@@ -218,8 +218,7 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
                 # Create momentum gradient descent optimizer.
                 optimizer = tf.train.MomentumOptimizer(
                     learning_rate,
-                    params['momentum'],
-                    use_nesterov=params['use_nesterov'])
+                    params['momentum'])
 
                 # Create the train op.
                 train_op = optimizer.apply_gradients(gradvars,
