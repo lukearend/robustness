@@ -19,7 +19,7 @@ def main():
             'max_epochs': 120,
             'batch_size': 256,
             'dataset': 'cifar10',
-            'num_filters': num_filters}
+            'num_filters': num_filters},
     tf_random_seed=12345)
 
     model.train(data_dir='/om/user/larend/data/cifar-10-tfrecords',
