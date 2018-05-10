@@ -18,7 +18,7 @@ def main():
             'num_epochs_per_decay': 30,
             'max_epochs': 120,
             'batch_size': 256,
-            'dataset': 'cifar10'
+            'dataset': 'cifar10',
             'num_filters': num_filters}
     tf_random_seed=12345)
 
