@@ -7,7 +7,7 @@ def forward_pass(x, is_training, params):
     resnet = resnet_model.Model(
         resnet_size=18,
         bottleneck=False,
-        num_classes=1000,
+        num_classes=params['num_classes'],
         num_filters=params['num_filters'],
         kernel_size=7,
         conv_stride=2,
