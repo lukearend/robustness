@@ -20,7 +20,7 @@ class Estimator(object):
     """A class that wraps up the estimator."""
     DEFAULT_PARAMS = {
         'initial_learning_rate': 0.1,
-        'learning_rate_decay_factor': 0.1
+        'learning_rate_decay_factor': 0.1,
         'num_epochs_per_decay': 30,
         'max_epochs': 120,
         'train_with_distortion': True,
