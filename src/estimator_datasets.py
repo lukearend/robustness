@@ -138,6 +138,11 @@ class ImageNetDataset(object):
     def make_batch(self, batch_size):
         """Make a batch of images and labels."""
         filenames = self.get_filenames()
+        for _ in range(5):
+            print()
+        print(filenames)
+        for _ in range(5):
+            print()
         dataset = tf.contrib.data.TFRecordDataset(filenames)
 
         # Parse records.
@@ -232,11 +237,6 @@ class Cifar10Dataset(object):
     def make_batch(self, batch_size):
         """Make a batch of images and labels."""
         filenames = self.get_filenames()
-        for _ in range(5):
-            print()
-        print(filenames)
-        for _ in range(5):
-            print()
         dataset = tf.contrib.data.TFRecordDataset(filenames)
 
         # Parse records.
