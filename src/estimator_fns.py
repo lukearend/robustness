@@ -280,6 +280,10 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
                 tf.summary.image('examples/images',
                                  tower_features[0])
 
+            # Log tensors.
+            stacked_labels = tf.identity(stacked_labels, name='labels')
+
+
             # Merge the summaries for saving.
             summary_op = tf.summary.merge_all()
 
