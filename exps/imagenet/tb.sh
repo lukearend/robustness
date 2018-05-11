@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --time=00:30:00
+#SBATCH --time=12:00:00
 #SBATCH --mem=10000
 #SBATCH --job-name=tb
 #SBATCH --output=out/tb.out
