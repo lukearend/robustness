@@ -32,7 +32,6 @@ def main():
             'max_epochs': 120,
             'batch_size': 256,
             'dataset': 'cifar10',
-            'num_classes': 10,
             'num_filters': num_filters},
     tf_random_seed=12345)
 
