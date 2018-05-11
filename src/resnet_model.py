@@ -35,7 +35,7 @@ import tensorflow as tf
 
 _BATCH_NORM_DECAY = 0.997
 _BATCH_NORM_EPSILON = 1e-5
-DEFAULT_VERSION = 1
+DEFAULT_VERSION = 2
 DEFAULT_DTYPE = tf.float32
 CASTABLE_TYPES = ()
 ALLOWED_TYPES = (DEFAULT_DTYPE,) + CASTABLE_TYPES
@@ -519,7 +519,7 @@ class Model(object):
             strides=self.block_strides[i], training=training,
             name='block_layer{}'.format(i + 1), data_format=self.data_format)
 
-      # inputs = batch_norm(inputs, training, self.data_format)
+      inputs = batch_norm(inputs, training, self.data_format)
       inputs = tf.nn.relu(inputs)
 
       # The current top layer has shape
