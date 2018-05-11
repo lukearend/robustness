@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --time=04:00:00
+#SBATCH --time=12:00:00
 #SBATCH --mem=500000
 #SBATCH --job-name=train
 #SBATCH --output=out/%a.out

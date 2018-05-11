@@ -1,5 +1,4 @@
 *.DS_Store
-*.cpython-35.pyc
-*.cpython-34.pyc
+*.pyc
 *.log
 
