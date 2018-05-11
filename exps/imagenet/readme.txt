@@ -24,13 +24,11 @@ screen -R tf       (0: git, 1: tb, 2: train0, 3: train1, 4: nvidia-smi0, 5: nvid
 bash tb.sh                             (on gpu-16)
 bash train-polestar-old.sh 0           (on gpu-16)
 bash train-polestar-old.sh 1           (on gpu-17)
-
-om:
-sbatch tb.sh
-sbatch --array=2 --qos=cbmm train-om.sh
+watch -n 30 nvidia-smi                 (on gpu-16)
+watch -n 30 nvidia-smi                 (on gpu-17)
 
 local:
-screen -R tf       (0: dgx, 1: polestar, 2: polestar-old0, 3: polestar-old1)
+screen -R tf       (0: dgx, 1: polestar, 2: polestar-old)
 ssh -L 6006:dgx1:6050 larend@dgx1.mit.edu
 ssh -L 6007:polestar:6050 larend@polestar.mit.edu
 ssh -L 6008:gpu-16:6050 larend@polestar-old.mit.edu

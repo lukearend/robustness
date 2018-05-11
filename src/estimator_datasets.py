@@ -141,9 +141,7 @@ class ImageNetDataset(object):
         dataset = tf.contrib.data.TFRecordDataset(filenames)
 
         # Parse records.
-        dataset = dataset.map(self.parser,
-                              num_threads=int(batch_size / 8),
-                              output_buffer_size=int(batch_size / 4))
+        dataset = dataset.map(self.parser)
 
         # If training, shuffle and repeat indefinitely.
         if self.mode == tf.estimator.ModeKeys.TRAIN:
@@ -234,6 +232,11 @@ class Cifar10Dataset(object):
     def make_batch(self, batch_size):
         """Make a batch of images and labels."""
         filenames = self.get_filenames()
+        for _ in range(5):
+            print()
+        print(filenames)
+        for _ in range(5):
+            print()
         dataset = tf.contrib.data.TFRecordDataset(filenames)
 
         # Parse records.
@@ -324,9 +327,7 @@ class MNISTDataset(object):
         dataset = tf.contrib.data.TFRecordDataset(filenames)
 
         # Parse records.
-        dataset = dataset.map(self.parser,
-                              num_threads=batch_size,
-                              output_buffer_size=2 * batch_size)
+        dataset = dataset.map(self.parser)
 
         # If training, shuffle and repeat indefinitely.
         if self.mode == tf.estimator.ModeKeys.TRAIN:
