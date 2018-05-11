@@ -227,7 +227,7 @@ class Cifar10Dataset(object):
             image = tf.image.random_flip_left_right(image)
 
         # Resize to 224 x 224.
-        image = tf.image.resize_images(image, (224, 224))
+        # image = tf.image.resize_images(image, (224, 224))
 
         return image, label
 
