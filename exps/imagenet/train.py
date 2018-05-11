@@ -5,8 +5,16 @@ import sys
 
 import argparse
 
-sys.path.append('/om/user/larend/robust/src')
-sys.path.append('/raid/poggio/home/larend/robust/src')
+parser = argparse.ArgumentParser()
+parser.add_argument('--model_index', type=int, required=True)
+parser.add_argument('--host_filesystem', type=str, required=True)
+FLAGS = parser.parse_args()
+
+append_path = {
+    '/raid': '/raid/poggio/home/larend/robust/src',
+    '/om': '/om/user/larend/robust/src',
+    '/cbcl': '/cbcl/cbcl01/larend/robust/src'}[FLAGS.host_filesystem]
+sys.path.append(append_path)
 import estimator
 
 
@@ -25,6 +33,7 @@ def main():
                 '/om/user/larend/data'),
         '/cbcl': ('/cbcl/cbcl01/larend/models',
                   '/cbcl/cbcl01/larend/data')}[FLAGS.host_filesystem]
+    import estimator
 
     model = estimator.Estimator(
         model_dir='{}/robust/imagenet/{}'.format(base_model_dir, name),
@@ -52,9 +61,4 @@ def main():
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--model_index', type=int, required=True)
-    parser.add_argument('--host_filesystem', type=str, required=True)
-    FLAGS = parser.parse_args()
-
     main()

@@ -3,18 +3,25 @@ Training ResNet on ImageNet.
 Training notes ----------------------------------------------------------------
 Training 4 on dgx; 3 on polestar; 0,1 on polestar-old 16,17
 
-dgx:
+dgx:               (/raid/poggio/home/larend/robust/exps/imagenet/)
+screen -R tf       (0: git, 1: tb, 2: train, 3: tail, 4: squeue)
+git pull origin master
 bash tb.sh
 sbatch --array=4 train-dgx.sh
+tail -f out/4.out
+watch -n 30 squeue
 
-polestar:
-screen -R tf       (0: git, 1: tb, 2: train)
+polestar:          (/om/user/larend/robust/exps/imagenet/)
+screen -R tf       (0: git, 1: tb, 2: train, 3: nvidia-smi)
+git pull origin master
 bash tb.sh
 bash train-polestar.sh 3
+watch -n 30 nvidia-smi
 
-polestar-old:
-screen -R tf       (0: git, 1: tb, 2: train0 [gpu-16], 3: train1 [gpu-17])
-bash tb.shj                            (on gpu-16)
+
+polestar-old:      (/cbcl/cbcl01/larend/robust/exps/imagenet/)
+screen -R tf       (0: git, 1: tb, 2: train0, 3: train1, 4: nvidia-smi0, 5: nvidia-smi1)
+bash tb.sh                             (on gpu-16)
 bash train-polestar-old.sh 0           (on gpu-16)
 bash train-polestar-old.sh 1           (on gpu-17)
 
