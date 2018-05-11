@@ -8,7 +8,7 @@
 
 module load openmind/singularity/2.4
 
-singularity exec -B /om:/om /om/user/larend/localtensorflow.img \
+singularity exec --nv -B /om:/om /om/user/larend/localtensorflow.img \
 tensorboard \
 --logdir=/om/user/larend/models/robust/cifar10/00000 \
 --port=${1:-6050}
