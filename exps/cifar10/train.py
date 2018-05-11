@@ -28,12 +28,17 @@ def main():
     model = estimator.Estimator(
         model_dir='{}/robust/cifar10/{}'.format(base_model_dir, name),
         params={
+            'initial_learning_rate': 0.1,
+            'learning_rate_decay_factor': 0.1,
             'num_epochs_per_decay': 30,
             'max_epochs': 120,
+            'train_with_distortion': True,
+            'momentum': 0.9,
             'batch_size': 256,
+            'weight_decay': 0.0001,
             'dataset': 'cifar10',
             'num_filters': num_filters},
-    tf_random_seed=12345)
+        tf_random_seed=12345)
 
     model.train(data_dir='{}/cifar-10-tfrecords'.format(base_data_dir),
                 num_gpus=8,

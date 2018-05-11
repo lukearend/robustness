@@ -17,7 +17,9 @@ def forward_pass(x, is_training, params):
         'imagenet': 1000,
         'cifar10': 10}[params['dataset']]
     num_filters = params['num_filters']
-    final_size = num_filters * 2 ** (len(block_sizes) - 1)
+    final_size = {
+        True: num_filters * 2 ** (len(block_sizes) - 1) * 4,
+        False: num_filters * 2 ** (len(block_sizes) - 1)}[bottleneck]
 
     resnet = resnet_model.Model(
         resnet_size=resnet_size,
