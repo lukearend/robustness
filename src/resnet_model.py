@@ -45,14 +45,15 @@ ALLOWED_TYPES = (DEFAULT_DTYPE,) + CASTABLE_TYPES
 # Convenience functions for building the ResNet model.
 ################################################################################
 def batch_norm(inputs, training, data_format):
-  """Performs a batch normalization using a standard set of parameters."""
-  # We set fused=True for a significant performance boost. See
-  # https://www.tensorflow.org/performance/performance_guide#common_fused_ops
-  return tf.contrib.layers.batch_norm(
-      inputs=inputs,
-      data_format='NCHW' if data_format == 'channels_first' else 'NHWC',
-      decay=_BATCH_NORM_DECAY, epsilon=_BATCH_NORM_EPSILON, center=True,
-      scale=True, is_training=training, fused=True)
+  return tf.identity(inputs) # Bypass batch norm for debugging.
+  # """Performs a batch normalization using a standard set of parameters."""
+  # # We set fused=True for a significant performance boost. See
+  # # https://www.tensorflow.org/performance/performance_guide#common_fused_ops
+  # return tf.contrib.layers.batch_norm(
+  #     inputs=inputs,
+  #     data_format='NCHW' if data_format == 'channels_first' else 'NHWC',
+  #     decay=_BATCH_NORM_DECAY, epsilon=_BATCH_NORM_EPSILON, center=True,
+  #     scale=True, is_training=training, fused=True)
 
 
 def fixed_padding(inputs, kernel_size, data_format):
