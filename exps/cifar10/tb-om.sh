@@ -6,7 +6,7 @@
 #SBATCH --mail-user=larend@mit.edu
 #SBATCH --mail-type=FAIL
 
-module load openmind/singularity/2.4
+module load openmind/singularity/older_versions/2.4
 
 singularity exec --nv -B /om:/om /om/user/larend/localtensorflow.img \
 tensorboard \
