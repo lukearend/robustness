@@ -26,7 +26,10 @@ def get_mean_imagenet_rgb():
     dataset from mean_imagenet_rgb.mat file, which must be located in
     the path shown."""
     # Load the data from file.
-    data = scipy.io.loadmat('/om/user/larend/robust/prep/mean_imagenet_rgb.mat')
+    if os.path.exists('/om/user/larend/robust/prep/mean_imagenet_rgb.mat'):
+        data = scipy.io.loadmat('/om/user/larend/robust/prep/mean_imagenet_rgb.mat')
+    else:
+        data = scipy.io.loadmat('/raid/poggio/home/larend/robust/prep/mean_imagenet_rgb.mat')
     mean_imagenet_rgb = data['mean_imagenet_rgb']
 
     # Convert to float32 Tensor and map onto range [0, 1].
