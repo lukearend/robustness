@@ -37,8 +37,8 @@ def main():
             'batch_size': 256,
             'weight_decay': 0.0001,
             'dataset': 'imagenet',
-            'num_filters': num_filters}
-    tf_random_seed=12345)
+            'num_filters': num_filters},
+        tf_random_seed=12345)
 
     model.train(data_dir='{}/imagenet-tfrecords'.format(base_data_dir),
                 num_gpus=8,
