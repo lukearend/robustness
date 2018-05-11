@@ -126,8 +126,8 @@ class ImageNetDataset(object):
             # the central 224 x 224.
             image = tf.image.random_flip_left_right(image)
             image = tf.image.crop_to_bounding_box(image,
-                tf.random_uniform([1], minval=0, maxval=32, dtype=tf.int32),
-                tf.random_uniform([1], minval=0, maxval=32, dtype=tf.int32),
+                tf.random_uniform([], minval=0, maxval=32, dtype=tf.int32),
+                tf.random_uniform([], minval=0, maxval=32, dtype=tf.int32),
                 224, 224)
         else:
             # Take a central 224 x 224 crop.
