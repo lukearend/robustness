@@ -25,7 +25,7 @@ def forward_pass(x, is_training, params):
         resnet_size=resnet_size,
         bottleneck=bottleneck,
         num_classes=num_classes,
-        num_filters=params['num_filters'],
+        num_filters=num_filters,
         kernel_size=7,
         conv_stride=2,
         first_pool_size=3,
