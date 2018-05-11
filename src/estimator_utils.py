@@ -26,9 +26,9 @@ def get_mean_imagenet_rgb():
     dataset from mean_imagenet_rgb.mat file, which must be located in
     the path shown."""
     # Load the data from file.
-    if os.path.exists('/raid/poggio/home/larend/robust/prep/mean_imagenet_rgb.mat')
+    if os.path.exists('/raid/poggio/home/larend/robust/prep/mean_imagenet_rgb.mat'):
         data = scipy.io.loadmat('/raid/poggio/home/larend/robust/prep/mean_imagenet_rgb.mat')
-    elif os.path.exists('/cbcl/cbcl01/larend/robust/prep/mean_imagenet_rgb.mat')
+    elif os.path.exists('/cbcl/cbcl01/larend/robust/prep/mean_imagenet_rgb.mat'):
         data = scipy.io.loadmat('/cbcl/cbcl01/larend/robust/prep/mean_imagenet_rgb.mat')
     else:
         data = scipy.io.loadmat('/om/user/larend/robust/prep/mean_imagenet_rgb.mat')
