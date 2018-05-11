@@ -5,8 +5,16 @@ import sys
 
 import argparse
 
-sys.path.append('/om/user/larend/robust/src')
-sys.path.append('/raid/poggio/home/larend/robust/src')
+parser = argparse.ArgumentParser()
+parser.add_argument('--model_index', type=int, required=True)
+parser.add_argument('--host_filesystem', type=str, required=True)
+FLAGS = parser.parse_args()
+
+append_path = {
+    '/raid': '/raid/poggio/home/larend/robust/src',
+    '/om': '/om/user/larend/robust/src',
+    '/cbcl': '/cbcl/cbcl01/larend/robust/src'}[FLAGS.host_filesystem]
+sys.path.append(append_path)
 import estimator
 
 
@@ -18,12 +26,14 @@ def main():
                    3: 128,
                    4: 256}[FLAGS.model_index]
 
-    if FLAGS.host_machine == 'dgx':
-        base_model_dir = '/raid/poggio/home/larend/models'
-        base_data_dir = '/raid/poggio/home/larend/data'
-    else:
-        base_model_dir = '/om/user/larend/models'
-        base_data_dir = '/om/user/larend/data'
+    base_model_dir, base_data_dir = {
+        '/raid': ('/raid/poggio/home/larend/models',
+                  '/raid/poggio/home/larend/data'),
+        '/om': ('/om/user/larend/models',
+                '/om/user/larend/data'),
+        '/cbcl': ('/cbcl/cbcl01/larend/models',
+                  '/cbcl/cbcl01/larend/data')}[FLAGS.host_filesystem]
+    import estimator
 
     model = estimator.Estimator(
         model_dir='{}/robust/cifar10/{}'.format(base_model_dir, name),
@@ -51,9 +61,4 @@ def main():
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--model_index', type=int, required=True)
-    parser.add_argument('--host_machine', type=str, default='om')
-    FLAGS = parser.parse_args()
-
     main()

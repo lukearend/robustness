@@ -138,15 +138,12 @@ class ImageNetDataset(object):
     def make_batch(self, batch_size):
         """Make a batch of images and labels."""
         filenames = self.get_filenames()
-        for _ in range(5):
-            print()
-        print(filenames)
-        for _ in range(5):
-            print()
         dataset = tf.contrib.data.TFRecordDataset(filenames)
 
         # Parse records.
-        dataset = dataset.map(self.parser)
+        dataset = dataset.map(self.parser,
+                              num_threads=batch_size,
+                              output_buffer_size=2 * batch_size)
 
         # If training, shuffle and repeat indefinitely.
         if self.mode == tf.estimator.ModeKeys.TRAIN:
