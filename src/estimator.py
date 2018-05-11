@@ -41,6 +41,9 @@ class Estimator(object):
             allow_soft_placement=True,
             log_device_placement=False,
             gpu_options=tf.GPUOptions(
+                # Use only as much GPU memory as needed based on
+                # runtime allocations.
+                allow_growth=True,
                 # Force all CPU tensors to be allocated with Cuda
                 # pinned memory. May hurt host performance if model is
                 # extremely large, as all Cuda pinned memory is

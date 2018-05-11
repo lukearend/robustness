@@ -8,5 +8,4 @@
 
 singularity exec --nv -B /raid:/raid /raid/poggio/home/larend/localtensorflow.img \
 python /raid/poggio/home/larend/robust/exps/imagenet/train.py \
---model_index="${SLURM_ARRAY_TASK_ID}" \
---host_machine=dgx
+--model_index="${SLURM_ARRAY_TASK_ID}" --host_filesystem=/raid
