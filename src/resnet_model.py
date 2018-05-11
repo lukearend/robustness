@@ -519,7 +519,7 @@ class Model(object):
             strides=self.block_strides[i], training=training,
             name='block_layer{}'.format(i + 1), data_format=self.data_format)
 
-      inputs = batch_norm(inputs, training, self.data_format)
+      # inputs = batch_norm(inputs, training, self.data_format)
       inputs = tf.nn.relu(inputs)
 
       # The current top layer has shape

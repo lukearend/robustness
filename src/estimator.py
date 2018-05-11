@@ -147,12 +147,9 @@ class Estimator(object):
              'precision_at_one': 'precision_at_one',
              'precision_at_five': 'precision_at_five'},
             every_n_iter=log_every_n_steps)
-        logging_labels_hook = tf.train.LoggingTensorHook(
-            {'labels': 'labels'},
-            every_n_iter=1)
 
         hooks = estimator_utils.replace_monitors_with_hooks(
-            [validation_monitor, examples_per_second_hook, logging_hook, logging_labels_hook],
+            [validation_monitor, examples_per_second_hook, logging_hook],
             model)
 
         max_steps = int(
