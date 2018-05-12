@@ -40,3 +40,7 @@ Debugging notes:
 -tried setting training to True for batch norm function, even while evaluating (I saw someone mention this online). set bn decay back to 0.997. evaluation worked! but this can't be the way to fix the problem...
 -saw some more stuff online about how you have to set tf.control dependencies and whatnot... trying this. seemed to improve evaluation...! still seems to overfit a bit but maybe not so badly.
 -tried setting bn decay to 0.9, will see if this improves things even more. worked!!!!!!
+
+More notes:
+-going to train cifar with and without batch norm.
+-when bypassing batch norm, the model instantly diverges with nan loss (lr still 0.1). so going to try reducing learning rate.
