@@ -37,21 +37,3 @@ def forward_pass(x, is_training, params):
     y = resnet(x, is_training)
 
     return y
-
-
-# import tensorflow as tf
-
-# def forward_pass(x, is_training, params):
-#     x = tf.layers.conv2d(x, filters=20, kernel_size=5, strides=1)
-#     x = tf.nn.relu(x)
-#     x = tf.layers.max_pooling2d(x, pool_size=2, strides=2)
-#     x = tf.layers.conv2d(x, filters=50, kernel_size=5, strides=1)
-#     x = tf.nn.relu(x)
-#     x = tf.layers.max_pooling2d(x, pool_size=2, strides=2)
-#     size = x.get_shape().as_list()
-#     x = tf.reshape(x, [-1, size[1] * size[2] * size[3]])
-#     x = tf.layers.dense(x, 500)
-#     x = tf.nn.relu(x)
-#     x = tf.layers.dense(x, 10)
-
-#     return x

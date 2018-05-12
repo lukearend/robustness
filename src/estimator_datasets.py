@@ -228,7 +228,6 @@ class Cifar10Dataset(object):
 
         # Resize to 224 x 224.
         image = tf.image.resize_images(image, (224, 224))
-        # image = tf.image.resize_images(image, (32, 32))
 
         return image, label
 
