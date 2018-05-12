@@ -53,7 +53,7 @@ def batch_norm(inputs, training, data_format):
   #     momentum=_BATCH_NORM_DECAY, epsilon=_BATCH_NORM_EPSILON, center=True,
   #     scale=True, training=training, fused=True)
 
-  A 1.3 function that allows fused batch norm.
+  # A 1.3 function that allows fused batch norm.
   return tf.contrib.layers.batch_norm(
       inputs=inputs,
       data_format='NCHW' if data_format == 'channels_first' else 'NHWC',
