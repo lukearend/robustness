@@ -2,7 +2,7 @@
 #SBATCH --time=6:00:00
 #SBATCH --mem=64000
 #SBATCH --gres=gpu:tesla-k80:8
-#SBATCH --job-name=train
+#SBATCH --job-name=bn
 #SBATCH --output=out/%a.out
 #SBATCH --mail-user=larend@mit.edu
 #SBATCH --mail-type=FAIL
