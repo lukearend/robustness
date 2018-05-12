@@ -53,7 +53,7 @@ def main():
 
     model.train(data_dir='{}/imagenet-tfrecords'.format(base_data_dir),
                 num_gpus=8,
-                save_summary_steps=10000,
+                save_summary_steps=1000,
                 save_checkpoint_and_validate_secs=3600,
                 keep_checkpoint_max=10,
                 keep_checkpoint_every_n_hours=1,
