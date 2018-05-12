@@ -30,4 +30,6 @@ Debugging notes:
         -this would be good because it leaves open the possibility that we don't have to adjust this parameter (adjust regularization while changing redundancy).
 -tried v1, scale_factor = 1.0 with decay = 0.997. demonstrated overfitting problem.
 -tried v1, scale_factor = 1.0 with decay = 0.9. demonstrated overfitting problem.
--tried v2, scale_factor = 1.0 with decay = 0.9.
+-tried v2, scale_factor = 1.0 with decay = 0.9. demonstrated overfitting problem.
+-set decay back to 0.997 and version back to v1. read on the docs for tf.layers.batch_normalization() something about update_ops and realized I may have missed a step in the implementation. maybe that's the issue? haven't investigated yet.
+-could be that I'm using the contrib version of batch norm instead of the proper version (which doesn't allow fusing, sadly). trying the proper version without fusing to see if that works. v1, 0.997, scale factor 1.0.
