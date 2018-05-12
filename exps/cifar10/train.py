@@ -47,6 +47,7 @@ def main():
             'batch_size': 256,
             'weight_decay': 0.0001,
             'dataset': 'cifar10',
+            'use_batch_norm': True,
             'num_filters': num_filters},
         tf_random_seed=12345)
 
