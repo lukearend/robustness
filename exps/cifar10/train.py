@@ -40,8 +40,8 @@ def main():
         params={
             'initial_learning_rate': 0.1,
             'learning_rate_decay_factor': 0.1,
-            'num_epochs_per_decay': 30,
-            'max_epochs': 120,
+            'num_epochs_per_decay': 15,
+            'max_epochs': 60,
             'train_with_distortion': True,
             'momentum': 0.9,
             'batch_size': 256,

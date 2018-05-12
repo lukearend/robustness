@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --time=6:00:00
+#SBATCH --time=12:00:00
 #SBATCH --mem=64000
 #SBATCH --gres=gpu:tesla-k80:8
 #SBATCH --job-name=bn
