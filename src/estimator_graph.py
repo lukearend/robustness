@@ -3,7 +3,7 @@
 import resnet_model
 
 
-RESNET_SIZE = 18
+RESNET_SIZE = 50
 
 
 def forward_pass(x, is_training, params):

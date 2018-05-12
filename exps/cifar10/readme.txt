@@ -34,4 +34,5 @@ Debugging notes:
 -set decay back to 0.997 and version back to v1. read on the docs for tf.layers.batch_normalization() something about update_ops and realized I may have missed a step in the implementation. maybe that's the issue? haven't investigated yet.
 -could be that I'm using the contrib version of batch norm instead of the proper version (which doesn't allow fusing, sadly). trying the proper version without fusing to see if that works.
 -v1, 0.997, scale factor 1.0. demonstrated overfitting problem.
--v1, 0.9, scale factor 1.0.
+-v1, 0.9, scale factor 1.0. demonstrated overfitting problem.
+-maybe the best way to go about this is to try to replicate as precisely as possible the original script. so I'm using v2, resnet 50, with decay = 0.997, and the only difference as far as I can see is that i'm training on cifar and using the contrib version of fused batch norm available with 1.3.

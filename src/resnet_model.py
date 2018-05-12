@@ -33,11 +33,11 @@ from __future__ import print_function
 
 import tensorflow as tf
 
-_BATCH_NORM_DECAY = 0.9
+_BATCH_NORM_DECAY = 0.997
 _BATCH_NORM_EPSILON = 1e-5
-DEFAULT_VERSION = 1
+DEFAULT_VERSION = 2
 DEFAULT_DTYPE = tf.float32
-CASTABLE_TYPES = ()
+CASTABLE_TYPES = (tf.float16,)
 ALLOWED_TYPES = (DEFAULT_DTYPE,) + CASTABLE_TYPES
 
 
@@ -53,18 +53,18 @@ def batch_norm(inputs, training, data_format):
   #     momentum=_BATCH_NORM_DECAY, epsilon=_BATCH_NORM_EPSILON, center=True,
   #     scale=True, training=training, fused=True)
 
-  # A 1.3 function that allows fused batch norm.
-  # return tf.contrib.layers.batch_norm(
-  #     inputs=inputs,
-  #     data_format='NCHW' if data_format == 'channels_first' else 'NHWC',
-  #     decay=_BATCH_NORM_DECAY, epsilon=_BATCH_NORM_EPSILON, center=True,
-  #     scale=True, is_training=training, fused=True)
+  A 1.3 function that allows fused batch norm.
+  return tf.contrib.layers.batch_norm(
+      inputs=inputs,
+      data_format='NCHW' if data_format == 'channels_first' else 'NHWC',
+      decay=_BATCH_NORM_DECAY, epsilon=_BATCH_NORM_EPSILON, center=True,
+      scale=True, is_training=training, fused=True)
 
-  # # Will suffer in performance because not fused.
-  return tf.layers.batch_normalization(
-      inputs=inputs, axis=1 if data_format == 'channels_first' else 3,
-      momentum=_BATCH_NORM_DECAY, epsilon=_BATCH_NORM_EPSILON, center=True,
-      scale=True, training=training)
+  # # # Will suffer in performance because not fused.
+  # return tf.layers.batch_normalization(
+  #     inputs=inputs, axis=1 if data_format == 'channels_first' else 3,
+  #     momentum=_BATCH_NORM_DECAY, epsilon=_BATCH_NORM_EPSILON, center=True,
+  #     scale=True, training=training)
 
   # # Bypass batch norm for debugging. Results in instant NaNs.
   # return tf.identity(inputs)
