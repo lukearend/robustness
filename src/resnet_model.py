@@ -59,7 +59,7 @@ def batch_norm(inputs, training, data_format):
       data_format='NCHW' if data_format == 'channels_first' else 'NHWC',
       decay=_BATCH_NORM_DECAY, epsilon=_BATCH_NORM_EPSILON, center=True,
       # scale=True, is_training=training, fused=True)
-      scale=True, is_training=True, fused=True)
+      scale=True, is_training=training, fused=True)
 
   # # # Will suffer in performance because not fused.
   # return tf.layers.batch_normalization(

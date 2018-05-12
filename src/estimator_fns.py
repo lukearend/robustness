@@ -221,8 +221,10 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
                     params['momentum'])
 
                 # Create the train op.
-                train_op = optimizer.apply_gradients(gradvars,
-                                                     global_step=global_step)
+                update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
+                with tf.control_dependencies(update_ops)
+                    train_op = optimizer.apply_gradients(gradvars,
+                                                         global_step=global_step)
 
                 # Combine results and compute metrics; name tensors we
                 # want to log.
