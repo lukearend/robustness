@@ -38,7 +38,7 @@ def main():
     model = estimator.Estimator(
         model_dir='{}/robust/cifar10/{}'.format(base_model_dir, name),
         params={
-            'initial_learning_rate': 0.1,
+            'initial_learning_rate': 0.001,
             'learning_rate_decay_factor': 0.1,
             'num_epochs_per_decay': 30,
             'max_epochs': 120,
