@@ -35,7 +35,7 @@ import tensorflow as tf
 
 _BATCH_NORM_DECAY = 0.9
 _BATCH_NORM_EPSILON = 1e-5
-DEFAULT_VERSION = 2
+DEFAULT_VERSION = 1
 DEFAULT_DTYPE = tf.float32
 CASTABLE_TYPES = (tf.float16,)
 ALLOWED_TYPES = (DEFAULT_DTYPE,) + CASTABLE_TYPES
@@ -48,14 +48,14 @@ def batch_norm(inputs, training, data_format):
   """Performs a batch normalization using a standard set of parameters."""
   # We set fused=True for a significant performance boost. See
   # https://www.tensorflow.org/performance/performance_guide#common_fused_ops
-  # return tf.contrib.layers.batch_norm(
-  #     inputs=inputs,
-  #     data_format='NCHW' if data_format == 'channels_first' else 'NHWC',
-  #     decay=_BATCH_NORM_DECAY, epsilon=_BATCH_NORM_EPSILON, center=True,
-  #     scale=True, is_training=training, fused=True)
+  return tf.contrib.layers.batch_norm(
+      inputs=inputs,
+      data_format='NCHW' if data_format == 'channels_first' else 'NHWC',
+      decay=_BATCH_NORM_DECAY, epsilon=_BATCH_NORM_EPSILON, center=True,
+      scale=True, is_training=training, fused=True)
 
   # Bypass batch norm.
-  return inputs
+  # return inputs
 
 
 def fixed_padding(inputs, kernel_size, data_format):

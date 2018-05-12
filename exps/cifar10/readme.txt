@@ -43,4 +43,5 @@ Debugging notes:
 
 More notes:
 -going to train cifar with and without batch norm.
--when bypassing batch norm, the model instantly diverges with nan loss (lr still 0.1). so going to try reducing learning rate.
+-when bypassing batch norm, the model instantly diverges with nan loss (lr still 0.1). so going to try reducing learning rate. found that 0.001 is good learning rate when batch norm is off.
+-going to make sure v1 works with batch norm and lr back to 0.1. if it does, I'll do all experiments with v1 instead since it's supposedly better for resnet-18 (or not super deep resnets).
