@@ -38,4 +38,5 @@ Debugging notes:
 -maybe the best way to go about this is to try to replicate as precisely as possible the original script. so I'm using v2, resnet 50, with decay = 0.997, and the only difference as far as I can see is that i'm training on cifar and using the contrib version of fused batch norm available with 1.3. still had overfitting problem.
 -let's be extreme. I went back to resnet-18 and set bn decay = 0.1. didn't seem to make a difference.
 -tried setting training to True for batch norm function, even while evaluating (I saw someone mention this online). set bn decay back to 0.997. evaluation worked! but this can't be the way to fix the problem...
--saw some more stuff online about how you have to set tf.control dependencies and whatnot... trying this.
+-saw some more stuff online about how you have to set tf.control dependencies and whatnot... trying this. seemed to improve evaluation...! still seems to overfit a bit but maybe not so badly.
+-tried setting bn decay to 0.9, will see if this improves things even more. worked!!!!!!
