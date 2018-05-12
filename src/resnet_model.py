@@ -33,7 +33,7 @@ from __future__ import print_function
 
 import tensorflow as tf
 
-_BATCH_NORM_DECAY = 0.1
+_BATCH_NORM_DECAY = 0.0001
 _BATCH_NORM_EPSILON = 1e-5
 DEFAULT_VERSION = 2
 DEFAULT_DTYPE = tf.float32
@@ -58,7 +58,8 @@ def batch_norm(inputs, training, data_format):
       inputs=inputs,
       data_format='NCHW' if data_format == 'channels_first' else 'NHWC',
       decay=_BATCH_NORM_DECAY, epsilon=_BATCH_NORM_EPSILON, center=True,
-      scale=True, is_training=training, fused=True)
+      # scale=True, is_training=training, fused=True)
+      scale=True, is_training=True, fused=True)
 
   # # # Will suffer in performance because not fused.
   # return tf.layers.batch_normalization(
