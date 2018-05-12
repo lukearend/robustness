@@ -222,7 +222,7 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
 
                 # Create the train op.
                 update_ops = tf.get_collection(tf.GraphKeys.UPDATE_OPS)
-                with tf.control_dependencies(update_ops)
+                with tf.control_dependencies(update_ops):
                     train_op = optimizer.apply_gradients(gradvars,
                                                          global_step=global_step)
 
