@@ -1176,13 +1176,13 @@ class Estimator(object):
                                        params=self.params)
 
         # Configure evaluation.
-        input_fn = lambda: input_fn(tf.estimator.ModeKeys.EVAL,
+        eval_input_fn = lambda: input_fn(tf.estimator.ModeKeys.EVAL,
                                                data_dir,
                                                self.params,
                                                num_gpus)
 
         # Evaluate the model.
-        model.evaluate(input_fn=input_fn)
+        model.evaluate(input_fn=eval_input_fn)
 
 
 #######################################################################
