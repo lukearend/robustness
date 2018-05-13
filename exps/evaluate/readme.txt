@@ -1,0 +1,35 @@
+Script for building the graph and evaluating a model.
+
+example usage:
+evaluate.py --model_dir=/om/user/larend/models/robust/cifar10/00000 --scale_factor=0.25 --use_batch_norm=True --dataset=cifar10`
+
+arguments:
+`--model_dir`: path to model directory to load
+    for cifar10 models:
+        `/om/user/larend/models/robust/cifar10/00000`
+        `/om/user/larend/models/robust/cifar10/00001`
+        `/om/user/larend/models/robust/cifar10/00002`
+        `/om/user/larend/models/robust/cifar10/00003`
+        `/om/user/larend/models/robust/cifar10/00004`
+    for cifar10-no-bn (no batch norm) models:
+        /om/user/larend/models/robust/cifar10-no-bn/00000
+        ...
+    for imagenet models:
+        /om/user/larend/models/robust/imagenet/00000
+        ...
+
+`--scale_factor`: scale factor to use; should be
+    `0.25` if model index is 00000
+    `0.5`                    00001
+    `1`                      00002
+    `2`                      00003
+    `4`                      00004
+
+`--use_batch_norm`: `True` if cifar10 or imagenet, `False` if cifar10-no-bn
+`--dataset`: `cifar10` or `imagenet`
+
+example usage with slurm:
+    Luke's container:
+        `sbatch --qos=cbmm --mem=16000 --gres=gpu:tesla-k80:1 --job-name=robustness --output=out/cifar10-00000 singularity exec --nv -B /om:/om /om/user/larend/localtensorflow.img python evaluate.py --model_dir=/om/user/larend/models/robust/cifar10/00000 --scale_factor=0.25 --use_batch_norm=True --dataset=cifar10`
+    Xavier's container:
+        `sbatch --qos=cbmm --mem=16000 --gres=gpu:tesla-k80:1 --job-name=robustness --output=out/cifar10-00000 singularity exec --nv -B /om:/om /om/user/xboix/share/belledon-tensorflow-keras-master-latest.simg python evaluate.py --model_dir=/om/user/larend/models/robust/cifar10/00000 --scale_factor=0.25 --use_batch_norm=True --dataset=cifar10`

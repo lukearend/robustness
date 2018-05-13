@@ -54,9 +54,6 @@ def batch_norm(inputs, training, data_format):
       decay=_BATCH_NORM_DECAY, epsilon=_BATCH_NORM_EPSILON, center=True,
       scale=True, is_training=training, fused=True)
 
-  # Bypass batch norm.
-  # return inputs
-
 
 def fixed_padding(inputs, kernel_size, data_format):
   """Pads the input along the spatial dimensions independently of input size.

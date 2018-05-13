@@ -2,8 +2,6 @@
 
 import os
 
-from collections import OrderedDict
-
 import tensorflow as tf
 
 import estimator_utils
