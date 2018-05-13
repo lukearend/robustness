@@ -1,7 +1,12 @@
 Script for building the graph and evaluating a model.
 
+
 example usage:
-evaluate.py --model_dir=/om/user/larend/models/robust/cifar10/00000 --scale_factor=0.25 --use_batch_norm=True --dataset=cifar10`
+    for models with batch norm:
+        `evaluate.py --model_dir=/om/user/larend/models/robust/cifar10/00000 --scale_factor=0.25 --dataset=cifar10`
+    for models without batch norm:
+        `evaluate.py --model_dir=/om/user/larend/models/robust/cifar10-no-bn/00000 --scale_factor=0.25 --dataset=cifar10 --disable_batch_norm`
+
 
 arguments:
 `--model_dir`: path to model directory to load
@@ -28,8 +33,6 @@ arguments:
 `--disable_batch_norm`: set this flag for the cifar10-no-bn to disable batch norm; otherwise, do not set this flag.
 `--dataset`: `cifar10` or `imagenet`
 
+
 example usage with slurm:
-    Luke's container:
-        `sbatch --qos=cbmm --mem=16000 --gres=gpu:tesla-k80:1 --job-name=robustness --output=out/cifar10-00000.out singularity exec --nv -B /om:/om /om/user/larend/localtensorflow.img python evaluate.py --model_dir=/om/user/larend/models/robust/cifar10/00000 --scale_factor=0.25 --use_batch_norm=True --dataset=cifar10`
-    Xavier's container:
-        `sbatch --qos=cbmm --mem=16000 --gres=gpu:tesla-k80:1 --job-name=robustness --output=out/cifar10-00000 singularity exec --nv -B /om:/om /om/user/xboix/share/belledon-tensorflow-keras-master-latest.simg python evaluate.py --model_dir=/om/user/larend/models/robust/cifar10/00000 --scale_factor=0.25 --use_batch_norm=True --dataset=cifar10`
+    `sbatch --qos=cbmm --mem=16000 --gres=gpu:tesla-k80:1 --job-name=robustness --output=out/cifar10-00000.out singularity exec --nv -B /om:/om /om/user/larend/localtensorflow.img python evaluate.py --model_dir=/om/user/larend/models/robust/cifar10/00000 --scale_factor=0.25 --dataset=cifar10`
