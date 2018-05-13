@@ -765,7 +765,7 @@ class Cifar10Dataset(object):
 # estimator_graph
 #######################################################################
 def forward_pass(x, is_training, params):
-    resnet = resnet_model.Model(
+    resnet = Model(
         resnet_size=18,
         use_batch_norm=params['use_batch_norm'],
         bottleneck=False,
