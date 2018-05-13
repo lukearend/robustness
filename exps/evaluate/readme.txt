@@ -25,7 +25,7 @@ arguments:
     `2`                      00003
     `4`                      00004
 
-`--use_batch_norm`: `True` if cifar10 or imagenet, `False` if cifar10-no-bn
+`--disable_batch_norm`: set this flag for the cifar10-no-bn to disable batch norm; otherwise, do not set this flag.
 `--dataset`: `cifar10` or `imagenet`
 
 example usage with slurm:
