@@ -1,2 +1,2 @@
 # robust
-studying robustness for DNNs trained in ImageNet
+training nets to study robustness to ablation
