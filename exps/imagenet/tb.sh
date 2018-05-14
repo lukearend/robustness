@@ -35,10 +35,10 @@ tensorboard --logdir=\
 00002:/om/user/larend/models/robust/imagenet/00002,\
 00003:/om/user/larend/models/robust/imagenet/00003,\
 00004:/om/user/larend/models/robust/imagenet/00004,\
-00000:/cbcl/cbcl01/larend/models/robust/imagenet/00000,\
-00001:/cbcl/cbcl01/larend/models/robust/imagenet/00001,\
-00002:/cbcl/cbcl01/larend/models/robust/imagenet/00002,\
-00003:/cbcl/cbcl01/larend/models/robust/imagenet/00003,\
-00004:/cbcl/cbcl01/larend/models/robust/imagenet/00004 \
+00000-cbcl:/cbcl/cbcl01/larend/models/robust/imagenet/00000,\
+00001-cbcl:/cbcl/cbcl01/larend/models/robust/imagenet/00001,\
+00002-cbcl:/cbcl/cbcl01/larend/models/robust/imagenet/00002,\
+00003-cbcl:/cbcl/cbcl01/larend/models/robust/imagenet/00003,\
+00004-cbcl:/cbcl/cbcl01/larend/models/robust/imagenet/00004 \
 --port=${1:-6050}
 fi
