@@ -205,10 +205,11 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
                     estimator_utils.get_num_examples_per_epoch(
                         params['dataset'], tf.estimator.ModeKeys.TRAIN))
 
-
                 if params['dataset'] == 'cifar10' and 'epochs_to_decay' in params:
                     step_decay_boundaries = [
-                        num_examples_per_epoch * epoch_decay_boundary
+                        int(num_examples_per_epoch /
+                            params['batch_size'] *
+                            epoch_decay_boundary)
                         for epoch_decay_boundary in params['epochs_to_decay']]
 
                     values = [
