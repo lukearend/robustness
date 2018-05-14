@@ -13,7 +13,12 @@ tensorboard --logdir=\
 00001:/raid/poggio/home/larend/models/robust/cifar10/00001,\
 00002:/raid/poggio/home/larend/models/robust/cifar10/00002,\
 00003:/raid/poggio/home/larend/models/robust/cifar10/00003,\
-00004:/raid/poggio/home/larend/models/robust/cifar10/00004 \
+00004:/raid/poggio/home/larend/models/robust/cifar10/00004,\
+00005:/raid/poggio/home/larend/models/robust/cifar10/00005,\
+00006:/raid/poggio/home/larend/models/robust/cifar10/00006,\
+00007:/raid/poggio/home/larend/models/robust/cifar10/00007,\
+00008:/raid/poggio/home/larend/models/robust/cifar10/00008,\
+00009:/raid/poggio/home/larend/models/robust/cifar10/00009 \
 --port=${1:-6050}
 elif [ $HOSTNAME = gpu-16 ] || [ $HOSTNAME = gpu-17 ] ; then
     source /cbcl/cbcl01/larend/envs/robust/bin/activate
@@ -24,7 +29,12 @@ elif [ $HOSTNAME = gpu-16 ] || [ $HOSTNAME = gpu-17 ] ; then
 00001:/cbcl/cbcl01/larend/models/robust/cifar10/00001,\
 00002:/cbcl/cbcl01/larend/models/robust/cifar10/00002,\
 00003:/cbcl/cbcl01/larend/models/robust/cifar10/00003,\
-00004:/cbcl/cbcl01/larend/models/robust/cifar10/00004 \
+00004:/cbcl/cbcl01/larend/models/robust/cifar10/00004,\
+00005:/cbcl/cbcl01/larend/models/robust/cifar10/00005,\
+00006:/cbcl/cbcl01/larend/models/robust/cifar10/00006,\
+00007:/cbcl/cbcl01/larend/models/robust/cifar10/00007,\
+00008:/cbcl/cbcl01/larend/models/robust/cifar10/00008,\
+00009:/cbcl/cbcl01/larend/models/robust/cifar10/00009 \
 --port=${1:-6050}
 else
     module load openmind/singularity/older_versions/2.4
@@ -35,10 +45,10 @@ tensorboard --logdir=\
 00002:/om/user/larend/models/robust/cifar10/00002,\
 00003:/om/user/larend/models/robust/cifar10/00003,\
 00004:/om/user/larend/models/robust/cifar10/00004,\
-00000:/om/user/larend/models/robust/cifar10-no-bn/00000,\
-00001:/om/user/larend/models/robust/cifar10-no-bn/00001,\
-00002:/om/user/larend/models/robust/cifar10-no-bn/00002,\
-00003:/om/user/larend/models/robust/cifar10-no-bn/00003,\
-00004:/om/user/larend/models/robust/cifar10-no-bn/00004 \
+00005:/om/user/larend/models/robust/cifar10/00005,\
+00006:/om/user/larend/models/robust/cifar10/00006,\
+00007:/om/user/larend/models/robust/cifar10/00007,\
+00008:/om/user/larend/models/robust/cifar10/00008,\
+00009:/om/user/larend/models/robust/cifar10/00009 \
 --port=${1:-6050}
 fi

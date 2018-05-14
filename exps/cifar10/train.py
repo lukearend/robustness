@@ -20,11 +20,16 @@ import estimator
 
 def main():
     name = str(FLAGS.model_index).zfill(5)
-    num_filters = {0: 4,
-                   1: 8,
-                   2: 16,
-                   3: 32,
-                   4: 64}[FLAGS.model_index]
+    num_filters, use_batch_norm = {0: (4, True),
+                                   1: (8, True),
+                                   2: (16, True),
+                                   3: (32, True),
+                                   4: (64, True),
+                                   5: (4, False),
+                                   6: (8, False),
+                                   7: (16, False),
+                                   8: (32, False),
+                                   9: (64, False)}[FLAGS.model_index]
 
     base_model_dir, base_data_dir = {
         '/raid': ('/raid/poggio/home/larend/models',
@@ -47,7 +52,7 @@ def main():
             'batch_size': 128,
             'weight_decay': 0.0001,
             'dataset': 'cifar10',
-            'use_batch_norm': True,
+            'use_batch_norm': use_batch_norm,
             'num_filters': num_filters},
         tf_random_seed=12345)
 
