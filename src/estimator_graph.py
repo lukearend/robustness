@@ -27,7 +27,7 @@ def forward_pass(x, is_training, params):
             num_filters=params['num_filters'],
             kernel_size=3,
             conv_stride=1,
-            first_pool_size=1,
+            first_pool_size=0,
             first_pool_stride=1,
             block_sizes=[3, 3, 3],
             block_strides=[1, 2, 2],

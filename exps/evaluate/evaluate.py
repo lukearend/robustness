@@ -1190,6 +1190,7 @@ class Estimator(object):
 # run evaluation
 #######################################################################
 def main():
+    if dataset == 'cifar10':
     num_filters = {
         0.25: 16,
         0.5: 32,
