@@ -211,7 +211,7 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
                         num_examples_per_epoch * epoch_decay_boundary
                         for epoch_decay_boundary in params['epochs_to_decay']]
                     values = [
-                        initial_learning_rate * params['learning_rate_decay_factor'] ** i
+                        params['initial_learning_rate'] * params['learning_rate_decay_factor'] ** i
                         for i in range(len(step_decay_boundaries) + 1)]
                     learning_rate = tf.train.piecewise_constant(
                         global_step,
