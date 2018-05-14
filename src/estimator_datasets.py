@@ -224,10 +224,14 @@ class Cifar10Dataset(object):
         # Apply data augmentation.
         if (self.mode == tf.estimator.ModeKeys.TRAIN
             and self.params['train_with_distortion']):
+            # Randomly flip the image, zero-pad with four pixels along
+            # each edge, and take a random 32 x 32 crop.
             image = tf.image.random_flip_left_right(image)
-
-        # Resize to 224 x 224.
-        image = tf.image.resize_images(image, (224, 224))
+            image = tf.image.resize_image_with_crop_or_pad(image, 40, 40)
+            image = tf.image.crop_to_bounding_box(image,
+                tf.random_uniform([], minval=0, maxval=8, dtype=tf.int32),
+                tf.random_uniform([], minval=0, maxval=8, dtype=tf.int32),
+                32, 32)
 
         return image, label
 

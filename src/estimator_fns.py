@@ -204,16 +204,31 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
                 num_examples_per_epoch = (
                     estimator_utils.get_num_examples_per_epoch(
                         params['dataset'], tf.estimator.ModeKeys.TRAIN))
-                num_steps_per_decay = int(num_examples_per_epoch /
-                                          params['batch_size'] *
-                                          params['num_epochs_per_decay'])
-                learning_rate = tf.train.exponential_decay(
-                    tf.to_float(params['initial_learning_rate']),
-                    global_step,
-                    num_steps_per_decay,
-                    params['learning_rate_decay_factor'],
-                    staircase=True,
-                    name='learning_rate')
+
+
+                if params['dataset'] == 'cifar10' and 'epochs_to_decay' in params:
+                    step_decay_boundaries = [
+                        num_examples_per_epoch * epoch_decay_boundary
+                        for epoch_decay_boundary in params['epochs_to_decay']]
+                    values = [
+                        initial_learning_rate * params['learning_rate_decay_factor'] ** i
+                        for i in range(len(step_decay_boundaries) + 1)]
+                    learning_rate = tf.train.piecewise_constant(
+                        global_step,
+                        step_decay_boundaries,
+                        values)
+                else:
+                    num_steps_per_decay = int(num_examples_per_epoch /
+                                              params['batch_size'] *
+                                              params['num_epochs_per_decay'])
+
+                    learning_rate = tf.train.exponential_decay(
+                        tf.to_float(params['initial_learning_rate']),
+                        global_step,
+                        num_steps_per_decay,
+                        params['learning_rate_decay_factor'],
+                        staircase=True,
+                        name='learning_rate')
 
                 # Create momentum gradient descent optimizer.
                 optimizer = tf.train.MomentumOptimizer(

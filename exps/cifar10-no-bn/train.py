@@ -20,11 +20,11 @@ import estimator
 
 def main():
     name = str(FLAGS.model_index).zfill(5)
-    num_filters = {0: 16,
-                   1: 32,
-                   2: 64,
-                   3: 128,
-                   4: 256}[FLAGS.model_index]
+    num_filters = {0: 4,
+                   1: 8,
+                   2: 16,
+                   3: 32,
+                   4: 64}[FLAGS.model_index]
 
     base_model_dir, base_data_dir = {
         '/raid': ('/raid/poggio/home/larend/models',
@@ -40,11 +40,11 @@ def main():
         params={
             'initial_learning_rate': 0.001,
             'learning_rate_decay_factor': 0.1,
-            'num_epochs_per_decay': 15,
-            'max_epochs': 60,
+            'epochs_to_decay': [90, 135],
+            'max_epochs': 180,
             'train_with_distortion': True,
             'momentum': 0.9,
-            'batch_size': 256,
+            'batch_size': 128,
             'weight_decay': 0.0001,
             'dataset': 'cifar10',
             'use_batch_norm': False,
@@ -52,7 +52,7 @@ def main():
         tf_random_seed=12345)
 
     model.train(data_dir='{}/cifar-10-tfrecords'.format(base_data_dir),
-                num_gpus=8,
+                num_gpus=2,
                 save_summary_steps=1000,
                 save_checkpoint_and_validate_secs=600,
                 keep_checkpoint_max=10,
