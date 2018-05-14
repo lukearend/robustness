@@ -59,7 +59,7 @@ def main():
     model.train(data_dir='{}/cifar-10-tfrecords'.format(base_data_dir),
                 num_gpus=2,
                 save_summary_steps=1000,
-                save_checkpoint_and_validate_secs=600,
+                save_checkpoint_and_validate_secs=120,
                 keep_checkpoint_max=10,
                 keep_checkpoint_every_n_hours=1,
                 early_stopping_epochs=None,
