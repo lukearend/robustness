@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --time=3-00:00:00
 #SBATCH --mem=64000
-#SBATCH --cpus-per-task=80
+#SBATCH --cpus-per-task=40
 #SBATCH --gres=gpu:tesla-k80:8
 #SBATCH --job-name=train
 #SBATCH --output=out/%a.out
