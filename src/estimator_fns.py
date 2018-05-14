@@ -207,9 +207,11 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
 
 
                 if params['dataset'] == 'cifar10' and 'epochs_to_decay' in params:
-                    step_decay_boundaries = [
-                        num_examples_per_epoch * epoch_decay_boundary
-                        for epoch_decay_boundary in params['epochs_to_decay']]
+                    step_decay_boundaries = tf.constant(
+                        [num_examples_per_epoch * epoch_decay_boundary
+                         for epoch_decay_boundary in params['epochs_to_decay']],
+                        dtype=tf.int64)
+
                     values = [
                         params['initial_learning_rate'] * params['learning_rate_decay_factor'] ** i
                         for i in range(len(step_decay_boundaries) + 1)]
