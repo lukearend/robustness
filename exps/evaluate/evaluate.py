@@ -1190,13 +1190,20 @@ class Estimator(object):
 # run evaluation
 #######################################################################
 def main():
-    if dataset == 'cifar10':
-    num_filters = {
-        0.25: 16,
-        0.5: 32,
-        1: 64,
-        2: 128,
-        4: 256}[FLAGS.scale_factor]
+    if FLAGS.dataset == 'cifar10':
+        num_filters = {
+            0.25: 4,
+            0.5: 8,
+            1: 16,
+            2: 32,
+            4: 64}[FLAGS.scale_factor]
+    else:
+        num_filters = {
+            0.25: 16,
+            0.5: 32,
+            1: 64,
+            2: 128,
+            4: 256}[FLAGS.scale_factor]
 
     data_dir = {
         'cifar10': '/om/user/larend/data/cifar-10-tfrecords',
@@ -1208,12 +1215,7 @@ def main():
             'batch_size': 100,
             'dataset': FLAGS.dataset,
             'use_batch_norm': FLAGS.use_batch_norm,
-            'num_filters': {
-                0.25: 16,
-                0.5: 32,
-                1: 64,
-                2: 128,
-                4: 256}[FLAGS.scale_factor]},
+            'num_filters': num_filters},
         tf_random_seed=12345)
 
     model.evaluate(

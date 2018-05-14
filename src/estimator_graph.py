@@ -31,7 +31,8 @@ def forward_pass(x, is_training, params):
             first_pool_stride=1,
             block_sizes=[3, 3, 3],
             block_strides=[1, 2, 2],
-            final_size=params['num_filters'] * 4)
+            final_size=params['num_filters'] * 4,
+            data_format='channels_last' if not params['use_batch_norm'] else None)
 
     y = resnet(x, is_training)
 
