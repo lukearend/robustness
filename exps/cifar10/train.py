@@ -26,11 +26,11 @@ def main():
         2: (0.1, 16, True),
         3: (0.1, 32, True),
         4: (0.1, 64, True),
-        5: (0.01, 4, False),
-        6: (0.01, 8, False),
-        7: (0.01, 16, False),
-        8: (0.01, 32, False),
-        9: (0.01, 64, False)}[FLAGS.model_index]
+        5: (0.001, 4, False),
+        6: (0.001, 8, False),
+        7: (0.001, 16, False),
+        8: (0.001, 32, False),
+        9: (0.001, 64, False)}[FLAGS.model_index]
 
     base_model_dir, base_data_dir = {
         '/raid': ('/raid/poggio/home/larend/models',
