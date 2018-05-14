@@ -216,7 +216,7 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
                         for i in range(len(step_decay_boundaries) + 1)]
 
                     learning_rate = tf.train.piecewise_constant(
-                        int(global_step),   # Must be int32 here.
+                        tf.to_int32(global_step),   # Must be int32 here.
                         step_decay_boundaries,
                         values)
                 else:
