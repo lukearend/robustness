@@ -34,6 +34,11 @@ tensorboard --logdir=\
 00001:/om/user/larend/models/robust/cifar10/00001,\
 00002:/om/user/larend/models/robust/cifar10/00002,\
 00003:/om/user/larend/models/robust/cifar10/00003,\
-00004:/om/user/larend/models/robust/cifar10/00004 \
+00004:/om/user/larend/models/robust/cifar10/00004,\
+00000:/om/user/larend/models/robust/cifar10-no-bn/00000,\
+00001:/om/user/larend/models/robust/cifar10-no-bn/00001,\
+00002:/om/user/larend/models/robust/cifar10-no-bn/00002,\
+00003:/om/user/larend/models/robust/cifar10-no-bn/00003,\
+00004:/om/user/larend/models/robust/cifar10-no-bn/00004 \
 --port=${1:-6050}
 fi

@@ -29,6 +29,11 @@ what's where:
             0: ssh -L 6006:dgx1:6050 larend@dgx1.mit.edu (imagenet 4)
             1: ssh -L 6007:polestar:6050 larend@polestar.mit.edu (imagenet 0,1,2,3)
 
+    tab 5: polestar cifars
+        screen -rd cifar
+            0: git pull origin master
+            1: tb.sh
+
 
 training notes:
     05-11-2018:

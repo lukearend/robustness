@@ -30,6 +30,11 @@ else
     module load openmind/singularity/older_versions/2.4
     singularity exec --nv -B /om:/om /om/user/larend/localtensorflow.img \
 tensorboard --logdir=\
+00000:/om/user/larend/models/robust/cifar10/00000,\
+00001:/om/user/larend/models/robust/cifar10/00001,\
+00002:/om/user/larend/models/robust/cifar10/00002,\
+00003:/om/user/larend/models/robust/cifar10/00003,\
+00004:/om/user/larend/models/robust/cifar10/00004,\
 00000:/om/user/larend/models/robust/cifar10-no-bn/00000,\
 00001:/om/user/larend/models/robust/cifar10-no-bn/00001,\
 00002:/om/user/larend/models/robust/cifar10-no-bn/00002,\
