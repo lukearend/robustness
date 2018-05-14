@@ -26,11 +26,11 @@ def main():
         2: (0.1, 16, True),
         3: (0.1, 32, True),
         4: (0.1, 64, True),
-        5: (0.001, 4, False),
-        6: (0.001, 8, False),
-        7: (0.001, 16, False),
-        8: (0.001, 32, False),
-        9: (0.001, 64, False)}[FLAGS.model_index]
+        5: (0.01, 4, False),
+        6: (0.01, 8, False),
+        7: (0.01, 16, False),
+        8: (0.01, 32, False),
+        9: (0.01, 64, False)}[FLAGS.model_index]
 
     base_model_dir, base_data_dir = {
         '/raid': ('/raid/poggio/home/larend/models',
@@ -44,7 +44,7 @@ def main():
     model = estimator.Estimator(
         model_dir='{}/robust/cifar10/{}'.format(base_model_dir, name),
         params={
-            'initial_learning_rate': 0.1,
+            'initial_learning_rate': initial_learning_rate,
             'learning_rate_decay_factor': 0.1,
             'epochs_to_decay': [90, 135],
             'max_epochs': 180,
