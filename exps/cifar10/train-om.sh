@@ -2,7 +2,7 @@
 #SBATCH --time=12:00:00
 #SBATCH --mem=16000
 #SBATCH --cpus-per-task=4
-#SBATCH --gres=gpu:tesla-k80:8
+#SBATCH --gres=gpu:tesla-k80:2
 #SBATCH --job-name=train
 #SBATCH --output=out/%a.out
 #SBATCH --mail-user=larend@mit.edu
