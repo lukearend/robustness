@@ -28,7 +28,7 @@ elif [ $HOSTNAME = gpu-16 ] || [ $HOSTNAME = gpu-17 ] ; then
 --port=${1:-6050}
 else
     module load openmind/singularity/older_versions/2.4
-    singularity exec --nv -B /om:/om /om/user/larend/localtensorflow.img \
+    singularity exec --nv -B /om:/om -B /cbcl:/cbcl /om/user/larend/localtensorflow.img \
 tensorboard --logdir=\
 00000:/om/user/larend/models/robust/imagenet/00000,\
 00001:/om/user/larend/models/robust/imagenet/00001,\
