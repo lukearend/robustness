@@ -1,8 +1,9 @@
 #!/bin/bash
 #SBATCH --time=12:00:00
-#SBATCH --mem=64000
+#SBATCH --mem=16000
+#SBATCH --cpus-per-task=4
 #SBATCH --gres=gpu:tesla-k80:8
-#SBATCH --job-name=bn
+#SBATCH --job-name=train
 #SBATCH --output=out/%a.out
 #SBATCH --mail-user=larend@mit.edu
 #SBATCH --mail-type=FAIL
