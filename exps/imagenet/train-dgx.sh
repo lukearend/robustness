@@ -1,5 +1,6 @@
 #!/bin/bash
 #SBATCH --time=12:00:00
+#SBATCH --cpus-per-task=80
 #SBATCH --mem=500000
 #SBATCH --job-name=train
 #SBATCH --output=out/%a.out
