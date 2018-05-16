@@ -32,7 +32,7 @@ def input_fn(mode, input_path, params, num_gpus=None,
                                                   mode,
                                                   input_path,
                                                   params,
-                                                  predict_split='validation',
+                                                  predict_split=predict_split,
                                                   imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
                                                   imagenet_train_predict_just_some=imagenet_train_predict_just_some)
             image_batch, label_batch = dataset.make_batch(params['batch_size'])
