@@ -5,16 +5,6 @@ import sys
 import time
 import argparse
 
-parser = argparse.ArgumentParser()
-parser.add_argument('--model_dir', type=str, required=True)
-parser.add_argument('--scale_factor', type=float, required=True)
-parser.add_argument('--disable_batch_norm', dest='use_batch_norm',
-                    action='store_false')
-parser.add_argument('--dataset', type=str, required=True)
-parser.add_argument('--out_dir', type=str, required=True)
-parser.add_argument('--host_filesystem', type=str, required=True)
-FLAGS = parser.parse_args()
-
 append_path = {
     '/raid': '/raid/poggio/home/larend/robust/src',
     '/om': '/om/user/larend/robust/src',
