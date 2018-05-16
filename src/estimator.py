@@ -199,15 +199,6 @@ class Estimator(object):
             split: one of 'train' or 'validation'.
             num_gpus: number of GPUs to use.
         """
-        # Configure and build the model.
-        model_fn = estimator_fns.get_model_fn(num_gpus)
-
-        config = tf.estimator.RunConfig().replace(
-            tf_random_seed=self.tf_random_seed,
-            session_config=self.session_config)
-
-        imagenet_train_predict_shuffle_seed = int(time.time())
-
         # First, loop through the dataset and read out labels.
         _, label_batch = estimator_fns.input_fn(tf.estimator.ModeKeys.PREDICT,
                                                 data_dir,
@@ -228,6 +219,15 @@ class Estimator(object):
                 except tf.errors.OutOfRangeError:
                     break
         tf.reset_default_graph()
+
+        # Configure and build the model.
+        model_fn = estimator_fns.get_model_fn(num_gpus)
+
+        config = tf.estimator.RunConfig().replace(
+            tf_random_seed=self.tf_random_seed,
+            session_config=self.session_config)
+
+        imagenet_train_predict_shuffle_seed = int(time.time())
 
         # Extract activations.
         model = tf.estimator.Estimator(model_fn=model_fn,
