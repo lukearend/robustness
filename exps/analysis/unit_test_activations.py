@@ -50,6 +50,8 @@ def main():
                 data_dir=data_dir,
                 split=split)
             t_1 = time.time()
+
+            print('accuracy: {}'.format(accuracy))
             print('time: {}'.format(t_1 - t_0))
 
             out_dir = '/cbcl/cbcl01/larend/tmp'
