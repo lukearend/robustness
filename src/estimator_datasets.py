@@ -375,7 +375,7 @@ class Cifar10DatasetImages(object):
         iterator = dataset.make_one_shot_iterator()
         image_batch, label_batch = iterator.get_next()
 
-        return images
+        return images_batch
 
     @staticmethod
     def num_examples_per_epoch(mode):
