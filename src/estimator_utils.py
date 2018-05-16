@@ -49,12 +49,12 @@ def get_dataset(dataset, mode, input_path, params, predict_split='validation',
         return estimator_datasets.Cifar10Dataset(mode,
                                               input_path,
                                               params,
-                                              predict_split='validation')
+                                              predict_split=predict_split)
     elif dataset == 'imagenet':
         return estimator_datasets.ImageNetDataset(mode,
                                                input_path,
                                                params,
-                                               predict_split='validation',
+                                               predict_split=predict_split,
                                                imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
                                                imagenet_train_predict_partial=imagenet_train_predict_partial)
     else:
