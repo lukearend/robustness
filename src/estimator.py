@@ -210,17 +210,16 @@ class Estimator(object):
                                                 predict_split=split,
                                                 imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
                                                 imagenet_train_predict_partial=True)
-        label_batch = None
         labels = None
-            while True:
-                try:
-                    labels_tmp = sess.run(label_batch)
-                    if labels is None:
-                        labels = labels_tmp
-                    else:
-                        labels = np.append(labels, labels_tmp, axis=0)
-                except tf.errors.OutOfRangeError:
-                    break
+        while True:
+            try:
+                labels_tmp = sess.run(label_batch)
+                if labels is None:
+                    labels = labels_tmp
+                else:
+                    labels = np.append(labels, labels_tmp, axis=0)
+            except tf.errors.OutOfRangeError:
+                break
         print(labels)
 
         # Extract activations.
