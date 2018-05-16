@@ -52,6 +52,7 @@ def main():
 
             results.append([np.zeros(len(perturbation_amounts)) for _ in range(2)])
             for i, perturbation_amount in enumerate([perturbation_amounts[0]]):
+                kill_mask = [None for _ in range(19)]
 
                 for j, split in enumerate(['validation', 'train']):
                     accuracy = model.robustness(
