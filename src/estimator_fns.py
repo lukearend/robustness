@@ -39,7 +39,7 @@ def input_fn(mode, input_path, params, num_gpus=None, reading_labels=False,
             if reading_labels:
                 return image_batch, label_batch
             else:
-                return image_bach, None
+                return image_batch, None
 
         elif mode in [tf.estimator.ModeKeys.TRAIN, tf.estimator.ModeKeys.EVAL]:
             # Set the batch size.
