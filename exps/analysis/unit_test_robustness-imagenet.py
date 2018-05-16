@@ -43,7 +43,7 @@ def main():
             model_dir='/cbcl/cbcl01/larend/models/robust/imagenet/00002',
             params={
                 'batch_size': 100,
-                'dataset': 'cifar10',
+                'dataset': 'imagenet',
                 'use_batch_norm': True,
                 'num_filters': num_filters},
             tf_random_seed=int(time.time()))
@@ -60,7 +60,7 @@ def main():
             for i, perturbation_amount in enumerate([perturbation_amounts[1]]):
                 kill_mask = [None for _ in range(19)]
 
-                for j, split in enumerate(['validation', 'train']):
+                for j, split in enumerate(['validation']):
                     print('split: {}'.format(split))
 
                     t_0 = time.time()
