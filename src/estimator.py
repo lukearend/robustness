@@ -255,7 +255,7 @@ class Estimator(object):
                 ###########################################
                 # FIGURE OUT HOW TO RESHAPE THESE PROPERLY.
                 layer_activations = np.array(p[layer])
-                layer_labels = np.array(labels[i])
+                layer_labels = np.array([labels[i]])
                 ###########################################
 
                 if i == 0:
