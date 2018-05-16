@@ -33,7 +33,7 @@ def main():
     for crossval in range(1):
         results = []
 
-        model = Estimator(
+        model = estimator.Estimator(
             model_dir='/cbcl/cbcl01/larend/models/robust/cifar10/00002',
             params={
                 'batch_size': 100,
