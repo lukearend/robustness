@@ -162,7 +162,7 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
 
         if mode == tf.estimator.ModeKeys.PREDICT:
             if test_robustness:
-                logits = estimator_graph.forward_pass_test(features,
+                logits = estimator_graph.forward_pass_test(features['images'],
                                                            params,
                                                            perturbation_type,
                                                            perturbation_amount,
@@ -173,7 +173,7 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
                 }
 
             else:
-                logits, activations = estimator_graph.forward_pass(features,
+                logits, activations = estimator_graph.forward_pass(features['images'],
                                                       is_training,
                                                       params)
 
