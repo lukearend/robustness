@@ -28,7 +28,8 @@ def input_fn_read_images(mode, input_path, params, num_gpus=None,
     """
     with tf.device('/cpu:0'):
         if mode == tf.estimator.ModeKeys.PREDICT:
-            dataset = estimator_datasets.Cifar10DatasetImages(mode, input_path, params)
+            dataset = estimator_datasets.RawImageDataset(mode, '/cbcl/cbcl01/larend/data/images-sorted_paths.txt', params)
+            # dataset = estimator_datasets.Cifar10DatasetImages(mode, input_path, params)
             image_batch = dataset.make_batch(params['batch_size'])
             return image_batch, None
 

@@ -383,3 +383,46 @@ class Cifar10DatasetImages(object):
         if mode == tf.estimator.ModeKeys.TRAIN:
             return 45000
         return 5000
+
+
+
+
+
+
+class RawImageDataset(object):
+    """Raw image dataset."""
+    def __init__(self, mode, image_paths_file, params):
+        self.mode = mode
+        self.image_paths_file = image_paths_file
+        self.params = params
+
+        if self.mode != tf.estimator.ModeKeys.PREDICT:
+            raise ValueError("Invalid mode: '{}'.".format(self.mode))
+
+    def parser(self, image_filename):
+        """Parse a single image filename into image Tensor."""
+        # Read the raw data from file.
+        encoded_image = tf.read_file(image_filename)
+
+        image = tf.image.decode_image(encoded_image)
+
+        # Convert from uint8 -> float32 and map onto range [0, 1].
+        image = tf.cast(image, tf.float32) * (1. / 255)
+
+        # Crop or pad as needed to 256 x 256.
+        image = tf.image.resize_image_with_crop_or_pad(image, 32, 32)
+
+        return image
+
+
+
+
+
+
+
+
+
+
+
+
+
