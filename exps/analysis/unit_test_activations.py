@@ -46,7 +46,7 @@ def main():
             print('split: {}'.format(split))
 
             t_0 = time.time()
-            model.evaluate(data_dir)
+            model.evaluate(data_dir, num_gpus=2)
             print("EVALUATION COMPLETE")
             # activations, labels, accuracy = model.activations(
             #     data_dir=data_dir,
