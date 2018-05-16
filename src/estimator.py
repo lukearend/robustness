@@ -221,7 +221,6 @@ class Estimator(object):
                         labels = np.append(labels, labels_tmp, axis=0)
                 except tf.errors.OutOfRangeError:
                     break
-        print(labels)
 
         # Extract activations.
         model_fn = estimator_fns.get_model_fn(num_gpus)
@@ -285,18 +284,7 @@ class Estimator(object):
             split: one of 'train' or 'validation'.
             num_gpus: number of GPUs to use.
         """
-        # Configure and build the model.
-        model_fn = estimator_fns.get_model_fn(
-            num_gpus,
-            test_robustness=True,
-            perturbation_type=perturbation_type,
-            perturbation_amount=perturbation_amount,
-            kill_mask=kill_mask)
-
-        config = tf.estimator.RunConfig().replace(
-            tf_random_seed=self.tf_random_seed,
-            session_config=self.session_config)
-
+        # Set seed!
         imagenet_train_predict_shuffle_seed = int(time.time())
 
         # First, loop through the dataset and read out labels.
@@ -319,6 +307,17 @@ class Estimator(object):
                     break
 
         # Test robustness.
+        model_fn = estimator_fns.get_model_fn(
+            num_gpus,
+            test_robustness=True,
+            perturbation_type=perturbation_type,
+            perturbation_amount=perturbation_amount,
+            kill_mask=kill_mask)
+
+        config = tf.estimator.RunConfig().replace(
+            tf_random_seed=self.tf_random_seed,
+            session_config=self.session_config)
+
         model = tf.estimator.Estimator(model_fn=model_fn,
                                        model_dir=self.model_dir,
                                        config=config,
@@ -329,8 +328,7 @@ class Estimator(object):
                                                num_gpus=num_gpus,
                                                predict_split=split,
                                                imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed)
-        predictions = model.predict(input_fn,
-                                    predict_keys='classes')
+        predictions = model.predict(input_fn, predict_keys='classes')
 
         # Loop through predictions and store them in a numpy array.
         predicted_labels = np.array([p['classes'] for p in predictions])

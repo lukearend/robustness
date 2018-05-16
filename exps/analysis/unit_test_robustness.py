@@ -49,7 +49,7 @@ def main():
                 2: np.linspace(0.0, 1.0, 7)}[perturbation_type]
 
             results.append([np.zeros(len(perturbation_amounts)) for _ in range(2)])
-            for i, perturbation_amount in enumerate(perturbation_amounts):
+            for i, perturbation_amount in enumerate(list(perturbation_amounts[0])):
 
                 for j, split in enumerate(['validation', 'train']):
                     accuracy = model.robustness(
