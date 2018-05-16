@@ -8,7 +8,7 @@ import argparse
 append_path = {
     '/raid': '/raid/poggio/home/larend/robust/src',
     '/om': '/om/user/larend/robust/src',
-    '/cbcl': '/cbcl/cbcl01/larend/robust/src'}[FLAGS.host_filesystem]
+    '/cbcl': '/cbcl/cbcl01/larend/robust/src'}['/cbcl']
 sys.path.append(append_path)
 import estimator
 
@@ -34,11 +34,11 @@ def main():
         results = []
 
         model = Estimator(
-            model_dir=FLAGS.model_dir,
+            model_dir='/cbcl/cbcl01/larend/models/robust/cifar10/00002',
             params={
                 'batch_size': 100,
-                'dataset': FLAGS.dataset,
-                'use_batch_norm': FLAGS.use_batch_norm,
+                'dataset': 'cifar10',
+                'use_batch_norm': True,
                 'num_filters': num_filters},
             tf_random_seed=int(time.time()))
 
@@ -61,10 +61,11 @@ def main():
 
                     results[k][j][i] = accuracy
 
-        if not os.path.exists(FLAGS.out_dir):
-            os.makedirs(FLAGS.out_dir)
+        out_dir = '/cbcl/cbcl01/larend/tmp'
+        if not os.path.exists(out_dir):
+            os.makedirs(out_dir)
 
-        with open(os.path.join(FLAGS.out_dir, 'robustness{}.pkl'.format(crossval)), 'wb') as f:
+        with open(os.path.join(out_dir, 'robustness{}.pkl'.format(crossval)), 'wb') as f:
             pickle.dump(results, f, protocol=pickle.HIGHEST_PROTOCOL)
 
         tf.reset_default_graph()
