@@ -110,9 +110,9 @@ class ImageNetDataset(object):
                 # to do this a more extensive implementation.
                 dataset = dataset.shuffle(buffer_size=1281167,
                                           seed=self.imagenet_train_predict_shuffle_seed)
-                    # IMPORTANT (and sketchy): assume batch size 100
-                    # so this is divided evenly by the batches.
-                    dataset = dataset.take(50000)
+                # IMPORTANT (and sketchy): assume batch size 100
+                # so this is divided evenly by the batches.
+                dataset = dataset.take(50000)
             else:
                 # IMPORTANT (and sketchy): assume batch size 100
                 # so this is divided evenly by the batches.
