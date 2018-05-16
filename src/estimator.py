@@ -253,7 +253,7 @@ class Estimator(object):
             for layer in range(num_layers):
                 ###########################################
                 # FIGURE OUT HOW TO RESHAPE THESE PROPERLY.
-                # layer_activations = np.array(p[layer])
+                layer_activations = np.array(p[layer])
                 layer_activations = np.zeros((2,2,2))
                 layer_labels = np.array([labels[i]])
                 ###########################################
@@ -265,7 +265,7 @@ class Estimator(object):
                     activations_out[layer] = np.append(activations_out[layer], layer_activations, axis=0)
                     labels_out[layer] = np.append(labels_out[layer], layer_labels, axis=0)
 
-        accuracy = np.mean(np.equals(labels, predicted_labels))
+        accuracy = np.mean(np.equal(labels, predicted_labels))
 
         return activations, labels, accuracy
 
