@@ -414,6 +414,24 @@ class RawImageDataset(object):
 
         return image
 
+    def make_batch(self, batch_size):
+        """Make a batch of images."""
+        # Expects image_paths_file to contain one image path per line, e.g.:
+        #   /path/to/image-1
+        #   /path/to/image-2
+        dataset = tf.contrib.data.TextLineDataset(self.image_paths_file)
+        dataset = dataset.map(self.parser,
+                              num_threads=batch_size,
+                              output_buffer_size=2 * batch_size)
+
+        # Batch it up.
+        dataset = dataset.batch(batch_size)
+        dataset = dataset.repeat(1)
+        iterator = dataset.make_one_shot_iterator()
+        image_batch = iterator.get_next()
+
+        return image_batch
+
 
 
 
