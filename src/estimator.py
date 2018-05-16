@@ -202,52 +202,51 @@ class Estimator(object):
         # Set seed!
         imagenet_train_predict_shuffle_seed = int(time.time())
 
-        g_1 = tf.Graph()
-        with g_1.as_default():
+        # g_1 = tf.Graph()
+        # with g_1.as_default():
             # First, loop through the dataset and read out labels.
-            _, label_batch = estimator_fns.input_fn(tf.estimator.ModeKeys.PREDICT,
-                                                    data_dir,
-                                                    self.params,
-                                                    reading_labels=True,
-                                                    predict_split=split,
-                                                    imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
-                                                    imagenet_train_predict_partial=True)
-            labels = None
-            with tf.Session() as sess:
-                while True:
-                    try:
-                        labels_tmp = sess.run(label_batch)
-                        if labels is None:
-                            labels = labels_tmp
-                        else:
-                            labels = np.append(labels, labels_tmp, axis=0)
-                    except tf.errors.OutOfRangeError:
-                        break
+        label_batch = estimator_fns.input_fn_read_labels(tf.estimator.ModeKeys.PREDICT,
+                                                data_dir,
+                                                self.params,
+                                                reading_labels=True,
+                                                predict_split=split,
+                                                imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
+                                                imagenet_train_predict_partial=True)
+        labels = None
+        with tf.Session() as sess:
+            while True:
+                try:
+                    labels_tmp = sess.run(label_batch)
+                    if labels is None:
+                        labels = labels_tmp
+                    else:
+                        labels = np.append(labels, labels_tmp, axis=0)
+                except tf.errors.OutOfRangeError:
+                    break
 
-
-        g_2 = tf.Graph()
-        with g_2.as_default():
+        # g_2 = tf.Graph()
+        # with g_2.as_default():
             # Configure and build the model.
-            model_fn = estimator_fns.get_model_fn(num_gpus)
+        model_fn = estimator_fns.get_model_fn(num_gpus)
 
-            config = tf.estimator.RunConfig().replace(
-                tf_random_seed=self.tf_random_seed,
-                session_config=self.session_config)
+        config = tf.estimator.RunConfig().replace(
+            tf_random_seed=self.tf_random_seed,
+            session_config=self.session_config)
 
-            # Extract activations.
-            model = tf.estimator.Estimator(model_fn=model_fn,
-                                           model_dir=self.model_dir,
-                                           config=config,
-                                           params=self.params)
-            input_fn = lambda: estimator_fns.input_fn(tf.estimator.ModeKeys.PREDICT,
-                                                   data_dir,
-                                                   self.params,
-                                                   num_gpus=num_gpus,
-                                                   predict_split=split,
-                                                   imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
-                                                   imagenet_train_predict_partial=True)
-            predictions = model.predict(input_fn,
-                                        predict_keys=['classes', 'activations'])
+        # Extract activations.
+        model = tf.estimator.Estimator(model_fn=model_fn,
+                                       model_dir=self.model_dir,
+                                       config=config,
+                                       params=self.params)
+        input_fn = lambda: estimator_fns.input_fn(tf.estimator.ModeKeys.PREDICT,
+                                               data_dir,
+                                               self.params,
+                                               num_gpus=num_gpus,
+                                               predict_split=split,
+                                               imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
+                                               imagenet_train_predict_partial=True)
+        predictions = model.predict(input_fn,
+                                    predict_keys=['classes', 'activations'])
 
         print('predict step completed')
         print(predictions)
