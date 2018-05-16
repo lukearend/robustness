@@ -187,7 +187,7 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
                 predictions = {
                     'classes': tf.argmax(logits, axis=1),
                 }
-                for layer, layer_activation in enumerate(activations):
+                for layer, layer_activations in enumerate(activations):
                     predictions[layer] = layer_activations
 
             return tf.estimator.EstimatorSpec(
