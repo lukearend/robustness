@@ -252,6 +252,10 @@ class Estimator(object):
         print('predict step completed')
         print(predictions)
 
+        with tf.Session() as sess:
+            res = sess.run(next(predictions))
+            print(res)
+
         # Loop through predictions and store them in a numpy array.
         predicted_labels = np.zeros(np.shape(labels))
         for i, p in enumerate(predictions):
