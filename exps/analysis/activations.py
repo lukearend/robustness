@@ -44,7 +44,7 @@ def main():
         'imagenet': '/om/user/larend/data/imagenet-tfrecords'}[FLAGS.dataset]
 
     for crossval in range(3):
-        model = Estimator(
+        model = estimator.Estimator(
             model_dir=FLAGS.model_dir,
             params={
                 'batch_size': 100,
