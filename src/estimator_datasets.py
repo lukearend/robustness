@@ -115,7 +115,8 @@ class ImageNetDataset(object):
                     random.seed(self.imagenet_train_predict_shuffle_seed)
                     skip_examples = random.randint(0, 1251)
                     dataset = dataset.skip(skip_examples)
-                    # Continue shuffling.
+                    # Continue shuffling amongst at least as many examples
+                    # as it could see in 3 cross validations.
                     dataset.shuffle(buffer_size=3 * MAX_EXAMPLES,
                                     seed=self.imagenet_train_predict_shuffle_seed)
                     num_examples = MAX_EXAMPLES

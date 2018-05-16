@@ -239,7 +239,8 @@ class Estimator(object):
                                                predict_split=split,
                                                imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
                                                imagenet_train_predict_partial=True)
-        predictions = model.predict(input_fn=input_fn)
+        predictions = model.predict(input_fn,
+                                    predict_keys=['classes', 'activations'])
 
         # Loop through predictions and store them in a numpy array.
         predicted_labels = np.zeros(np.shape(labels))
@@ -327,7 +328,7 @@ class Estimator(object):
                                                num_gpus=num_gpus,
                                                predict_split=split,
                                                imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed)
-        predictions = model.predict(input_fn=input_fn,
+        predictions = model.predict(input_fn,
                                     predict_keys='classes')
 
         # Loop through predictions and store them in a numpy array.
