@@ -25,7 +25,7 @@ def main():
         'cifar10': '/om/user/larend/data/cifar-10-tfrecords',
         'imagenet': '/om/user/larend/data/imagenet-tfrecords'}['cifar10']
 
-    for crossval in range(0):
+    for crossval in range(1):
         model = Estimator(
             model_dir='/cbcl/cbcl01/larend/models/robust/cifar10/00002',
             params={
