@@ -199,6 +199,9 @@ class Estimator(object):
             split: one of 'train' or 'validation'.
             num_gpus: number of GPUs to use.
         """
+        # Set seed!
+        imagenet_train_predict_shuffle_seed = int(time.time())
+
         # First, loop through the dataset and read out labels.
         _, label_batch = estimator_fns.input_fn(tf.estimator.ModeKeys.PREDICT,
                                                 data_dir,
@@ -226,8 +229,6 @@ class Estimator(object):
         config = tf.estimator.RunConfig().replace(
             tf_random_seed=self.tf_random_seed,
             session_config=self.session_config)
-
-        imagenet_train_predict_shuffle_seed = int(time.time())
 
         # Extract activations.
         model = tf.estimator.Estimator(model_fn=model_fn,
