@@ -180,9 +180,10 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
                 }
 
             else:
-                logits, activations = estimator_graph.forward_pass(features,
-                                                      is_training,
-                                                      params)
+                with tf.variable_scope('estimator'):
+                    logits, activations = estimator_graph.forward_pass(features,
+                                                          is_training,
+                                                          params)
 
                 predictions = {
                     'classes': tf.argmax(logits, axis=1),
