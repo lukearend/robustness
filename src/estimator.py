@@ -203,7 +203,7 @@ class Estimator(object):
         imagenet_train_predict_shuffle_seed = int(time.time())
 
         g_1 = tf.Graph()
-        with g_1.asdefault():
+        with g_1.as_default():
             # First, loop through the dataset and read out labels.
             _, label_batch = estimator_fns.input_fn(tf.estimator.ModeKeys.PREDICT,
                                                     data_dir,
@@ -226,7 +226,7 @@ class Estimator(object):
 
 
         g_2 = tf.Graph()
-        with g_2.asdefault():
+        with g_2.as_default():
             # Configure and build the model.
             model_fn = estimator_fns.get_model_fn(num_gpus)
 
