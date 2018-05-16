@@ -4,6 +4,7 @@ import os
 import sys
 import time
 import argparse
+import pickle
 
 import numpy as np
 
@@ -33,6 +34,7 @@ def main():
         'imagenet': '{}/imagenet-tfrecords'.format(base_data_dir)}['cifar10']
 
     for crossval in range(1):
+        print('crossval: {}'.format(crossval))
         results = []
 
         model = estimator.Estimator(
@@ -45,6 +47,8 @@ def main():
             tf_random_seed=int(time.time()))
 
         for k, perturbation_type in enumerate([0]):
+            print('perturbation: {}'.format(perturbation_type))
+
             perturbation_amounts = {
                 0: np.linspace(0.0, 1.0, 7),
                 1: np.linspace(0.0, 1.0, 7),
@@ -55,12 +59,19 @@ def main():
                 kill_mask = [None for _ in range(19)]
 
                 for j, split in enumerate(['validation', 'train']):
+                    print('split: {}'.format(split))
+
+                    t_0 = time.time()
                     accuracy = model.robustness(
                         perturbation_type,
                         perturbation_amount,
                         kill_mask,
                         data_dir=data_dir,
                         split=split)
+                    t_1 = time.time()
+
+                    print('accuracy: {}'.format(accuracy))
+                    print('time: {}'.format(t_1 - t_0))
 
                     results[k][j][i] = accuracy
 

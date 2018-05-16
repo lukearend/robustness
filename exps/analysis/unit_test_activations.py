@@ -4,6 +4,7 @@ import os
 import sys
 import time
 import argparse
+import pickle
 
 append_path = {
     '/raid': '/raid/poggio/home/larend/robust/src',
