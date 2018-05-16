@@ -202,7 +202,7 @@ class Estimator(object):
         # Set seed!
         imagenet_train_predict_shuffle_seed = int(time.time())
 
-        First, loop through the dataset and read out labels.
+        # First, loop through the dataset and read out labels.
         label_batch = estimator_fns.input_fn(tf.estimator.ModeKeys.PREDICT,
                                                 data_dir,
                                                 self.params,
