@@ -249,10 +249,6 @@ class Estimator(object):
         predictions = model.predict(input_fn,
                                     predict_keys=['classes', 'activations'])
 
-        with tf.Session() as sess:
-            res = sess.run(predictions)
-        print(res)
-
         print('predict step completed')
         print(predictions)
 
