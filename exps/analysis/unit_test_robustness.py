@@ -5,6 +5,8 @@ import sys
 import time
 import argparse
 
+import numpy as np
+
 append_path = {
     '/raid': '/raid/poggio/home/larend/robust/src',
     '/om': '/om/user/larend/robust/src',

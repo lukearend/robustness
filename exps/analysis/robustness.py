@@ -5,6 +5,8 @@ import sys
 import time
 import argparse
 
+import numpy as np
+
 parser = argparse.ArgumentParser()
 parser.add_argument('--model_dir', type=str, required=True)
 parser.add_argument('--scale_factor', type=float, required=True)
