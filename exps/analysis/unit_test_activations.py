@@ -26,6 +26,8 @@ def main():
         'imagenet': '/om/user/larend/data/imagenet-tfrecords'}['cifar10']
 
     for crossval in range(1):
+        print('crossval: {}'.format(crossval))
+
         model = estimator.Estimator(
             model_dir='/cbcl/cbcl01/larend/models/robust/cifar10/00002',
             params={
@@ -36,9 +38,14 @@ def main():
             tf_random_seed=int(time.time()))
 
         for split in ['validation']:
+            print('split: {}'.format(split))
+
+            t_0 = time.time()
             activations, labels, accuracy = model.activations(
                 data_dir=data_dir,
                 split=split)
+            t_1 = time.time()
+            print('time: {}'.format(t_1 - t_0))
 
             out_dir = '/cbcl/cbcl01/larend/tmp'
             if not os.path.exists(out_dir):
@@ -54,6 +61,8 @@ def main():
                 pickle.dump(accuracy, f, protocol=pickle.HIGHEST_PROTOCOL)
 
         tf.reset_default_graph()
+
+    print('done :)')
 
 
 if __name__ == '__main__':

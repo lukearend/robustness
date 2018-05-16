@@ -200,7 +200,7 @@ class Estimator(object):
             num_gpus: number of GPUs to use.
         """
         # Configure and build the model.
-        model_fn = estimator_funs.get_model_fn(num_gpus)
+        model_fn = estimator_fns.get_model_fn(num_gpus)
 
         config = tf.estimator.RunConfig().replace(
             tf_random_seed=self.tf_random_seed,
@@ -285,7 +285,7 @@ class Estimator(object):
             num_gpus: number of GPUs to use.
         """
         # Configure and build the model.
-        model_fn = estimator_funs.get_model_fn(
+        model_fn = estimator_fns.get_model_fn(
             num_gpus,
             test_robustness=True,
             perturbation_type=perturbation_type,
