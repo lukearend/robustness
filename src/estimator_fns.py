@@ -10,7 +10,9 @@ import estimator_datasets
 import estimator_graph
 
 
-def input_fn(mode, input_path, params, num_gpus=None):
+def input_fn(mode, input_path, params, num_gpus=None,
+             predict_split='validation', imagenet_train_predict_shuffle_seed=None,
+             imagenet_train_predict_just_some=False):
     """Create input graph for model.
 
     Args:
@@ -26,9 +28,15 @@ def input_fn(mode, input_path, params, num_gpus=None):
     """
     with tf.device('/cpu:0'):
         if mode == tf.estimator.ModeKeys.PREDICT:
-            dataset = estimator_datasets.RawImageDataset(mode, input_path, params)
-            image_batch = dataset.make_batch(params['batch_size'])
-            return image_batch, None
+            dataset = estimator_utils.get_dataset(params['dataset'],
+                                                  mode,
+                                                  input_path,
+                                                  params,
+                                                  predict_split='validation',
+                                                  imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
+                                                  imagenet_train_predict_just_some=imagenet_train_predict_just_some)
+            image_batch, label_batch = dataset.make_batch(params['batch_size'])
+            return image_batch, label_batch
 
         elif mode in [tf.estimator.ModeKeys.TRAIN, tf.estimator.ModeKeys.EVAL]:
             # Set the batch size.
@@ -79,7 +87,11 @@ def input_fn(mode, input_path, params, num_gpus=None):
 
 
 def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
-                 keep_checkpoint_every_n_hours=2):
+                 keep_checkpoint_every_n_hours=2,
+                 test_robustness=False,
+                 perturbation_type=None,
+                 perturbation_amount=None,
+                 kill_mask=None):
     """Returns a function that will build the estimator.
 
     Args:
@@ -95,6 +107,10 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
                              training.
         keep_checkpoint_every_n_hours: how frequently to keep a
                                        checkpoint permanently.
+        test_robustness: whether to build and use the graph for testing
+                         robustness.
+        perturbation_type, perturbation_amount, kill_mask:
+            settings for testing robustness.
 
     Returns:
         The estimator model_fn.
@@ -116,14 +132,26 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
         is_training = (mode == tf.estimator.ModeKeys.TRAIN)
 
         if mode == tf.estimator.ModeKeys.PREDICT:
-            logits = estimator_graph.forward_pass(features,
-                                                  is_training,
-                                                  params)
+            if test_robustness:
+                logits = estimator_graph.forward_pass_test(features,
+                                                           params,
+                                                           perturbation_type,
+                                                           perturbation_amount,
+                                                           kill_mask)
 
-            predictions = {
-                'classes': tf.argmax(logits, axis=1),
-                'probabilities': tf.nn.softmax(logits),
-            }
+                predictions = {
+                    'classes': tf.argmax(logits, axis=1)
+                }
+
+            else:
+                logits, activations = estimator_graph.forward_pass(features,
+                                                      is_training,
+                                                      params)
+
+                predictions = {
+                    'classes': tf.argmax(logits, axis=1),
+                    'activations': activations
+                }
 
             return tf.estimator.EstimatorSpec(
                 mode=mode,
@@ -335,7 +363,7 @@ def _tower_fn(features, labels, is_training, params):
         predictions: unscaled logit predictions.
         weight_loss: total loss from L2 penalty on model weights.
     """
-    logits = estimator_graph.forward_pass(features,
+    logits, _ = estimator_graph.forward_pass(features,
                                           is_training,
                                           params)
 

@@ -7,57 +7,6 @@ import tensorflow as tf
 import estimator_utils
 
 
-class RawImageDataset(object):
-    """Raw image dataset."""
-    def __init__(self, mode, image_paths_file, params):
-        self.mode = mode
-        self.image_paths_file = image_paths_file
-        self.params = params
-
-        if self.mode != tf.estimator.ModeKeys.PREDICT:
-            raise ValueError("Invalid mode: '{}'.".format(self.mode))
-
-    def parser(self, image_filename):
-        """Parse a single image filename into image Tensor."""
-        # Read the raw data from file.
-        encoded_image = tf.read_file(image_filename)
-
-        image = tf.image.decode_image(encoded_image)
-
-        # Convert from uint8 -> float32 and map onto range [0, 1].
-        image = tf.cast(image, tf.float32) * (1. / 255)
-
-        # Crop or pad as needed to 256 x 256.
-        image = tf.image.resize_image_with_crop_or_pad(image, 256, 256)
-
-        # Subtract mean ImageNet activations.
-        mean_imagenet_rgb = estimator_utils.get_mean_imagenet_rgb()
-        image = image - mean_imagenet_rgb
-
-        # Take a central 224 x 224 crop.
-        image = tf.image.resize_image_with_crop_or_pad(image, 224, 224)
-
-        return image
-
-    def make_batch(self, batch_size):
-        """Make a batch of images."""
-        # Expects image_paths_file to contain one image path per line, e.g.:
-        #   /path/to/image-1
-        #   /path/to/image-2
-        dataset = tf.contrib.data.TextLineDataset(self.image_paths_file)
-        dataset = dataset.map(self.parser,
-                              num_threads=batch_size,
-                              output_buffer_size=2 * batch_size)
-
-        # Batch it up.
-        dataset = dataset.batch(batch_size)
-        dataset = dataset.repeat(1)
-        iterator = dataset.make_one_shot_iterator()
-        image_batch = iterator.get_next()
-
-        return image_batch
-
-
 class ImageNetDataset(object):
     """ImageNet dataset.
 
@@ -67,14 +16,14 @@ class ImageNetDataset(object):
     WIDTH = 256
     DEPTH = 3
 
-    def __init__(self, mode, data_dir, params):
+    def __init__(self, mode, data_dir, params, predict_split='validation',
+                 imagenet_train_predict_shuffle_seed=None,
+                 imagenet_train_predict_just_some=False):
         self.mode = mode
         self.data_dir = data_dir
         self.params = params
-
-        if self.mode not in [tf.estimator.ModeKeys.TRAIN,
-                             tf.estimator.ModeKeys.EVAL]:
-            raise ValueError("Invalid mode: '{}'.".format(self.mode))
+        self.predict_split = predict_split
+        self.imagenet_train_predict_shuffle_seed = imagenet_train_predict_shuffle_seed
 
     def get_filenames(self):
         """Get names of data files."""
@@ -82,8 +31,13 @@ class ImageNetDataset(object):
             lookup_name = 'train'
         elif self.mode == tf.estimator.ModeKeys.EVAL:
             lookup_name = 'validation'
+        elif self.mode == tf.estimator.ModeKeys.PREDICT:
+            lookup_name = self.predict_split
         filenames = tf.gfile.Glob(
             os.path.join(self.data_dir, '{}-*-of-*'.format(lookup_name)))
+        if self.mode == tf.estimator.ModeKeys.PREDICT and self.imagenet_train_predict_shuffle_seed is not None:
+            # Sort so that TFRecords will be read out deterministically.
+            filenames = sorted(filenames)
         return filenames
 
     def parser(self, serialized_example):
@@ -149,6 +103,21 @@ class ImageNetDataset(object):
         if self.mode == tf.estimator.ModeKeys.TRAIN:
             dataset = dataset.shuffle(buffer_size=50000 + 3 * batch_size)
             dataset = dataset.repeat(-1)
+        elif self.mode == tf.estimator.ModeKeys.PREDICT and self.predict_split == 'train':
+            if self.imagenet_train_predict_just_some:
+                # Shuffle the whole ImageNet in memory and take 50000.
+                # Requires several hundred GB of memory, but the easiest way
+                # to do this a more extensive implementation.
+                dataset = dataset.shuffle(buffer_size=1281167,
+                                          seed=self.imagenet_train_predict_shuffle_seed)
+                    # IMPORTANT (and sketchy): assume batch size 100
+                    # so this is divided evenly by the batches.
+                    dataset = dataset.take(50000)
+            else:
+                # IMPORTANT (and sketchy): assume batch size 100
+                # so this is divided evenly by the batches.
+                dataset = dataset.take(1281100)
+            dataset = dataset.repeat(1)
         else:
             dataset = dataset.repeat(1)
 
@@ -176,14 +145,11 @@ class Cifar10Dataset(object):
     WIDTH = 32
     DEPTH = 3
 
-    def __init__(self, mode, data_dir, params):
+    def __init__(self, mode, data_dir, params, predict_split='validation'):
         self.mode = mode
         self.data_dir = data_dir
         self.params = params
-
-        if self.mode not in [tf.estimator.ModeKeys.TRAIN,
-                             tf.estimator.ModeKeys.EVAL]:
-            raise ValueError("Invalid mode: '{}'.".format(self.mode))
+        self.predict_split = predict_split
 
     def get_filenames(self):
         """Get names of data files."""
@@ -191,8 +157,13 @@ class Cifar10Dataset(object):
             lookup_name = 'train'
         elif self.mode == tf.estimator.ModeKeys.EVAL:
             lookup_name = 'validation'
+        elif self.mode == tf.estimator.ModeKeys.PREDICT:
+            lookup_name = self.predict_split
         filenames = tf.gfile.Glob(
             os.path.join(self.data_dir, '{}-*-of-*'.format(lookup_name)))
+        if tf.estimator.ModeKeys.PREDICT:
+            # Sort so that TFRecords will be read out deterministically.
+            filenames = sorted(filenames)
         return filenames
 
     def parser(self, serialized_example):
@@ -265,90 +236,3 @@ class Cifar10Dataset(object):
         if mode == tf.estimator.ModeKeys.TRAIN:
             return 45000
         return 5000
-
-
-class MNISTDataset(object):
-    """MNIST dataset.
-
-    Described at http://yann.lecun.com/exdb/mnist/.
-    """
-    HEIGHT = 28
-    WIDTH = 28
-    DEPTH = 1
-
-    def __init__(self, mode, data_dir, params):
-        self.mode = mode
-        self.data_dir = data_dir
-        self.params = params
-
-    def get_filenames(self):
-        """Get names of data files."""
-        if self.mode == tf.estimator.ModeKeys.TRAIN:
-            return os.path.join(self.data_dir, 'train.tfrecords')
-        elif self.mode == tf.estimator.ModeKeys.EVAL:
-            return os.path.join(self.data_dir, 'validation.tfrecords')
-        return os.path.join(self.data_dir, 'test.tfrecords')
-
-    def parser(self, serialized_example):
-        """Parse a single tf.Example into image and label Tensors."""
-        features = {
-            'height': tf.FixedLenFeature([], tf.int64),
-            'width': tf.FixedLenFeature([], tf.int64),
-            'depth': tf.FixedLenFeature([], tf.int64),
-            'label': tf.FixedLenFeature([], tf.int64),
-            'image_raw': tf.FixedLenFeature([], tf.string)}
-        parsed_features = tf.parse_single_example(serialized_example, features)
-
-        # Get label as a Tensor.
-        label = parsed_features['image/class/label']
-
-        # Decode the image string into [h, w, 1] Tensor.
-        image = tf.decode_raw(parsed_features['image_raw'], tf.uint8)
-        image = tf.expand_dims(tf.reshape(image, [self.HEIGHT, self.WIDTH]), 2)
-
-        # Convert from uint8 -> float32 and map onto range [0, 1].
-        image = tf.cast(image, tf.float32) * (1. / 255)
-
-        # Standardize image.
-        image = tf.image.per_image_standardization(image)
-
-        # Apply data augmentation.
-        if (self.mode == tf.estimator.ModeKeys.TRAIN
-            and self.params['train_with_distortion']):
-            image = tf.image.random_flip_left_right(image)
-
-        # Resize to 224 x 224.
-        image = tf.image.resize_images(image, (224, 224))
-
-        return image, label
-
-    def make_batch(self, batch_size):
-        """Make a batch of images and labels."""
-        filenames = self.get_filenames()
-        dataset = tf.contrib.data.TFRecordDataset(filenames)
-
-        # Parse records.
-        dataset = dataset.map(self.parser)
-
-        # If training, shuffle and repeat indefinitely.
-        if self.mode == tf.estimator.ModeKeys.TRAIN:
-            dataset = dataset.shuffle(buffer_size=1000 + 3 * batch_size)
-            dataset = dataset.repeat(-1)
-        else:
-            dataset = dataset.repeat(1)
-
-        # Batch it up.
-        dataset = dataset.batch(batch_size)
-        iterator = dataset.make_one_shot_iterator()
-        image_batch, label_batch = iterator.get_next()
-
-        return image_batch, label_batch
-
-    @staticmethod
-    def num_examples_per_epoch(mode):
-        """Stores constants about this dataset."""
-        if mode == tf.estimator.ModeKeys.TRAIN:
-            return 55000
-        elif mode == tf.estimator.ModeKeys.EVAL:
-            return 5000
-        return 10000

@@ -41,28 +41,28 @@ def get_mean_imagenet_rgb():
 
 
 # Utils for estimator_graph.
-def get_dataset(dataset, mode, input_path, params):
+def get_dataset(dataset, mode, input_path, params, predict_split='validation',
+                imagenet_train_predict_shuffle_seed=None,
+                imagenet_train_predict_just_some=False):
     """Get a dataset based on name."""
-    if dataset == 'mnist':
-        return estimator_datasets.MNISTDataset(mode,
-                                            input_path,
-                                            params)
-    elif dataset == 'cifar10':
+    if dataset == 'cifar10':
         return estimator_datasets.Cifar10Dataset(mode,
                                               input_path,
-                                              params)
+                                              params,
+                                              predict_split='validation')
     elif dataset == 'imagenet':
         return estimator_datasets.ImageNetDataset(mode,
                                                input_path,
-                                               params)
+                                               params,
+                                               predict_split='validation',
+                                               imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
+                                               imagenet_train_predict_just_some=imagenet_train_predict_just_some)
     else:
         raise ValueError("Dataset '{}' not recognized.".format(dataset))
 
 def get_num_examples_per_epoch(dataset, mode):
     """Get number of examples per epoch for some dataset and mode."""
-    if dataset == 'mnist':
-        return estimator_datasets.MNISTDataset.num_examples_per_epoch(mode)
-    elif dataset == 'cifar10':
+    if dataset == 'cifar10':
         return estimator_datasets.Cifar10Dataset.num_examples_per_epoch(mode)
     elif dataset == 'imagenet':
         return estimator_datasets.ImageNetDataset.num_examples_per_epoch(mode)

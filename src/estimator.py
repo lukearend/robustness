@@ -1,6 +1,9 @@
 """A wrapper class for the model."""
 
 import os
+import time
+
+import numpy as np
 
 import tensorflow as tf
 
@@ -181,11 +184,155 @@ class Estimator(object):
                                        config=config,
                                        params=self.params)
 
-        # Configure evaluation.
         input_fn = lambda: estimator_fns.input_fn(tf.estimator.ModeKeys.EVAL,
                                                data_dir,
                                                self.params,
                                                num_gpus)
 
-        # Evaluate the model.
         model.evaluate(input_fn=input_fn)
+
+    def activations(self, data_dir='/tmp', split='train', num_gpus=1):
+        """Extract activations to a dataset.
+
+        Args:
+            data_dir: directory in which to look for validation data.
+            split: one of 'train' or 'validation'.
+            num_gpus: number of GPUs to use.
+        """
+        # Configure and build the model.
+        model_fn = estimator_funs.get_model_fn(num_gpus)
+
+        config = tf.estimator.RunConfig().replace(
+            tf_random_seed=self.tf_random_seed,
+            session_config=self.session_config)
+
+        imagenet_train_predict_shuffle_seed = int(time.time())
+
+        # First, loop through the dataset and read out labels.
+        _, label_batch = estimator_fns.input_fn(tf.estimator.ModeKeys.PREDICT,
+                                                data_dir,
+                                                self.params,
+                                                predict_split=split,
+                                                imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
+                                                imagenet_train_predict_just_some=True)
+        labels = None
+        with tf.Session() as sess:
+            while True:
+                try:
+                    labels_tmp = sess.run(label_batch)
+                    if labels is None:
+                        labels = labels_tmp
+                    else:
+                        labels = np.append(labels, labels_tmp, axis=0)
+                except tf.errors.OutOfRangeError:
+                    break
+
+        # Extract activations.
+        model = tf.estimator.Estimator(model_fn=model_fn,
+                                       model_dir=self.model_dir,
+                                       config=config,
+                                       params=self.params)
+        input_fn = lambda: estimator_fns.input_fn(tf.estimator.ModeKeys.PREDICT,
+                                               data_dir,
+                                               self.params,
+                                               num_gpus=num_gpus,
+                                               predict_split=split,
+                                               imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
+                                               imagenet_train_predict_just_some=True)
+        predictions = model.predict(input_fn=input_fn)
+
+        # Loop through predictions and store them in a numpy array.
+        predicted_labels = np.zeros(np.shape(labels))
+        for i, p in enumerate(predictions):
+            predicted_labels[i] = p['classes']
+            if i == 0:
+                num_layers = len(p['activations'])
+                activations_out = list(range(num_layers))
+                labels_out = list(range(num_layers))
+
+            for layer in range(num_layers):
+                ###########################################
+                # FIGURE OUT HOW TO RESHAPE THESE PROPERLY.
+                layer_activations = np.array(p['activations'][layer])
+                layer_labels = np.array(labels[i])
+                ###########################################
+
+                if i == 0:
+                    activations_out[layer] = layer_activations
+                    labels_out[layer] = layer_labels
+                else:
+                    activations_out[layer] = np.append(activations_out[layer], layer_activations, axis=0)
+                    labels_out[layer] = np.append(labels_out[layer], layer_labels, axis=0)
+
+        accuracy = np.mean(np.equals(labels, predicted_labels))
+
+        return activations, labels, accuracy
+
+    def robustness(self,
+        perturbation_type,
+        perturbation_amount,
+        kill_mask,
+        data_dir='/tmp',
+        split='train',
+        num_gpus=1):
+        """Test robustness of a model.
+
+        Args:
+            perturbation_type, perturbation_amount, kill_mask:
+                settings for testing robustness.
+            data_dir: directory in which to look for validation data.
+            split: one of 'train' or 'validation'.
+            num_gpus: number of GPUs to use.
+        """
+        # Configure and build the model.
+        model_fn = estimator_funs.get_model_fn(
+            num_gpus,
+            test_robustness=True,
+            perturbation_type=perturbation_type,
+            perturbation_amount=perturbation_amount,
+            kill_mask=kill_mask)
+
+        config = tf.estimator.RunConfig().replace(
+            tf_random_seed=self.tf_random_seed,
+            session_config=self.session_config)
+
+        imagenet_train_predict_shuffle_seed = int(time.time())
+
+        # First, loop through the dataset and read out labels.
+        _, label_batch = estimator_fns.input_fn(tf.estimator.ModeKeys.PREDICT,
+                                                data_dir,
+                                                self.params,
+                                                predict_split=split,
+                                                imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed)
+        labels = None
+        with tf.Session() as sess:
+            while True:
+                try:
+                    labels_tmp = sess.run(label_batch)
+                    if labels is None:
+                        labels = labels_tmp
+                    else:
+                        labels = np.append(labels, labels_tmp, axis=0)
+                except tf.errors.OutOfRangeError:
+                    break
+
+        # Test robustness.
+        model = tf.estimator.Estimator(model_fn=model_fn,
+                                       model_dir=self.model_dir,
+                                       config=config,
+                                       params=self.params)
+        input_fn = lambda: estimator_fns.input_fn(tf.estimator.ModeKeys.PREDICT,
+                                               data_dir,
+                                               self.params,
+                                               num_gpus=num_gpus,
+                                               predict_split=split,
+                                               imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed)
+        predictions = model.predict(input_fn=input_fn,
+                                    predict_keys='classes')
+
+        # Loop through predictions and store them in a numpy array.
+        predicted_labels = np.array([p['classes'] for p in predictions])
+
+        accuracy = np.mean(np.equals(labels, predicted_labels))
+
+        return accuracy

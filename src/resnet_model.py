@@ -100,7 +100,7 @@ def conv2d_fixed_padding(inputs, filters, kernel_size, strides, data_format):
 # ResNet block definitions.
 ################################################################################
 def _building_block_v1(inputs, filters, use_batch_norm, training,
-                       projection_shortcut, strides, data_format):
+                       projection_shortcut, strides, data_format, activations):
   """A single block for ResNet v1, without a bottleneck.
 
   Convolution then batch normalization then ReLU as described by:
@@ -121,6 +121,8 @@ def _building_block_v1(inputs, filters, use_batch_norm, training,
       downsample the input.
     data_format: The input format ('channels_last' or 'channels_first').
 
+    activations: list to append activations to.
+
   Returns:
     The output tensor of the block; shape should match inputs.
   """
@@ -139,6 +141,8 @@ def _building_block_v1(inputs, filters, use_batch_norm, training,
     inputs = batch_norm(inputs, training, data_format)
   inputs = tf.nn.relu(inputs)
 
+  activations.append(inputs)
+
   inputs = conv2d_fixed_padding(
       inputs=inputs, filters=filters, kernel_size=3, strides=1,
       data_format=data_format)
@@ -146,6 +150,8 @@ def _building_block_v1(inputs, filters, use_batch_norm, training,
     inputs = batch_norm(inputs, training, data_format)
   inputs += shortcut
   inputs = tf.nn.relu(inputs)
+
+  activations.append(inputs)
 
   return inputs
 
@@ -324,7 +330,7 @@ def _bottleneck_block_v2(inputs, filters, use_batch_norm, training,
 
 
 def block_layer(inputs, filters, use_batch_norm, bottleneck, block_fn, blocks,
-                strides, training, name, data_format):
+                strides, training, name, data_format, activations):
   """Creates one layer of blocks for the ResNet model.
 
   Args:
@@ -343,6 +349,8 @@ def block_layer(inputs, filters, use_batch_norm, bottleneck, block_fn, blocks,
     name: A string name for the tensor output of the block layer.
     data_format: The input format ('channels_last' or 'channels_first').
 
+    activations: list to append activations to.
+
   Returns:
     The output tensor of the block layer.
   """
@@ -357,11 +365,11 @@ def block_layer(inputs, filters, use_batch_norm, bottleneck, block_fn, blocks,
 
   # Only the first block per block_layer uses projection_shortcut and strides
   inputs = block_fn(inputs, filters, use_batch_norm, training,
-                    projection_shortcut, strides, data_format)
+                    projection_shortcut, strides, data_format, activations)
 
   for _ in range(1, blocks):
     inputs = block_fn(inputs, filters, use_batch_norm, training, None, 1,
-                      data_format)
+                      data_format, activations)
 
   return tf.identity(inputs, name)
 
@@ -511,6 +519,8 @@ class Model(object):
       A logits Tensor with shape [<batch_size>, self.num_classes].
     """
 
+    activations = []
+
     with self._model_variable_scope():
       if self.data_format == 'channels_first':
         # Convert the inputs from channels_last (NHWC) to channels_first (NCHW).
@@ -522,6 +532,8 @@ class Model(object):
           inputs=inputs, filters=self.num_filters, kernel_size=self.kernel_size,
           strides=self.conv_stride, data_format=self.data_format)
       inputs = tf.identity(inputs, 'initial_conv')
+
+      activations.append(inputs)
 
       if self.first_pool_size:
         inputs = tf.layers.max_pooling2d(
@@ -537,7 +549,8 @@ class Model(object):
             use_batch_norm=self.use_batch_norm, bottleneck=self.bottleneck,
             block_fn=self.block_fn, blocks=num_blocks,
             strides=self.block_strides[i], training=training,
-            name='block_layer{}'.format(i + 1), data_format=self.data_format)
+            name='block_layer{}'.format(i + 1), data_format=self.data_format,
+            activations=activations)
 
       if self.use_batch_norm:
         inputs = batch_norm(inputs, training, self.data_format)
@@ -554,5 +567,8 @@ class Model(object):
 
       inputs = tf.reshape(inputs, [-1, self.final_size])
       inputs = tf.layers.dense(inputs=inputs, units=self.num_classes)
+
+      activations.append(inputs)
+
       inputs = tf.identity(inputs, 'final_dense')
-      return inputs
+      return inputs, activations

@@ -75,6 +75,7 @@ training notes:
             -rest of day, work on new metric
             -longer term, white box RF method
         -I put all the cifars (bn and no-bn) into one group of 10 models instead of two groups of 5 models.
+        -to do: get robustness code running for my models
 
 
 training results for cifar-224x224
