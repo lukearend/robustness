@@ -168,6 +168,7 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
         is_training = (mode == tf.estimator.ModeKeys.TRAIN)
 
         if mode == tf.estimator.ModeKeys.PREDICT:
+            with tf.variable_scope('estimator'):
             if test_robustness:
                 logits = estimator_graph.forward_pass_test(features,
                                                            params,
@@ -180,10 +181,9 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
                 }
 
             else:
-                with tf.variable_scope('estimator'):
-                    logits, activations = estimator_graph.forward_pass(features,
-                                                          is_training,
-                                                          params)
+                logits, activations = estimator_graph.forward_pass(features,
+                                                      is_training,
+                                                      params)
 
                 predictions = {
                     'classes': tf.argmax(logits, axis=1),

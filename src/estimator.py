@@ -191,7 +191,7 @@ class Estimator(object):
 
         model.evaluate(input_fn=input_fn)
 
-    def activations(self, data_dir='/tmp', split='train', num_gpus=1):
+    def activations(self, num_layers, data_dir='/tmp', split='train', num_gpus=1):
         """Extract activations to a dataset.
 
         Args:
@@ -243,22 +243,18 @@ class Estimator(object):
                                                imagenet_train_predict_partial=True)
         predictions = model.predict(input_fn)
 
-        print('predict step completed')
-        print(predictions)
-
         # Loop through predictions and store them in a numpy array.
         predicted_labels = np.zeros(np.shape(labels))
         for i, p in enumerate(predictions):
             predicted_labels[i] = p['classes']
             if i == 0:
-                num_layers = len(p['activations'])
                 activations_out = list(range(num_layers))
                 labels_out = list(range(num_layers))
 
             for layer in range(num_layers):
                 ###########################################
                 # FIGURE OUT HOW TO RESHAPE THESE PROPERLY.
-                layer_activations = np.array(p['activations'][layer])
+                layer_activations = np.array(p[layer])
                 layer_labels = np.array(labels[i])
                 ###########################################
 

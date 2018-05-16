@@ -21,6 +21,10 @@ def main():
         2: 32,
         4: 64}[1]
 
+    num_layers = {
+        'cifar10': 17,
+        'imagemet': 19}['cifar10']
+
     base_data_dir = {
         '/raid': '/raid/poggio/home/larend/data',
         '/om': '/om/user/larend/data',
@@ -34,11 +38,11 @@ def main():
         print('crossval: {}'.format(crossval))
 
         model = estimator.Estimator(
-            model_dir='/cbcl/cbcl01/larend/models/robust/cifar10/00007',
+            model_dir='/cbcl/cbcl01/larend/models/robust/cifar10/00002',
             params={
                 'batch_size': 100,
                 'dataset': 'cifar10',
-                'use_batch_norm': False,
+                'use_batch_norm': True,
                 'num_filters': num_filters},
             tf_random_seed=int(time.time()))
 
@@ -46,8 +50,9 @@ def main():
             print('split: {}'.format(split))
 
             t_0 = time.time()
-            model.evaluate(data_dir=data_dir)
+            # model.evaluate(data_dir=data_dir)
             activations, labels, accuracy = model.activations(
+                num_layers,
                 data_dir=data_dir,
                 split=split)
             t_1 = time.time()
