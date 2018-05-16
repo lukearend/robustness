@@ -267,7 +267,7 @@ class Estimator(object):
 
         accuracy = np.mean(np.equal(labels, predicted_labels))
 
-        return activations, labels, accuracy
+        return activations_out, labels_out, accuracy
 
     def robustness(self,
         perturbation_type,
