@@ -212,6 +212,7 @@ class Estimator(object):
         _, label_batch = estimator_fns.input_fn(tf.estimator.ModeKeys.PREDICT,
                                                 data_dir,
                                                 self.params,
+                                                reading_labels=True,
                                                 predict_split=split,
                                                 imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
                                                 imagenet_train_predict_partial=True)
@@ -303,6 +304,7 @@ class Estimator(object):
         _, label_batch = estimator_fns.input_fn(tf.estimator.ModeKeys.PREDICT,
                                                 data_dir,
                                                 self.params,
+                                                reading_labels=True,
                                                 predict_split=split,
                                                 imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed)
         labels = None

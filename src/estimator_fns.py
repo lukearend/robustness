@@ -10,7 +10,7 @@ import estimator_datasets
 import estimator_graph
 
 
-def input_fn(mode, input_path, params, num_gpus=None,
+def input_fn(mode, input_path, params, num_gpus=None, reading_labels=False,
              predict_split='validation', imagenet_train_predict_shuffle_seed=None,
              imagenet_train_predict_partial=False):
     """Create input graph for model.
@@ -36,7 +36,10 @@ def input_fn(mode, input_path, params, num_gpus=None,
                                                   imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
                                                   imagenet_train_predict_partial=imagenet_train_predict_partial)
             image_batch, label_batch = dataset.make_batch(params['batch_size'])
-            return image_batch, label_batch
+            if reading_labels:
+                return image_batch, label_batch
+            else:
+                return image_bach, None
 
         elif mode in [tf.estimator.ModeKeys.TRAIN, tf.estimator.ModeKeys.EVAL]:
             # Set the batch size.
