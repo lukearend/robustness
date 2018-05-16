@@ -33,7 +33,6 @@ def main():
                 '/om/user/larend/data'),
         '/cbcl': ('/cbcl/cbcl01/larend/models',
                   '/cbcl/cbcl01/larend/data')}[FLAGS.host_filesystem]
-    import estimator
 
     model = estimator.Estimator(
         model_dir='{}/robust/imagenet/{}'.format(base_model_dir, name),

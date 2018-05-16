@@ -21,9 +21,14 @@ def main():
         2: 32,
         4: 64}[1]
 
+    base_data_dir = {
+        '/raid': '/raid/poggio/home/larend/data',
+        '/om': '/om/user/larend/data',
+        '/cbcl': '/cbcl/cbcl01/larend/data'}['/cbcl']
+
     data_dir = {
-        'cifar10': '/om/user/larend/data/cifar-10-tfrecords',
-        'imagenet': '/om/user/larend/data/imagenet-tfrecords'}['cifar10']
+        'cifar10': '{}/cifar-10-tfrecords'.format(base_data_dir),
+        'imagenet': '{}/imagenet-tfrecords'.format(base_data_dir)}['cifar10']
 
     for crossval in range(1):
         print('crossval: {}'.format(crossval))

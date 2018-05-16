@@ -39,9 +39,14 @@ def main():
             2: 128,
             4: 256}[FLAGS.scale_factor]
 
+    base_data_dir = {
+        '/raid': '/raid/poggio/home/larend/data',
+        '/om': '/om/user/larend/data',
+        '/cbcl': '/cbcl/cbcl01/larend/data'}[FLAGS.host_filesystem]
+
     data_dir = {
-        'cifar10': '/om/user/larend/data/cifar-10-tfrecords',
-        'imagenet': '/om/user/larend/data/imagenet-tfrecords'}[FLAGS.dataset]
+        'cifar10': '{}/cifar-10-tfrecords'.format(base_data_dir),
+        'imagenet': '{}/imagenet-tfrecords'.format(base_data_dir)}[FLAGS.dataset]
 
     for crossval in range(3):
         model = estimator.Estimator(
