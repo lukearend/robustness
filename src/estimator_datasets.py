@@ -115,7 +115,7 @@ class ImageNetDataset(object):
                     # Just take part of the shuffled training set.
                     MAX_EXAMPLES = 50000
                     num_examples = MAX_EXAMPLES
-                else
+                else:
                     # Take whole training set.
                     num_examples = num_examples_per_epoch(tf.estimator.ModeKeys.TRAIN)
             else:
@@ -241,9 +241,9 @@ class Cifar10Dataset(object):
             # divided by batch_size.
             while True:
                 if num_examples % batch_size == 0:
-                        break
-                    else:
-                        num_examples -= 1
+                    break
+                else:
+                    num_examples -= 1
             dataset = dataset.take(num_examples)
             dataset = dataset.repeat(1)
         else:
