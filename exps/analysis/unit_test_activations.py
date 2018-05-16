@@ -46,9 +46,11 @@ def main():
             print('split: {}'.format(split))
 
             t_0 = time.time()
-            activations, labels, accuracy = model.activations(
-                data_dir=data_dir,
-                split=split)
+            model.evaluate(data_dir)
+            print("EVALUATION COMPLETE")
+            # activations, labels, accuracy = model.activations(
+            #     data_dir=data_dir,
+            #     split=split)
             t_1 = time.time()
 
             print('accuracy: {}'.format(accuracy))
