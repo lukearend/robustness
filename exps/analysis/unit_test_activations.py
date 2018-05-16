@@ -34,11 +34,11 @@ def main():
         print('crossval: {}'.format(crossval))
 
         model = estimator.Estimator(
-            model_dir='/cbcl/cbcl01/larend/models/robust/cifar10/00002',
+            model_dir='/cbcl/cbcl01/larend/models/robust/cifar10/00007',
             params={
                 'batch_size': 100,
                 'dataset': 'cifar10',
-                'use_batch_norm': True,
+                'use_batch_norm': False,
                 'num_filters': num_filters},
             tf_random_seed=int(time.time()))
 
