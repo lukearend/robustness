@@ -110,13 +110,26 @@ class ImageNetDataset(object):
                 # to do this a more extensive implementation.
                 dataset = dataset.shuffle(buffer_size=1281167,
                                           seed=self.imagenet_train_predict_shuffle_seed)
-                # IMPORTANT (and sketchy): assume batch size 100
-                # so this is divided evenly by the batches.
-                dataset = dataset.take(50000)
+                # Take the highest number of examples less than MAX_EXAMPLES
+                # that will be evenly divided by batch_size.
+                MAX_EXAMPLES = 50000
+                num_examples = MAX_EXAMPLES
+                while True:
+                    if num_examples % batch_size == 0:
+                        break
+                    else:
+                        num_examples -= 1
+                dataset = dataset.take(num_examples)
             else:
-                # IMPORTANT (and sketchy): assume batch size 100
-                # so this is divided evenly by the batches.
-                dataset = dataset.take(1281100)
+                # Take the highest number of examples from the train set
+                # that will be evenly divided by batch_size.
+                num_examples = self.num_examples_per_epoch(tf.estimator.ModeKeys.TRAIN)
+                while True:
+                    if num_examples % batch_size == 0:
+                        break
+                    else:
+                        num_examples -= 1
+                dataset = dataset.take(num_examples)
             dataset = dataset.repeat(1)
         else:
             dataset = dataset.repeat(1)
