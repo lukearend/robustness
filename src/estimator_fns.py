@@ -170,6 +170,9 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
         if mode == tf.estimator.ModeKeys.PREDICT:
             with tf.variable_scope('estimator'):
                 if test_robustness:
+                    features_shape = features.get_shape().as_list()
+                    features_shape[0] = params['batch_size']
+                    features.set_shape(features_shape)
                     logits = estimator_graph.forward_pass_test(features,
                                                                params,
                                                                perturbation_type,
