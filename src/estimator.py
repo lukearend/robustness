@@ -244,7 +244,7 @@ class Estimator(object):
                                     predict_keys=['classes', 'activations'])
 
         print('predict step completed')
-        print(predictions.get_shape())
+        print(predictions)
 
         # Loop through predictions and store them in a numpy array.
         predicted_labels = np.zeros(np.shape(labels))
