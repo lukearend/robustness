@@ -205,23 +205,25 @@ class Estimator(object):
         # g_1 = tf.Graph()
         # with g_1.as_default():
             # First, loop through the dataset and read out labels.
-        label_batch = estimator_fns.input_fn_read_labels(tf.estimator.ModeKeys.PREDICT,
-                                                data_dir,
-                                                self.params,
-                                                predict_split=split,
-                                                imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
-                                                imagenet_train_predict_partial=True)
+        # label_batch = estimator_fns.input_fn_read_labels(tf.estimator.ModeKeys.PREDICT,
+        #                                         data_dir,
+        #                                         self.params,
+        #                                         predict_split=split,
+        #                                         imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
+        #                                         imagenet_train_predict_partial=True)
+        label_batch = None
         labels = None
         with tf.Session() as sess:
-            while True:
-                try:
-                    labels_tmp = sess.run(label_batch)
-                    if labels is None:
-                        labels = labels_tmp
-                    else:
-                        labels = np.append(labels, labels_tmp, axis=0)
-                except tf.errors.OutOfRangeError:
-                    break
+            pass
+            # while True:
+            #     try:
+            #         labels_tmp = sess.run(label_batch)
+            #         if labels is None:
+            #             labels = labels_tmp
+            #         else:
+            #             labels = np.append(labels, labels_tmp, axis=0)
+            #     except tf.errors.OutOfRangeError:
+            #         break
 
         # g_2 = tf.Graph()
         # with g_2.as_default():
