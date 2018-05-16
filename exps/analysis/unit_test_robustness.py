@@ -52,7 +52,7 @@ def main():
             print('perturbation: {}'.format(perturbation_type))
 
             perturbation_amounts = {
-                0: np.linspace(0.0, 1.0, 7),
+                0: np.linspace(0.0, 0.9, 7),
                 1: np.linspace(0.0, 1.0, 7),
                 2: np.linspace(0.0, 1.0, 7)}[perturbation_type]
 

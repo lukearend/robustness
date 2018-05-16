@@ -68,11 +68,11 @@ def main():
 
             split_str = {'train': '', 'validation': '_test'}[split]
 
-            with open(os.path.join(FLAGS.out_dir, 'activations{}{}.pkl'.format(split_str, crossval)), 'wb') as f:
+            with open(os.path.join(out_dir, 'activations{}{}.pkl'.format(split_str, crossval)), 'wb') as f:
                 pickle.dump(activations, f, protocol=pickle.HIGHEST_PROTOCOL)
-            with open(os.path.join(FLAGS.out_dir, 'labels{}{}.pkl'.format(split_str, crossval)), 'wb') as f:
+            with open(os.path.join(out_dir, 'labels{}{}.pkl'.format(split_str, crossval)), 'wb') as f:
                 pickle.dump(labels, f, protocol=pickle.HIGHEST_PROTOCOL)
-            with open(os.path.join(FLAGS.out_dir, 'accuracy{}{}.pkl'.format(split_str, crossval)), 'wb') as f:
+            with open(os.path.join(out_dir, 'accuracy{}{}.pkl'.format(split_str, crossval)), 'wb') as f:
                 pickle.dump(accuracy, f, protocol=pickle.HIGHEST_PROTOCOL)
 
         tf.reset_default_graph()
