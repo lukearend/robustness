@@ -239,7 +239,7 @@ class Estimator(object):
                                        model_dir=self.model_dir,
                                        config=config,
                                        params=self.params)
-        input_fn = lambda: estimator_fns.input_fn(tf.estimator.ModeKeys.PREDICT,
+        input_fn = lambda: estimator_fns.input_fn_read_images(tf.estimator.ModeKeys.PREDICT,
                                                data_dir,
                                                self.params,
                                                num_gpus=num_gpus,

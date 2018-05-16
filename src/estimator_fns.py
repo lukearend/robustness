@@ -10,7 +10,7 @@ import estimator_datasets
 import estimator_graph
 
 
-def input_fn_read_labels(mode, input_path, params, num_gpus=None,
+def input_fn_read_images(mode, input_path, params, num_gpus=None,
              predict_split='validation', imagenet_train_predict_shuffle_seed=None,
              imagenet_train_predict_partial=False):
     """Create input graph for model.
@@ -28,15 +28,9 @@ def input_fn_read_labels(mode, input_path, params, num_gpus=None,
     """
     with tf.device('/cpu:0'):
         if mode == tf.estimator.ModeKeys.PREDICT:
-            dataset = estimator_utils.get_dataset(params['dataset'],
-                                                  mode,
-                                                  input_path,
-                                                  params,
-                                                  predict_split=predict_split,
-                                                  imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
-                                                  imagenet_train_predict_partial=imagenet_train_predict_partial)
-            _, label_batch = dataset.make_batch(params['batch_size'])
-            return label_batch
+            dataset = Cifar10DatasetImages(mode, input_path, params)
+            image_batch = dataset.make_batch(params['batch_size'])
+            return image_batch, None
 
 
 def input_fn(mode, input_path, params, num_gpus=None,
@@ -184,7 +178,7 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
 
             return tf.estimator.EstimatorSpec(
                 mode=mode,
-                predictions=predictions)
+            predictions=predictions)
 
         elif mode in [tf.estimator.ModeKeys.TRAIN,
                       tf.estimator.ModeKeys.EVAL]:

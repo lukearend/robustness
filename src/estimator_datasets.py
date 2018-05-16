@@ -267,3 +267,119 @@ class Cifar10Dataset(object):
         if mode == tf.estimator.ModeKeys.TRAIN:
             return 45000
         return 5000
+
+
+class Cifar10DatasetImages(object):
+    """CIFAR-10 dataset.
+
+    Described at http://www.cs.toronto.edu/~kriz/cifar.html.
+    """
+    HEIGHT = 32
+    WIDTH = 32
+    DEPTH = 3
+
+    def __init__(self, mode, data_dir, params, predict_split='validation'):
+        self.mode = mode
+        self.data_dir = data_dir
+        self.params = params
+        self.predict_split = predict_split
+
+    def get_filenames(self):
+        """Get names of data files."""
+        if self.mode == tf.estimator.ModeKeys.TRAIN:
+            lookup_name = 'train'
+        elif self.mode == tf.estimator.ModeKeys.EVAL:
+            lookup_name = 'validation'
+        elif self.mode == tf.estimator.ModeKeys.PREDICT:
+            lookup_name = self.predict_split
+        filenames = tf.gfile.Glob(
+            os.path.join(self.data_dir, '{}-*-of-*'.format(lookup_name)))
+        if tf.estimator.ModeKeys.PREDICT:
+            # Sort so that TFRecords will be read out deterministically.
+            filenames = sorted(filenames)
+        return filenames
+
+    def parser(self, serialized_example):
+        """Parse a single tf.Example into image and label Tensors."""
+        features = {
+            'image/height': tf.FixedLenFeature([], tf.int64),
+            'image/width': tf.FixedLenFeature([], tf.int64),
+            'image/colorspace': tf.FixedLenFeature([], tf.string),
+            'image/channels': tf.FixedLenFeature([], tf.int64),
+            'image/class/label': tf.FixedLenFeature([], tf.int64),
+            'image/format': tf.FixedLenFeature([], tf.string),
+            'image/encoded': tf.FixedLenFeature([], tf.string),
+            'image/fixation_pt': tf.FixedLenFeature([2], tf.float32)}
+        parsed_features = tf.parse_single_example(serialized_example, features)
+
+        # Get label as a Tensor.
+        label = parsed_features['image/class/label']
+
+        # Decode the image JPEG string into a Tensor.
+        image = tf.image.decode_jpeg(parsed_features['image/encoded'],
+                                     channels=self.DEPTH)
+
+        # Convert from uint8 -> float32 and map onto range [0, 1].
+        image = tf.cast(image, tf.float32) * (1. / 255)
+
+        # Standardize image.
+        image = tf.image.per_image_standardization(image)
+
+        # Apply data augmentation.
+        if (self.mode == tf.estimator.ModeKeys.TRAIN
+            and self.params['train_with_distortion']):
+            # Randomly flip the image, zero-pad with four pixels along
+            # each edge, and take a random 32 x 32 crop.
+            image = tf.image.random_flip_left_right(image)
+            image = tf.image.resize_image_with_crop_or_pad(image, 40, 40)
+            image = tf.image.crop_to_bounding_box(image,
+                tf.random_uniform([], minval=0, maxval=8, dtype=tf.int32),
+                tf.random_uniform([], minval=0, maxval=8, dtype=tf.int32),
+                32, 32)
+
+        return image, label
+
+    def make_batch(self, batch_size):
+        """Make a batch of images and labels."""
+        filenames = self.get_filenames()
+        dataset = tf.contrib.data.TFRecordDataset(filenames)
+
+        # Parse records.
+        dataset = dataset.map(self.parser,
+                              num_threads=batch_size,
+                              output_buffer_size=2 * batch_size)
+
+        # If training, shuffle and repeat indefinitely.
+        if self.mode == tf.estimator.ModeKeys.TRAIN:
+            dataset = dataset.shuffle(buffer_size=10000 + 3 * batch_size)
+            dataset = dataset.repeat(-1)
+        elif self.mode == tf.estimator.ModeKeys.PREDICT:
+            if self.predict_split == 'train':
+                num_examples = self.num_examples_per_epoch(tf.estimator.ModeKeys.TRAIN)
+            else:
+                num_examples = self.num_examples_per_epoch(tf.estimator.ModeKeys.EVAL)
+            # Take as much of the dataset as possible that can be evenly
+            # divided by batch_size.
+            while True:
+                if num_examples % batch_size == 0:
+                    break
+                else:
+                    num_examples -= 1
+            dataset = dataset.take(num_examples)
+            dataset = dataset.repeat(1)
+        else:
+            dataset = dataset.repeat(1)
+
+        # Batch it up.
+        dataset = dataset.batch(batch_size)
+        iterator = dataset.make_one_shot_iterator()
+        image_batch, label_batch = iterator.get_next()
+
+        return images
+
+    @staticmethod
+    def num_examples_per_epoch(mode):
+        """Stores constants about this dataset."""
+        if mode == tf.estimator.ModeKeys.TRAIN:
+            return 45000
+        return 5000
