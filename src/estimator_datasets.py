@@ -110,17 +110,17 @@ class ImageNetDataset(object):
                     # Shuffle the whole ImageNet in memory and take 50000.
                     # Requires ~100 GB (?) memory, but is the easiest way
                     # to do this without a more extensive implementation.
-                    dataset = dataset.shuffle(buffer_size=num_examples_per_epoch(tf.estimator.ModeKeys.TRAIN),
+                    dataset = dataset.shuffle(buffer_size=self.num_examples_per_epoch(tf.estimator.ModeKeys.TRAIN),
                                               seed=self.imagenet_train_predict_shuffle_seed)
                     # Just take part of the shuffled training set.
                     MAX_EXAMPLES = 50000
                     num_examples = MAX_EXAMPLES
                 else:
                     # Take whole training set.
-                    num_examples = num_examples_per_epoch(tf.estimator.ModeKeys.TRAIN)
+                    num_examples = self.num_examples_per_epoch(tf.estimator.ModeKeys.TRAIN)
             else:
                 # Take whole validation set.
-                num_examples = num_examples_per_epoch(tf.estimator.ModeKeys.EVAL)
+                num_examples = self.num_examples_per_epoch(tf.estimator.ModeKeys.EVAL)
             # Take as much of the dataset as possible that can be evenly
             # divided by batch_size.
             while True:
@@ -234,9 +234,9 @@ class Cifar10Dataset(object):
             dataset = dataset.repeat(-1)
         elif self.mode == tf.estimator.ModeKeys.PREDICT:
             if self.predict_split == 'train':
-                num_examples = num_examples_per_epoch(tf.estimator.ModeKeys.TRAIN)
+                num_examples = self.num_examples_per_epoch(tf.estimator.ModeKeys.TRAIN)
             else:
-                num_examples = num_examples_per_epoch(tf.estimator.ModeKeys.EVAL)
+                num_examples = self.num_examples_per_epoch(tf.estimator.ModeKeys.EVAL)
             # Take as much of the dataset as possible that can be evenly
             # divided by batch_size.
             while True:
