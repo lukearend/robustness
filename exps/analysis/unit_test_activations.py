@@ -50,7 +50,6 @@ def main():
             print('split: {}'.format(split))
 
             t_0 = time.time()
-            # model.evaluate(data_dir=data_dir)
             activations, labels, accuracy = model.activations(
                 num_layers,
                 data_dir=data_dir,
