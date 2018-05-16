@@ -1,0 +1,43 @@
+test_robustness.py
+    -main file for now
+
+experiments.py
+    -set of classes to handle all parameters of all experiments
+
+perturbations.py
+    -layers for adding perturbation
+
+alexnet.py
+    -alexnet and alexnet_test
+        -alexnet is graph for training, alexnet_test for evaluating with perturbations
+    `robustness` is 2d list where first index is robustness graph (2, 3, 4) and second is layer of the model 
+
+nets.py
+    -4 is ablation, 2 is targeted ablation, 3 is adding noise to the activations
+    -for 2 and 4 same graph, but different masks (4 is randomized and 2 is targeted mask computed based on activations)
+
+redundancy.py
+    -extracts activations
+
+redundancy_nogpu.py
+    -evaluates selectivity, compressibility, etc. from the activations
+
+
+
+
+
+the skeleton of the experiment
+
+for three cross validations:
+    # first perturbation: random killing
+    for p in linspace(0.0, 1.0, 7):
+        randomly kill off proportion p neurons
+
+    # second perturbation: targeted killing
+    for p in linspace(0.0, 1.0, 7):
+        randomly kill off proportion p neurons of neighbors within threshold
+
+    # third perturbation: random noise
+    for p in linspace(0.0, 1.0, 7):
+        randomly add noise sampled from gaussian with standard deviation p / std of activations
+
