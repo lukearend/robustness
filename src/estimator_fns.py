@@ -192,7 +192,7 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
 
             return tf.estimator.EstimatorSpec(
                 mode=mode,
-            predictions=predictions)
+                predictions=predictions)
 
         elif mode in [tf.estimator.ModeKeys.TRAIN,
                       tf.estimator.ModeKeys.EVAL]:
