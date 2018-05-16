@@ -213,8 +213,8 @@ class Estimator(object):
         #                                         imagenet_train_predict_partial=True)
         label_batch = None
         labels = None
-        with tf.Session() as sess:
-            pass
+        # with tf.Session() as sess:
+        #     pass
             # while True:
             #     try:
             #         labels_tmp = sess.run(label_batch)
