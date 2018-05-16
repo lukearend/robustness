@@ -24,6 +24,7 @@ class ImageNetDataset(object):
         self.params = params
         self.predict_split = predict_split
         self.imagenet_train_predict_shuffle_seed = imagenet_train_predict_shuffle_seed
+        self.imagenet_train_predict_partial = imagenet_train_predict_partial
 
     def get_filenames(self):
         """Get names of data files."""
