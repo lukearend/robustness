@@ -18,7 +18,7 @@ class ImageNetDataset(object):
 
     def __init__(self, mode, data_dir, params, predict_split='validation',
                  imagenet_train_predict_shuffle_seed=None,
-                 imagenet_train_predict_just_some=False):
+                 imagenet_train_predict_partial=False):
         self.mode = mode
         self.data_dir = data_dir
         self.params = params
@@ -104,7 +104,7 @@ class ImageNetDataset(object):
             dataset = dataset.shuffle(buffer_size=50000 + 3 * batch_size)
             dataset = dataset.repeat(-1)
         elif self.mode == tf.estimator.ModeKeys.PREDICT and self.predict_split == 'train':
-            if self.imagenet_train_predict_just_some:
+            if self.imagenet_train_predict_partial:
                 # Shuffle the whole ImageNet in memory and take 50000.
                 # Requires several hundred GB of memory, but the easiest way
                 # to do this a more extensive implementation.

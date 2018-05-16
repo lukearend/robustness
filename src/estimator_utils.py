@@ -43,7 +43,7 @@ def get_mean_imagenet_rgb():
 # Utils for estimator_graph.
 def get_dataset(dataset, mode, input_path, params, predict_split='validation',
                 imagenet_train_predict_shuffle_seed=None,
-                imagenet_train_predict_just_some=False):
+                imagenet_train_predict_partial=False):
     """Get a dataset based on name."""
     if dataset == 'cifar10':
         return estimator_datasets.Cifar10Dataset(mode,
@@ -56,7 +56,7 @@ def get_dataset(dataset, mode, input_path, params, predict_split='validation',
                                                params,
                                                predict_split='validation',
                                                imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
-                                               imagenet_train_predict_just_some=imagenet_train_predict_just_some)
+                                               imagenet_train_predict_partial=imagenet_train_predict_partial)
     else:
         raise ValueError("Dataset '{}' not recognized.".format(dataset))
 
