@@ -68,7 +68,7 @@ def input_fn(mode, input_path, params, num_gpus=None, reading_labels=False,
                                                   predict_split=predict_split,
                                                   imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
                                                   imagenet_train_predict_partial=imagenet_train_predict_partial)
-            image_batch, _ = dataset.make_batch(params['batch_size'])
+            image_batch, label_batch = dataset.make_batch(params['batch_size'])
             if reading_labels:
                 return image_batch, label_batch
             else:
