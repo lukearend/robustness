@@ -411,6 +411,7 @@ class RawImageDataset(object):
         image = tf.cast(image, tf.float32) * (1. / 255)
 
         # Crop or pad as needed to 256 x 256.
+        image = tf.constant(0, shape=[32, 32, 3])
         image = tf.image.resize_image_with_crop_or_pad(image, 32, 32)
 
         return image
