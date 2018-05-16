@@ -60,7 +60,7 @@ def input_fn(mode, input_path, params, num_gpus=None,
                                                   imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
                                                   imagenet_train_predict_partial=imagenet_train_predict_partial)
             image_batch, _ = dataset.make_batch(params['batch_size'])
-            return {'images': image_batch}, None
+            return image_batch, None
 
         elif mode in [tf.estimator.ModeKeys.TRAIN, tf.estimator.ModeKeys.EVAL]:
             # Set the batch size.
