@@ -8,6 +8,8 @@ import pickle
 
 import numpy as np
 
+import tensorflow as tf
+
 append_path = {
     '/raid': '/raid/poggio/home/larend/robust/src',
     '/om': '/om/user/larend/robust/src',

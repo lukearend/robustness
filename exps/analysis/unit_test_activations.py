@@ -6,6 +6,8 @@ import time
 import argparse
 import pickle
 
+import tensorflow as tf
+
 append_path = {
     '/raid': '/raid/poggio/home/larend/robust/src',
     '/om': '/om/user/larend/robust/src',
