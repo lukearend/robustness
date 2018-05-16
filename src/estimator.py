@@ -249,6 +249,8 @@ class Estimator(object):
             if i == 0:
                 activations_out = list(range(num_layers))
                 labels_out = list(range(num_layers))
+            """
+            """
 
             for layer in range(num_layers):
                 ###########################################
