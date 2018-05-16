@@ -25,8 +25,8 @@ def main():
         4: 64}[1]
 
     num_layers = {
-        'cifar10': 17,
-        'imagemet': 19}['cifar10']
+        'cifar10': 19,
+        'imagenet': 17}['cifar10']
 
     base_data_dir = {
         '/raid': '/raid/poggio/home/larend/data',

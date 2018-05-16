@@ -48,7 +48,7 @@ def main():
                 'num_filters': num_filters},
             tf_random_seed=int(time.time()))
 
-        for k, perturbation_type in enumerate([0]):
+        for k, perturbation_type in enumerate([1]):
             print('perturbation: {}'.format(perturbation_type))
 
             perturbation_amounts = {
@@ -57,7 +57,7 @@ def main():
                 2: np.linspace(0.0, 1.0, 7)}[perturbation_type]
 
             results.append([np.zeros(len(perturbation_amounts)) for _ in range(2)])
-            for i, perturbation_amount in enumerate([perturbation_amounts[1]]):
+            for i, perturbation_amount in enumerate([perturbation_amounts[0]]):
                 kill_mask = [None for _ in range(19)]
 
                 for j, split in enumerate(['validation', 'train']):
