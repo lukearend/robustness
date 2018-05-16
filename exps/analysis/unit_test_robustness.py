@@ -52,12 +52,12 @@ def main():
             print('perturbation: {}'.format(perturbation_type))
 
             perturbation_amounts = {
-                0: np.linspace(0.0, 0.9, 7),
+                0: np.linspace(0.0, 1.0, 7),
                 1: np.linspace(0.0, 1.0, 7),
                 2: np.linspace(0.0, 1.0, 7)}[perturbation_type]
 
             results.append([np.zeros(len(perturbation_amounts)) for _ in range(2)])
-            for i, perturbation_amount in enumerate([perturbation_amounts[6]]):
+            for i, perturbation_amount in enumerate([perturbation_amounts[3]]):
                 kill_mask = [None for _ in range(19)]
 
                 for j, split in enumerate(['validation', 'train']):
@@ -85,6 +85,8 @@ def main():
             pickle.dump(results, f, protocol=pickle.HIGHEST_PROTOCOL)
 
         tf.reset_default_graph()
+
+    print('done :)')
 
 
 if __name__ == '__main__':
