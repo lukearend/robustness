@@ -404,7 +404,7 @@ class RawImageDataset(object):
         # Read the raw data from file.
         encoded_image = tf.read_file(image_filename)
 
-        image = tf.image.decode_image(encoded_image)
+        image = tf.image.decode_image(encoded_image, channels=3)
 
         # Convert from uint8 -> float32 and map onto range [0, 1].
         image = tf.cast(image, tf.float32) * (1. / 255)
