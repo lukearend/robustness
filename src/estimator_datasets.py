@@ -91,10 +91,10 @@ class ImageNetDataset(object):
     def make_batch(self, batch_size):
         """Make a batch of images and labels."""
         filenames = self.get_filenames()
-        if self.mode == tf.estimator.ModeKeys.PREDICT and self.imagenet_train_predict_shuffle_seed is not None:
+        if self.mode == tf.estimator.ModeKeys.PREDICT and self.imagenet_train_predict_partial:
             # Sort and shuffle with seed to randomize deterministically.
             filenames = sorted(filenames)
-            random.seed(imagenet_train_predict_shuffle_seed)
+            random.seed(self.imagenet_train_predict_shuffle_seed)
             random.shuffle(filenames)
         dataset = tf.contrib.data.TFRecordDataset(filenames)
 
