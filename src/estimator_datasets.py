@@ -104,33 +104,31 @@ class ImageNetDataset(object):
         if self.mode == tf.estimator.ModeKeys.TRAIN:
             dataset = dataset.shuffle(buffer_size=50000 + 3 * batch_size)
             dataset = dataset.repeat(-1)
-        elif self.mode == tf.estimator.ModeKeys.PREDICT and self.predict_split == 'train':
-            if self.imagenet_train_predict_partial:
-                # Shuffle the whole ImageNet in memory and take 50000.
-                # Requires several hundred GB of memory, but the easiest way
-                # to do this a more extensive implementation.
-                dataset = dataset.shuffle(buffer_size=1281167,
-                                          seed=self.imagenet_train_predict_shuffle_seed)
-                # Take the highest number of examples less than MAX_EXAMPLES
-                # that will be evenly divided by batch_size.
-                MAX_EXAMPLES = 50000
-                num_examples = MAX_EXAMPLES
-                while True:
-                    if num_examples % batch_size == 0:
-                        break
-                    else:
-                        num_examples -= 1
-                dataset = dataset.take(num_examples)
+        elif self.mode == tf.estimator.ModeKeys.PREDICT:
+            if self.predict_split == 'train':
+                if self.imagenet_train_predict_partial:
+                    # Shuffle the whole ImageNet in memory and take 50000.
+                    # Requires ~100 GB (?) memory, but is the easiest way
+                    # to do this without a more extensive implementation.
+                    dataset = dataset.shuffle(buffer_size=num_examples_per_epoch(tf.estimator.ModeKeys.TRAIN),
+                                              seed=self.imagenet_train_predict_shuffle_seed)
+                    # Just take part of the shuffled training set.
+                    MAX_EXAMPLES = 50000
+                    num_examples = MAX_EXAMPLES
+                else
+                    # Take whole training set.
+                    num_examples = num_examples_per_epoch(tf.estimator.ModeKeys.TRAIN)
             else:
-                # Take the highest number of examples from the train set
-                # that will be evenly divided by batch_size.
-                num_examples = self.num_examples_per_epoch(tf.estimator.ModeKeys.TRAIN)
-                while True:
-                    if num_examples % batch_size == 0:
+                # Take whole validation set.
+                num_examples = num_examples_per_epoch(tf.estimator.ModeKeys.EVAL)
+            # Take as much of the dataset as possible that can be evenly
+            # divided by batch_size.
+            while True:
+                if num_examples % batch_size == 0:
                         break
                     else:
                         num_examples -= 1
-                dataset = dataset.take(num_examples)
+            dataset = dataset.take(num_examples)
             dataset = dataset.repeat(1)
         else:
             dataset = dataset.repeat(1)
@@ -234,6 +232,20 @@ class Cifar10Dataset(object):
         if self.mode == tf.estimator.ModeKeys.TRAIN:
             dataset = dataset.shuffle(buffer_size=10000 + 3 * batch_size)
             dataset = dataset.repeat(-1)
+        elif self.mode == tf.estimator.ModeKeys.PREDICT:
+            if self.predict_split == 'train':
+                num_examples = num_examples_per_epoch(tf.estimator.ModeKeys.TRAIN)
+            else:
+                num_examples = num_examples_per_epoch(tf.estimator.ModeKeys.EVAL)
+            # Take as much of the dataset as possible that can be evenly
+            # divided by batch_size.
+            while True:
+                if num_examples % batch_size == 0:
+                        break
+                    else:
+                        num_examples -= 1
+            dataset = dataset.take(num_examples)
+            dataset = dataset.repeat(1)
         else:
             dataset = dataset.repeat(1)
 
