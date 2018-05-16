@@ -112,8 +112,9 @@ class ImageNetDataset(object):
                 if self.imagenet_train_predict_partial:
                     MAX_EXAMPLES = 50000
                     # Skip to start at a random spot in the first TFRecord.
-                    dataset = dataset.skip(tf.random_uniform([], minval=0, maxval=1251, dtype=tf.int64,
-                                                             seed=self.imagenet_train_predict_shuffle_seed))
+                    random.seed(self.imagenet_train_predict_shuffle_seed)
+                    skip_examples = random.randint(0, 1251)
+                    dataset = dataset.skip(skip_examples)
                     # Continue shuffling.
                     dataset.shuffle(buffer_size=MAX_EXAMPLES,
                                     seed=self.imagenet_train_predict_shuffle_seed)
