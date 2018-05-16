@@ -239,15 +239,14 @@ class Estimator(object):
                                        model_dir=self.model_dir,
                                        config=config,
                                        params=self.params)
-        input_fn = lambda: estimator_fns.input_fn_read_images(tf.estimator.ModeKeys.PREDICT,
+        input_fn = lambda: estimator_fns.input_fn(tf.estimator.ModeKeys.PREDICT,
                                                data_dir,
                                                self.params,
                                                num_gpus=num_gpus,
                                                predict_split=split,
                                                imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
                                                imagenet_train_predict_partial=True)
-        predictions = model.predict(input_fn,
-                                    predict_keys=['classes', 'activations'])
+        predictions = model.predict(input_fn)
 
         print('predict step completed')
         print(predictions)
