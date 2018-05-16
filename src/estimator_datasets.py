@@ -408,10 +408,10 @@ class RawImageDataset(object):
         image = tf.stack([image, image, image], axis=3)
 
         # Convert from uint8 -> float32 and map onto range [0, 1].
-        image = tf.cast(image, tf.float32) * (1. / 255)
+        # image = tf.cast(image, tf.float32) * (1. / 255)
 
         # Crop or pad as needed to 256 x 256.
-        image = tf.constant(0, shape=[32, 32, 3])
+        image = tf.constant(0.0, shape=[32, 32, 3])
         image = tf.image.resize_image_with_crop_or_pad(image, 32, 32)
 
         return image
