@@ -37,7 +37,7 @@ def forward_pass(x, is_training, params):
 
     y, activations = resnet(x, is_training)
 
-    return y
+    return y, activations
 
 def forward_pass_test(x, params, perturbation_type, perturbation_amount, kill_mask):
     # For perturbation experiment.
