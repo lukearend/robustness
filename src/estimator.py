@@ -253,8 +253,8 @@ class Estimator(object):
             for layer in range(num_layers):
                 ###########################################
                 # FIGURE OUT HOW TO RESHAPE THESE PROPERLY.
-                layer_activations = np.array(p[layer])
-                layer_activations = np.zeros((2,2,2))
+                # layer_activations = np.array(p[layer])
+                layer_activations = np.array(p[layer].shape) # temporary debug
                 layer_labels = np.array([labels[i]])
                 ###########################################
 
