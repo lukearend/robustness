@@ -333,6 +333,6 @@ class Estimator(object):
         # Loop through predictions and store them in a numpy array.
         predicted_labels = np.array([p['classes'] for p in predictions])
 
-        accuracy = np.mean(np.equals(labels, predicted_labels))
+        accuracy = np.mean(np.equal(labels, predicted_labels))
 
         return accuracy
