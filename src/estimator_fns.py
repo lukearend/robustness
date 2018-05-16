@@ -169,27 +169,27 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
 
         if mode == tf.estimator.ModeKeys.PREDICT:
             with tf.variable_scope('estimator'):
-            if test_robustness:
-                logits = estimator_graph.forward_pass_test(features,
-                                                           params,
-                                                           perturbation_type,
-                                                           perturbation_amount,
-                                                           kill_mask)
+                if test_robustness:
+                    logits = estimator_graph.forward_pass_test(features,
+                                                               params,
+                                                               perturbation_type,
+                                                               perturbation_amount,
+                                                               kill_mask)
 
-                predictions = {
-                    'classes': tf.argmax(logits, axis=1)
-                }
+                    predictions = {
+                        'classes': tf.argmax(logits, axis=1)
+                    }
 
-            else:
-                logits, activations = estimator_graph.forward_pass(features,
-                                                      is_training,
-                                                      params)
+                else:
+                    logits, activations = estimator_graph.forward_pass(features,
+                                                          is_training,
+                                                          params)
 
-                predictions = {
-                    'classes': tf.argmax(logits, axis=1),
-                }
-                for layer, layer_activations in enumerate(activations):
-                    predictions[layer] = layer_activations
+                    predictions = {
+                        'classes': tf.argmax(logits, axis=1),
+                    }
+                    for layer, layer_activations in enumerate(activations):
+                        predictions[layer] = layer_activations
 
             return tf.estimator.EstimatorSpec(
                 mode=mode,
