@@ -1,6 +1,7 @@
 """Class implementations for various datasets."""
 
 import os
+import random
 
 import tensorflow as tf
 
@@ -36,9 +37,6 @@ class ImageNetDataset(object):
             lookup_name = self.predict_split
         filenames = tf.gfile.Glob(
             os.path.join(self.data_dir, '{}-*-of-*'.format(lookup_name)))
-        if self.mode == tf.estimator.ModeKeys.PREDICT and self.imagenet_train_predict_shuffle_seed is not None:
-            # Sort so that TFRecords will be read out deterministically.
-            filenames = sorted(filenames)
         return filenames
 
     def parser(self, serialized_example):
@@ -93,6 +91,11 @@ class ImageNetDataset(object):
     def make_batch(self, batch_size):
         """Make a batch of images and labels."""
         filenames = self.get_filenames()
+        if self.mode == tf.estimator.ModeKeys.PREDICT and self.imagenet_train_predict_shuffle_seed is not None:
+            # Sort and shuffle with seed to randomize deterministically.
+            filenames = sorted(filenames)
+            random.seed(imagenet_train_predict_shuffle_seed)
+            random.shuffle(filenames)
         dataset = tf.contrib.data.TFRecordDataset(filenames)
 
         # Parse records.
@@ -107,13 +110,13 @@ class ImageNetDataset(object):
         elif self.mode == tf.estimator.ModeKeys.PREDICT:
             if self.predict_split == 'train':
                 if self.imagenet_train_predict_partial:
-                    # Shuffle the whole ImageNet in memory and take 50000.
-                    # Requires ~100 GB (?) memory, but is the easiest way
-                    # to do this without a more extensive implementation.
-                    dataset = dataset.shuffle(buffer_size=self.num_examples_per_epoch(tf.estimator.ModeKeys.TRAIN),
-                                              seed=self.imagenet_train_predict_shuffle_seed)
-                    # Just take part of the shuffled training set.
                     MAX_EXAMPLES = 50000
+                    # Skip to start at a random spot in the first TFRecord.
+                    dataset = dataset.skip(tf.random_uniform([], minval=0, maxval=1251, dtype=tf.int64,
+                                                             seed=self.imagenet_train_predict_shuffle_seed))
+                    # Continue shuffling.
+                    dataset.shuffle(buffer_size=MAX_EXAMPLES,
+                                    seed=self.imagenet_train_predict_shuffle_seed)
                     num_examples = MAX_EXAMPLES
                 else:
                     # Take whole training set.
