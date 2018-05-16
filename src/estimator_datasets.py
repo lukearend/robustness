@@ -126,8 +126,8 @@ class ImageNetDataset(object):
             while True:
                 if num_examples % batch_size == 0:
                         break
-                    else:
-                        num_examples -= 1
+                else:
+                    num_examples -= 1
             dataset = dataset.take(num_examples)
             dataset = dataset.repeat(1)
         else:
