@@ -157,7 +157,8 @@ def _building_block_v1(inputs, filters, use_batch_norm, training,
             inputs = tf.transpose(inputs, [0, 2, 3, 1])
         mask = tf.reshape(tf.tile(kill_mask[0],
                                   [int(np.prod(inputs.get_shape()[1:3]) * inputs.get_shape()[0])]),
-                          [-1, int(inputs.get_shape()[1]), int(inputs.get_shape()[2]), int(inputs.get_shape()[3])])
+                          [-1, int(inputs.get_shape()[1]), int(inputs.get_shape()[2]), int(inputs.get_shape()[3])],
+                          dtype=tf.float32)
         inputs = pt.activation_knockout_mask(inputs, perturbation_amount, mask)
         if data_format == 'channels_first':
             # Swap back to 'channels_first'.
@@ -184,7 +185,8 @@ def _building_block_v1(inputs, filters, use_batch_norm, training,
             inputs = tf.transpose(inputs, [0, 2, 3, 1])
         mask = tf.reshape(tf.tile(kill_mask[0],
                                   [int(np.prod(inputs.get_shape()[1:3]) * inputs.get_shape()[0])]),
-                          [-1, int(inputs.get_shape()[1]), int(inputs.get_shape()[2]), int(inputs.get_shape()[3])])
+                          [-1, int(inputs.get_shape()[1]), int(inputs.get_shape()[2]), int(inputs.get_shape()[3])],
+                          dtype=tf.float32)
         inputs = pt.activation_knockout_mask(inputs, perturbation_amount, mask)
         if data_format == 'channels_first':
             # Swap back to 'channels_first'.
