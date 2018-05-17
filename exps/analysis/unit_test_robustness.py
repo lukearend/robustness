@@ -70,7 +70,7 @@ def main():
                     pickle_dir = '/cbcl/cbcl01/larend/tmp'
                     split_str = {'train': '', 'validation': '_test'}[split]
                     kernel_filename = os.path.join(pickle_dir,
-                                                   'kernel{}{}'.format(split_str, crossval))
+                                                   'kernel{}{}.pkl'.format(split_str, crossval))
 
                     t_0 = time.time()
                     accuracy = model.robustness(

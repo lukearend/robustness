@@ -74,7 +74,7 @@ def main():
                     # Build kernel file name.
                     split_str = {'train': '', 'validation': '_test'}[split]
                     kernel_filename = os.path.join(FLAGS.pickle_dir,
-                                                   'kernel{}{}'.format(split_str, crossval))
+                                                   'kernel{}{}.pkl'.format(split_str, crossval))
 
                     accuracy = model.robustness(
                         perturbation_type,
