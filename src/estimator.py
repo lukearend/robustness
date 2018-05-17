@@ -245,7 +245,7 @@ class Estimator(object):
 
         # Loop through predictions and store them in a numpy array;
         # done in batches for memory efficiency.
-        extraction_batch_size = 200
+        extraction_batch_size = 100
         num_predictions = len(labels)
         num_iterations = math.ceil(num_predictions / extraction_batch_size)
         predicted_labels = np.zeros(np.shape(labels))
