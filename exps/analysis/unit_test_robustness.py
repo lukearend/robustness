@@ -48,7 +48,7 @@ def main():
                 'num_filters': num_filters},
             tf_random_seed=int(time.time()))
 
-        for perturbation_type in enumerate([0, 1, 2]):
+        for perturbation_type in [0, 1, 2]:
             print('perturbation: {}'.format(perturbation_type))
 
             perturbation_amounts = {
