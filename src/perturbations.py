@@ -109,9 +109,9 @@ def unscaled_dropout_mask(x, keep_prob, mask, noise_shape=None, seed=None, name=
         if not x.dtype.is_floating:
             raise ValueError("x has to be a floating point tensor since it's going to"
                              " be scaled. Got a %s tensor instead." % x.dtype)
-        if isinstance(keep_prob, numbers.Real) and not 0 < keep_prob <= 1:
-            raise ValueError("keep_prob must be a scalar tensor or a float in the "
-                             "range (0, 1], got %g" % keep_prob)
+        # if isinstance(keep_prob, numbers.Real) and not 0 < keep_prob <= 1:
+        #     raise ValueError("keep_prob must be a scalar tensor or a float in the "
+        #                      "range (0, 1], got %g" % keep_prob)
         keep_prob = ops.convert_to_tensor(keep_prob,
                                           dtype=x.dtype,
                                           name="keep_prob")
