@@ -242,73 +242,52 @@ class Estimator(object):
                                                imagenet_train_predict_partial=True)
         predictions = model.predict(input_fn)
 
-        # Loop through predictions and store them in a numpy array.
+        # Loop through predictions and store them in a numpy array;
+        # done in batches for memory efficiency.
         extraction_batch_size = 100
         num_predictions = len(labels)
         num_iterations = ceil(num_predictions / extraction_batch_size)
         predicted_labels = np.zeros(np.shape(labels))
         for i in range(num_iterations):
-            p = next(predictions)
+            if i == 0:
+                activations_out = list(range(num_layers))
+                labels_out = list(range(num_layers))
 
             for j in range(extraction_batch_size):
+                p = next(predictions)
+                predicted_labels[i * extraction_batch_size + j] = p['classes']
+
                 if j == 0:
                     activations_batch = list(range(num_layers))
                     labels_batch = list(range(num_layers))
 
                 for layer in range(num_layers):
                     layer_activations = np.reshape(p[layer], (-1, np.shape(p[layer])[-1]))
-                    layer_labels = np.repeat(labels[i], np.prod(np.shape(p[layer])[1:-1]))
+                    layer_labels = np.repeat(labels[i * extraction_batch_size + j],
+                                             np.prod(np.shape(p[layer])[1:-1]))
 
                     if j == 0:
                         activations_batch[layer] = layer_activations
                         labels_out[layer] = layer_labels
                     else:
-                        activations_out[layer] = np.append(activations_out[layer], layer_activations, axis=0)
-                        labels_out[layer] = np.append(labels_out[layer], layer_labels, axis=0)
+                        activations_batch[layer] = np.append(activations_batch[layer], layer_activations, axis=0)
+                        labels_batch[layer] = np.append(labels_batch[layer], layer_labels, axis=0)
 
-            # Subsample activations if necessary.
-            # MAX_SAMPLES = 50000
-            # num_samples = np.shape(layer_labels)[0]
-            # max_samples_per_iteration = int(MAX_SAMPLES / num_iterations)
-            # if num_samples > num_samples_per_iteration
-# to do: continue writing the subsampling code
-# and desk check the logic of this whole loop
-
-
-            # for layer in range(num_layers):
-            #     num_samples = np.shape(activations_out[layer])[0]
-            #     if num_samples > MAX_SAMPLES:
-            #         idx = np.random.permutations(num_samples)[:MAX_
-
-
-
-
-        predicted_labels = np.zeros(np.shape(labels))
-        for i, p in enumerate(predictions):
-            predicted_labels[i] = p['classes']
-            if i == 0:
-                activations_out = list(range(num_layers))
-                labels_out = list(range(num_layers))
-
+            MAX_SAMPLES = 50000
+            max_samples_per_iteration = int(MAX_SAMPLES / num_iterations)
             for layer in range(num_layers):
-                layer_activations = np.reshape(p[layer], (-1, np.shape(p[layer])[-1]))
-                layer_labels = np.repeat(labels[i], np.prod(np.shape(p[layer])[1:-1]))
+                num_samples = np.shape(labels_batch[layer])[0]
+                if num_samples > max_samples_per_iteration:
+                    idx = np.random.permutations(num_samples)[:max_samples_per_iteration]
+                    activations_batch[layer] = activations_batch[layer][idx, :]
+                    labels_batch[layer] = labels_batch[layer][idx]
 
                 if i == 0:
-                    activations_out[layer] = layer_activations
-                    labels_out[layer] = layer_labels
+                    activations_out[layer] = activations_batch[layer]
+                    labels_out[layer] = labels_batch[layer]
                 else:
-                    activations_out[layer] = np.append(activations_out[layer], layer_activations, axis=0)
-                    labels_out[layer] = np.append(labels_out[layer], layer_labels, axis=0)
-
-        # Subsample activations.
-        MAX_SAMPLES = 50000
-        for layer in range(num_layers):
-            num_samples = np.shape(activations_out[layer])[0]
-            if num_samples > MAX_SAMPLES:
-                idx = np.random.permutations(num_samples)[:MAX_SAMPLES]
-                activations_out[layer] = activations_out[lyer][idx, :]
-                labels_out[layer] = labels_out[layer][idx]
+                    activations_out[layer] = np.append(activations_out[layer], activations_batch[layer], axis=0)
+                    labels_out[layer] = np.append(labels_out[layer], labels_batch[layer], axis=0)
 
         accuracy = np.mean(np.equal(labels, predicted_labels))
 
