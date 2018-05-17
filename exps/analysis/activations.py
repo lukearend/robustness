@@ -4,6 +4,7 @@ import os
 import sys
 import time
 import argparse
+import pickle
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--model_dir', type=str, required=True)
