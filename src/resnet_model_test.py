@@ -145,14 +145,11 @@ def _building_block_v1(inputs, filters, use_batch_norm, training,
     inputs = tf.nn.relu(inputs)
 
     # Perturbation.
-    if perturbation_type == 0:
-        # Random killing.
-        inputs = pt.activation_knockout(inputs, perturbation_amount)
-    elif perturbation_type == 1:
+    if perturbation_type == 1:
         # Activation noise.
         inputs = pt.activation_noise(inputs, perturbation_amount, int(inputs.get_shape()[0]))
-    elif perturbation_type == 2:
-        # Targeted killing.
+    elif perturbation_type in [0, 2]:
+        # Random (0) or targeted (2) killing, depending on mask.
         mask = tf.reshape(tf.tile(kill_mask[0],
                                   [int(np.prod(inputs.get_shape()[1:3])) * inputs.get_shape()[0]]),
                           [-1, int(inputs.get_shape()[1]), int(inputs.get_shape()[2]), int(inputs.get_shape()[3])])
@@ -167,14 +164,11 @@ def _building_block_v1(inputs, filters, use_batch_norm, training,
     inputs = tf.nn.relu(inputs)
 
     # Perturbation.
-    if perturbation_type == 0:
-        # Random killing.
-        inputs = pt.activation_knockout(inputs, perturbation_amount)
-    elif perturbation_type == 1:
+    if perturbation_type == 1:
         # Activation noise.
         inputs = pt.activation_noise(inputs, perturbation_amount, int(inputs.get_shape()[0]))
-    elif perturbation_type == 2:
-        # Targeted killing.
+    elif perturbation_type in [0, 2]:
+        # Random (0) or targeted (2) killing, depending on mask.
         mask = tf.reshape(tf.tile(kill_mask[1],
                                   [int(np.prod(inputs.get_shape()[1:3])) * inputs.get_shape()[0]]),
                           [-1, int(inputs.get_shape()[1]), int(inputs.get_shape()[2]), int(inputs.get_shape()[3])])
@@ -396,21 +390,10 @@ class Model(object):
                 strides=self.conv_stride, data_format=self.data_format)
             inputs = tf.identity(inputs, 'initial_conv')
 
-            # # Perturbations.
-            # if self.perturbation_type == 0:
-            #     # Random killing.
-            #     inputs = pt.activation_knockout(inputs, self.perturbation_amount)
-            # elif self.perturbation_type == 1:
-            # Only perturb this layer with noisy activations.
-            if self.perturbation_type == 1:
+            # Perturbation (this layer is only targeted if perturbation is noisy activations).
+            if perturbation_type == 1:
                 # Activation noise.
-                inputs = pt.activation_noise(inputs, self.perturbation_amount, int(inputs.get_shape()[0]))
-            # elif self.perturbation_type == 2:
-            #     # Targeted killing.
-            #     mask = tf.reshape(tf.tile(self.kill_mask[0]
-            #                               [int(np.prod(inputs.get_shape()[1:3])) * inputs.get_shape()[0]]),
-            #                       [-1, int(inputs.get_shape()[1]), int(inputs.get_shape()[2]), int(inputs.get_shape()[3])])
-            #     inputs = pt.activation_knockout_mask(inputs, self.perturbation_amount, mask)
+                inputs = pt.activation_noise(inputs, perturbation_amount, int(inputs.get_shape()[0]))
 
             if self.first_pool_size:
                 inputs = tf.layers.max_pooling2d(

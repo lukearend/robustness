@@ -48,7 +48,7 @@ def main():
                 'num_filters': num_filters},
             tf_random_seed=int(time.time()))
 
-        for k, perturbation_type in enumerate([1]):
+        for k, perturbation_type in enumerate([0, 1, 2]):
             print('perturbation: {}'.format(perturbation_type))
 
             perturbation_amounts = {
@@ -56,18 +56,27 @@ def main():
                 1: np.linspace(0.0, 1.0, 7),
                 2: np.linspace(0.0, 1.0, 7)}[perturbation_type]
 
-            results.append([np.zeros(len(perturbation_amounts)) for _ in range(2)])
-            for i, perturbation_amount in enumerate(perturbation_amounts[:]):
-                kill_mask = [None for _ in range(19)]
+            results_index = {
+                0: 2,
+                1: 3,
+                2: 4}[perturbation_type]
+            results[results_index] = [np.zeros(len(perturbation_amounts)) for _ in range(2)]
+            for i, perturbation_amount in enumerate(perturbation_amounts):
 
-                for j, split in enumerate(['validation']):
+                for j, split in enumerate(['validation', 'train']):
                     print('split: {}'.format(split))
+
+                    # Build kernel file name.
+                    pickle_dir = '/cbcl/cbcl01/larend/tmp'
+                    split_str = {'train': '', 'validation': '_test'}[split]
+                    kernel_filename = os.path.join(FLAGS.pickle_dir,
+                                                   'kernel{}{}'.format(split_str, crossval))
 
                     t_0 = time.time()
                     accuracy = model.robustness(
                         perturbation_type,
                         perturbation_amount,
-                        kill_mask,
+                        kernel_filename,
                         data_dir=data_dir,
                         split=split)
                     t_1 = time.time()
@@ -75,13 +84,13 @@ def main():
                     print('accuracy: {}'.format(accuracy))
                     print('time: {}'.format(t_1 - t_0))
 
-                    results[k][j][i] = accuracy
+                    results[results_index][j][i] = accuracy
 
-        out_dir = '/cbcl/cbcl01/larend/tmp'
-        if not os.path.exists(out_dir):
-            os.makedirs(out_dir)
+        pickle_dir = '/cbcl/cbcl01/larend/tmp'
+        if not os.path.exists(pickle_dir):
+            os.makedirs(pickle_dir)
 
-        with open(os.path.join(out_dir, 'robustness{}.pkl'.format(crossval)), 'wb') as f:
+        with open(os.path.join(pickle_dir, 'robustness{}.pkl'.format(crossval)), 'wb') as f:
             pickle.dump(results, f, protocol=pickle.HIGHEST_PROTOCOL)
 
         tf.reset_default_graph()

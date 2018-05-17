@@ -305,14 +305,14 @@ class Estimator(object):
     def robustness(self,
         perturbation_type,
         perturbation_amount,
-        kill_mask,
+        kernel_filename,
         data_dir='/tmp',
         split='train',
         num_gpus=1):
         """Test robustness of a model.
 
         Args:
-            perturbation_type, perturbation_amount, kill_mask:
+            perturbation_type, perturbation_amount, kernel_filename:
                 settings for testing robustness.
             data_dir: directory in which to look for validation data.
             split: one of 'train' or 'validation'.
@@ -320,6 +320,33 @@ class Estimator(object):
         """
         # Set seed!
         imagenet_train_predict_shuffle_seed = int(time.time())
+
+        # Load kernel file and use it to compute kill_mask.
+        with open(kernel_filename, 'rb') as f:
+            kernel = pickle.load(f)
+        num_layers = len(kernel)
+
+        if perturbation_type in [0, 2]:
+            kill_mask = []
+            for layer in range(num_layers):
+                num_neurons = np.shape(kernel[layer])[0]
+                num_to_kill = int(perturbation_amount * num_neurons)
+
+                if perturbation_type == 0:
+                    # Select neurons for killing at random.
+                    indices = np.arange(num_neurons)
+                    np.random.shuffle(indices)
+                    neurons_to_kill = indices[:num_to_kill]
+                elif perturbation_type == 2:
+                    # Pick a random neuron and find its nearest neighbors to kill.
+                    start_neuron = np.random.randint(0, num_neurons)
+                    nearest_neighbors = np.argsort(kernel[layer][start_neuron])
+                    neurons_to_kill = nearest_neighbors[:num_to_kill]
+
+                kill_mask.append(np.zeros(num_neurons))
+                kill_mask[layers][neurons_to_kill] = 1.
+        else:
+            kill_mask = [None for _ in range(len(kernel))]
 
         # First, loop through the dataset and read out labels.
         _, label_batch = estimator_fns.input_fn(tf.estimator.ModeKeys.PREDICT,

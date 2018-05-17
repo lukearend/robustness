@@ -13,7 +13,7 @@ parser.add_argument('--scale_factor', type=float, required=True)
 parser.add_argument('--disable_batch_norm', dest='use_batch_norm',
                     action='store_false')
 parser.add_argument('--dataset', type=str, required=True)
-parser.add_argument('--out_dir', type=str, required=True)
+parser.add_argument('--pickle_dir', type=str, required=True)
 parser.add_argument('--host_filesystem', type=str, required=True)
 FLAGS = parser.parse_args()
 
@@ -71,19 +71,24 @@ def main():
             for i, perturbation_amount in enumerate(perturbation_amounts):
 
                 for j, split in enumerate(['validation', 'train']):
+                    # Build kernel file name.
+                    split_str = {'train': '', 'validation': '_test'}[split]
+                    kernel_filename = os.path.join(FLAGS.pickle_dir,
+                                                   'kernel{}{}'.format(split_str, crossval))
+
                     accuracy = model.robustness(
                         perturbation_type,
                         perturbation_amount,
-                        kill_mask,
+                        kernel_filename,
                         data_dir=data_dir,
                         split=split)
 
                     results[results_index][j][i] = accuracy
 
-        if not os.path.exists(FLAGS.out_dir):
-            os.makedirs(FLAGS.out_dir)
+        if not os.path.exists(FLAGS.pickle_dir):
+            os.makedirs(FLAGS.pickle_dir)
 
-        with open(os.path.join(FLAGS.out_dir, 'robustness{}.pkl'.format(crossval)), 'wb') as f:
+        with open(os.path.join(FLAGS.pickle_dir, 'robustness{}.pkl'.format(crossval)), 'wb') as f:
             pickle.dump(results, f, protocol=pickle.HIGHEST_PROTOCOL)
 
         tf.reset_default_graph()
