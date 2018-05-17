@@ -267,18 +267,18 @@ class Estimator(object):
                         labels_out[layer] = np.append(labels_out[layer], layer_labels, axis=0)
 
             # Subsample activations if necessary.
-            MAX_SAMPLES = 50000
-            num_samples = np.shape(layer_labels)[0]
-            max_samples_per_iteration = int(MAX_SAMPLES / num_iterations)
-            if num_samples > num_samples_per_iteration
+            # MAX_SAMPLES = 50000
+            # num_samples = np.shape(layer_labels)[0]
+            # max_samples_per_iteration = int(MAX_SAMPLES / num_iterations)
+            # if num_samples > num_samples_per_iteration
 # to do: continue writing the subsampling code
 # and desk check the logic of this whole loop
 
 
-            for layer in range(num_layers):
-                num_samples = np.shape(activations_out[layer])[0]
-                if num_samples > MAX_SAMPLES:
-                    idx = np.random.permutations(num_samples)[:MAX_
+            # for layer in range(num_layers):
+            #     num_samples = np.shape(activations_out[layer])[0]
+            #     if num_samples > MAX_SAMPLES:
+            #         idx = np.random.permutations(num_samples)[:MAX_
 
 
 
