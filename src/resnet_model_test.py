@@ -419,7 +419,7 @@ class Model(object):
 
             for i, num_blocks in enumerate(self.block_sizes):
                 num_filters = self.num_filters * (2**i)
-                if i < 1:
+                if i < 2:
                     perturbation_type = 0
                     perturbation_amount = 0.
                 else:
