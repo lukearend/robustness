@@ -106,8 +106,6 @@ def main():
         with open(os.path.join(FLAGS.pickle_dir, 'robustness{}.pkl'.format(crossval)), 'wb') as f:
             pickle.dump(results, f, protocol=pickle.HIGHEST_PROTOCOL)
 
-        tf.reset_default_graph()
-
 
 if __name__ == '__main__':
     main()

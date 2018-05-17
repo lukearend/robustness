@@ -88,8 +88,6 @@ def main():
             with open(os.path.join(FLAGS.pickle_dir, 'accuracy{}{}.pkl'.format(split_str, crossval)), 'wb') as f:
                 pickle.dump(accuracy, f, protocol=pickle.HIGHEST_PROTOCOL)
 
-        tf.reset_default_graph()
-
     print('done :)')
 
 

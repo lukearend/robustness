@@ -297,7 +297,7 @@ class Estimator(object):
                     labels_out[layer] = np.append(labels_out[layer], labels_batch[layer], axis=0)
 
             toc = time.time()
-            print('extraction iteration {}/{}: {} sec'.format(i, num_iterations, toc - tic))
+            print('extraction iteration {}/{}: {} sec'.format(i, num_iterations, toc - tic), end='    \r')
 
         accuracy = np.mean(np.equal(labels, predicted_labels))
 
