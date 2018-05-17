@@ -577,10 +577,7 @@ class Model(object):
       inputs = tf.reshape(inputs, [-1, self.final_size])
       inputs = tf.layers.dense(inputs=inputs, units=self.num_classes)
 
-      if self.data_format == 'channels_first':
-        activations.append(tf.transpose(inputs, [0, 2, 3, 1]))
-      else:
-        activations.append(inputs)
+      activations.append(inputs)
 
       inputs = tf.identity(inputs, 'final_dense')
       return inputs, activations
