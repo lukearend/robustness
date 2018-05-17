@@ -48,7 +48,7 @@ def main():
                 'num_filters': num_filters},
             tf_random_seed=int(time.time()))
 
-        for k, perturbation_type in enumerate([1]):
+        for k, perturbation_type in enumerate([0]):
             print('perturbation: {}'.format(perturbation_type))
 
             perturbation_amounts = {
@@ -60,7 +60,7 @@ def main():
             for i, perturbation_amount in enumerate(perturbation_amounts):
                 kill_mask = [None for _ in range(19)]
 
-                for j, split in enumerate(['validation', 'train']):
+                for j, split in enumerate(['validation']):
                     print('split: {}'.format(split))
 
                     t_0 = time.time()
