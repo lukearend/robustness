@@ -141,7 +141,10 @@ def _building_block_v1(inputs, filters, use_batch_norm, training,
     inputs = batch_norm(inputs, training, data_format)
   inputs = tf.nn.relu(inputs)
 
-  activations.append(inputs)
+  if data_format == 'channels_first':
+    activations.append(tf.transpose(inputs, [0, 2, 3, 1]))
+  else:
+    activations.append(inputs)
 
   inputs = conv2d_fixed_padding(
       inputs=inputs, filters=filters, kernel_size=3, strides=1,
@@ -151,7 +154,10 @@ def _building_block_v1(inputs, filters, use_batch_norm, training,
   inputs += shortcut
   inputs = tf.nn.relu(inputs)
 
-  activations.append(inputs)
+  if data_format == 'channels_first':
+    activations.append(tf.transpose(inputs, [0, 2, 3, 1]))
+  else:
+    activations.append(inputs)
 
   return inputs
 
@@ -533,7 +539,10 @@ class Model(object):
           strides=self.conv_stride, data_format=self.data_format)
       inputs = tf.identity(inputs, 'initial_conv')
 
-      activations.append(inputs)
+      if self.data_format == 'channels_first':
+        activations.append(tf.transpose(inputs, [0, 2, 3, 1]))
+      else:
+        activations.append(inputs)
 
       if self.first_pool_size:
         inputs = tf.layers.max_pooling2d(
@@ -568,7 +577,10 @@ class Model(object):
       inputs = tf.reshape(inputs, [-1, self.final_size])
       inputs = tf.layers.dense(inputs=inputs, units=self.num_classes)
 
-      activations.append(inputs)
+      if self.data_format == 'channels_first':
+        activations.append(tf.transpose(inputs, [0, 2, 3, 1]))
+      else:
+        activations.append(inputs)
 
       inputs = tf.identity(inputs, 'final_dense')
       return inputs, activations

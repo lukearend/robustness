@@ -358,9 +358,19 @@ class Estimator(object):
                                                imagenet_train_predict_partial=True)
         predictions = model.predict(input_fn, predict_keys='classes')
 
-        # Loop through predictions and store them in a numpy array.
-        predicted_labels = np.array([p['classes'] for p in predictions])
+        # Loop through predictions and compute accuracy.
+        correct = np.zeros(len(labels))
+        if self.params['dataset'] == 'imagenet':
+            # For imagenet, compute top-5 accuracy.
+            probabilities = np.zeros((len(labels)), 1000)
+            for i, p in enumerate(predictions):
+                top_5_indices = np.argsort(-p['predictions'])[:5]
+                correct[i] = labels[i] in top_5_indices
+        else:
+            # For cifar, compute top-1 accuracy.
+            for i, p in enumerate(predictions):
+                correct[i] = labels[i] == p['classes']
 
-        accuracy = np.mean(np.equal(labels, predicted_labels))
+        accuracy = np.mean(correct)
 
         return accuracy

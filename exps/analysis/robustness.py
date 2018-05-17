@@ -46,7 +46,7 @@ def main():
         'imagenet': '/om/user/larend/data/imagenet-tfrecords'}[FLAGS.dataset]
 
     for crossval in range(3):
-        results = []
+        results = [None for _ in range(5)]
 
         model = Estimator(
             model_dir=FLAGS.model_dir,
@@ -63,7 +63,11 @@ def main():
                 1: np.linspace(0.0, 1.0, 7),
                 2: np.linspace(0.0, 1.0, 7)}[perturbation_type]
 
-            results.append([np.zeros(len(perturbation_amounts)) for _ in range(2)])
+            results_index = {
+                0: 2,
+                1: 3,
+                2: 4}[perturbation_type]
+            results[results_index] = [np.zeros(len(perturbation_amounts)) for _ in range(2)]
             for i, perturbation_amount in enumerate(perturbation_amounts):
 
                 for j, split in enumerate(['validation', 'train']):
@@ -74,7 +78,7 @@ def main():
                         data_dir=data_dir,
                         split=split)
 
-                    results[k][j][i] = accuracy
+                    results[results_index][j][i] = accuracy
 
         if not os.path.exists(FLAGS.out_dir):
             os.makedirs(FLAGS.out_dir)

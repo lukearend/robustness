@@ -182,7 +182,6 @@ class ExamplesPerSecondHook(session_run_hook.SessionRunHook):
                         current_examples_per_sec,
                         self._total_steps))
 
-
 def replace_monitors_with_hooks(monitors_and_hooks, model):
     """Converts a list which may contain hooks or monitors to a list of
     hooks."""

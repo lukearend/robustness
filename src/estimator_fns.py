@@ -184,7 +184,8 @@ def get_model_fn(num_gpus, variable_strategy='GPU', keep_checkpoint_max=10,
                                                                kill_mask)
 
                     predictions = {
-                        'classes': tf.argmax(logits, axis=1)
+                        'classes': tf.argmax(logits, axis=1),
+                        'probabilities': tf.nn.softmax(logits)
                     }
 
                 else:
