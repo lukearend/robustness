@@ -404,7 +404,7 @@ class Estimator(object):
         correct = np.zeros(len(labels))
         if self.params['dataset'] == 'imagenet':
             # For imagenet, compute top-5 accuracy.
-            probabilities = np.zeros((len(labels)), 1000)
+            probabilities = np.zeros(len(labels), 1000)
             for i, p in enumerate(predictions):
                 top_5_indices = np.argsort(-p['predictions'])[:5]
                 correct[i] = labels[i] in top_5_indices
