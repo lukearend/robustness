@@ -7,8 +7,6 @@
 #SBATCH --mail-user=larend@mit.edu
 #SBATCH --mail-type=FAIL
 
-module load openmind/singularity/older_versions/2.4
-
 singularity exec --nv -B /raid:/raid /raid/poggio/home/larend/localtensorflow.img \
 python /raid/poggio/home/larend/robust/exps/analysis/activations.py \
 --model_dir=/raid/poggio/home/larend/models/robust/imagenet/00004 \
