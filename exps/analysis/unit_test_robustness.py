@@ -49,8 +49,6 @@ def main():
             tf_random_seed=int(time.time()))
 
         for perturbation_type in [0, 1, 2]:
-            print('perturbation: {}'.format(perturbation_type))
-
             perturbation_amounts = {
                 0: np.linspace(0.0, 1.0, 7),
                 1: np.linspace(0.0, 1.0, 7),
@@ -64,8 +62,6 @@ def main():
             for i, perturbation_amount in enumerate(perturbation_amounts):
 
                 for j, split in enumerate(['train', 'validation']):
-                    print('split: {}'.format(split))
-
                     # Build kernel file name.
                     pickle_dir = '/cbcl/cbcl01/larend/tmp'
                     split_str = {'train': '', 'validation': '_test'}[split]
@@ -81,6 +77,9 @@ def main():
                         split=split)
                     t_1 = time.time()
 
+                    print('perturbation: {}'.format(perturbation_type))
+                    print('amount: {}'.format(perturbation_amount))
+                    print('split: {}'.format(split))
                     print('accuracy: {}'.format(accuracy))
                     print('time: {}'.format(t_1 - t_0))
 

@@ -409,7 +409,7 @@ class Model(object):
             # Perturbation (this first layer is only targeted if perturbation is noisy activations).
             if self.perturbation_type == 1:
                 # Activation noise.
-                inputs = pt.activation_noise(inputs, perturbation_amount, int(inputs.get_shape()[0]))
+                inputs = pt.activation_noise(inputs, self.perturbation_amount, int(inputs.get_shape()[0]))
 
             if self.first_pool_size:
                 inputs = tf.layers.max_pooling2d(
