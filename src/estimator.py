@@ -327,9 +327,6 @@ class Estimator(object):
             kernel = pickle.load(f)
         num_layers = len(kernel)
 
-        perturbation_type = 2 #DEBUGGING
-        perturbation_amount = 0.5 #DEBUGGING
-
         if perturbation_type in [0, 2]:
             kill_mask = []
             for layer in range(num_layers):
@@ -351,8 +348,6 @@ class Estimator(object):
                 kill_mask[layer][neurons_to_kill] = 1.
         else:
             kill_mask = [None for _ in range(len(kernel))]
-
-        print(kill_mask)
 
         # First, loop through the dataset and read out labels.
         _, label_batch = estimator_fns.input_fn(tf.estimator.ModeKeys.PREDICT,
