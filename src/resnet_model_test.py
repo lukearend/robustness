@@ -152,10 +152,16 @@ def _building_block_v1(inputs, filters, use_batch_norm, training,
         inputs = pt.activation_noise(inputs, perturbation_amount, int(inputs.get_shape()[0]))
     elif perturbation_type in [0, 2]:
         # Random (0) or targeted (2) killing, depending on mask.
+        if data_format == 'channels_first':
+            # Temporarily swap to 'channels_last'.
+            inputs = tf.transpose(inputs, [0, 2, 3, 1])
         mask = tf.reshape(tf.tile(kill_mask[0],
                                   [int(np.prod(inputs.get_shape()[1:3]) * inputs.get_shape()[0])]),
                           [-1, int(inputs.get_shape()[1]), int(inputs.get_shape()[2]), int(inputs.get_shape()[3])])
         inputs = pt.activation_knockout_mask(inputs, perturbation_amount, mask)
+        if data_format == 'channels_first':
+            # Swap back to 'channels_first'.
+            inputs = tf.transpose(inputs, [0, 3, 1, 2])
 
     inputs = conv2d_fixed_padding(
         inputs=inputs, filters=filters, kernel_size=3, strides=1,
@@ -173,10 +179,16 @@ def _building_block_v1(inputs, filters, use_batch_norm, training,
         inputs = pt.activation_noise(inputs, perturbation_amount, int(inputs.get_shape()[0]))
     elif perturbation_type in [0, 2]:
         # Random (0) or targeted (2) killing, depending on mask.
-        mask = tf.reshape(tf.tile(kill_mask[1],
+        if data_format == 'channels_first':
+            # Temporarily swap to 'channels_last'.
+            inputs = tf.transpose(inputs, [0, 2, 3, 1])
+        mask = tf.reshape(tf.tile(kill_mask[0],
                                   [int(np.prod(inputs.get_shape()[1:3]) * inputs.get_shape()[0])]),
                           [-1, int(inputs.get_shape()[1]), int(inputs.get_shape()[2]), int(inputs.get_shape()[3])])
         inputs = pt.activation_knockout_mask(inputs, perturbation_amount, mask)
+        if data_format == 'channels_first':
+            # Swap back to 'channels_first'.
+            inputs = tf.transpose(inputs, [0, 3, 1, 2])
 
     return inputs
 
