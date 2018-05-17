@@ -39,6 +39,10 @@ def main():
             2: 128,
             4: 256}[FLAGS.scale_factor]
 
+    num_layers = {
+        'cifar10': 19,
+        'imagenet': 17}['cifar10']
+
     base_data_dir = {
         '/raid': '/raid/poggio/home/larend/data',
         '/om': '/om/user/larend/data',
@@ -58,10 +62,18 @@ def main():
                 'num_filters': num_filters},
             tf_random_seed=int(time.time()))
 
-        for split in ['validation', 'train']:
+        for split in ['train', 'validation']:
+            t_0 = time.time()
             activations, labels, accuracy = model.activations(
+                num_layers,
                 data_dir=data_dir,
                 split=split)
+            t_1 = time.time()
+
+            print('crossval: {}'.format(crossval))
+            print('split: {}'.format(split))
+            print('accuracy: {}'.format(accuracy))
+            print('time: {}'.format(t_1 - t_0))
 
             if not os.path.exists(FLAGS.pickle_dir):
                 os.makedirs(FLAGS.pickle_dir)
@@ -76,6 +88,8 @@ def main():
                 pickle.dump(accuracy, f, protocol=pickle.HIGHEST_PROTOCOL)
 
         tf.reset_default_graph()
+
+    print('done :)')
 
 
 if __name__ == '__main__':

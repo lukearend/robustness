@@ -42,9 +42,14 @@ def main():
             2: 128,
             4: 256}[FLAGS.scale_factor]
 
+    base_data_dir = {
+        '/raid': '/raid/poggio/home/larend/data',
+        '/om': '/om/user/larend/data',
+        '/cbcl': '/cbcl/cbcl01/larend/data'}[FLAGS.host_filesystem]
+
     data_dir = {
-        'cifar10': '/om/user/larend/data/cifar-10-tfrecords',
-        'imagenet': '/om/user/larend/data/imagenet-tfrecords'}[FLAGS.dataset]
+        'cifar10': '{}/larend/data/cifar-10-tfrecords'.format(base_data_dir),
+        'imagenet': '{}/larend/data/imagenet-tfrecords'.format(base_data_dir)}[FLAGS.dataset]
 
     for crossval in range(3):
         results = [None for _ in range(5)]
@@ -77,12 +82,21 @@ def main():
                     kernel_filename = os.path.join(FLAGS.pickle_dir,
                                                    'kernel{}{}.pkl'.format(split_str, crossval))
 
+                    t_0 = time.time()
                     accuracy = model.robustness(
                         perturbation_type,
                         perturbation_amount,
                         kernel_filename,
                         data_dir=data_dir,
                         split=split)
+                    t_1 = time.time()
+
+                    print('crossval: {}'.format(crossval))
+                    print('perturbation: {}'.format(perturbation_type))
+                    print('amount: {}'.format(perturbation_amount))
+                    print('split: {}'.format(split))
+                    print('accuracy: {}'.format(accuracy))
+                    print('time: {}'.format(t_1 - t_0))
 
                     results[results_index][j][i] = accuracy
 
