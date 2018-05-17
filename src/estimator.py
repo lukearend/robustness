@@ -245,7 +245,7 @@ class Estimator(object):
 
         # Loop through predictions and store them in a numpy array;
         # done in batches for memory efficiency.
-        extraction_batch_size = 100
+        extraction_batch_size = 1000
         num_predictions = len(labels)
         num_iterations = math.ceil(num_predictions / extraction_batch_size)
         predicted_labels = np.zeros(np.shape(labels))
@@ -265,16 +265,9 @@ class Estimator(object):
                     labels_batch = list(range(num_layers))
 
                 for layer in range(num_layers):
-                    if i == 0 and j == 0:
-                        print('p[{}]: {}'.format(layer, p[layer].shape))
-
                     layer_activations = np.reshape(p[layer], (-1, np.shape(p[layer])[-1]))
                     layer_labels = np.repeat(labels[i * extraction_batch_size + j],
                                              np.prod(np.shape(p[layer])[:-1]))
-
-                    if i == 0 and j == 0:
-                        print('{}_activations: {}'.format(layer, layer_activations.shape))
-                        print('{}_labels: {}'.format(layer, layer_labels.shape))
 
                     if j == 0:
                         activations_batch[layer] = layer_activations
