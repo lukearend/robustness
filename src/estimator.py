@@ -400,7 +400,7 @@ class Estimator(object):
                                                predict_split=split,
                                                imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
                                                imagenet_train_predict_partial=True)
-        predictions = model.predict(input_fn, predict_keys='classes')
+        predictions = model.predict(input_fn, predict_keys=['classes', 'probabilities'])
 
         # Loop through predictions and compute accuracy.
         correct = np.zeros(len(labels))
