@@ -408,7 +408,7 @@ class Estimator(object):
             # For imagenet, compute top-5 accuracy.
             probabilities = np.zeros((len(labels), 1000))
             for i, p in enumerate(predictions):
-                top_5_indices = np.argsort(-p['predictions'])[:5]
+                top_5_indices = np.argsort(-p['probabilities'])[:5]
                 correct[i] = labels[i] in top_5_indices
         else:
             # For cifar, compute top-1 accuracy.
