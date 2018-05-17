@@ -339,7 +339,8 @@ class Estimator(object):
                                                 self.params,
                                                 reading_labels=True,
                                                 predict_split=split,
-                                                imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed)
+                                                imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
+                                                imagenet_train_predict_partial=True)
         labels = None
         with tf.Session() as sess:
             while True:
@@ -373,7 +374,8 @@ class Estimator(object):
                                                self.params,
                                                num_gpus=num_gpus,
                                                predict_split=split,
-                                               imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed)
+                                               imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
+                                               imagenet_train_predict_partial=True)
         predictions = model.predict(input_fn, predict_keys='classes')
 
         # Loop through predictions and store them in a numpy array.
