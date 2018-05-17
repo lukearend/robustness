@@ -42,7 +42,7 @@ def main():
 
     num_layers = {
         'cifar10': 19,
-        'imagenet': 17}['cifar10']
+        'imagenet': 17}[FLAGS.dataset]
 
     base_data_dir = {
         '/raid': '/raid/poggio/home/larend/data',
