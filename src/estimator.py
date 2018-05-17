@@ -250,6 +250,8 @@ class Estimator(object):
         num_iterations = math.ceil(num_predictions / extraction_batch_size)
         predicted_labels = np.zeros(np.shape(labels))
         for i in range(num_iterations):
+            tic = time.time()
+
             if i == 0:
                 activations_out = list(range(num_layers))
                 labels_out = list(range(num_layers))
@@ -263,9 +265,15 @@ class Estimator(object):
                     labels_batch = list(range(num_layers))
 
                 for layer in range(num_layers):
+                    if i == 0:
+                        print('p[{}]: {}'.format(layer, p[layer].shape))
+
                     layer_activations = np.reshape(p[layer], (-1, np.shape(p[layer])[-1]))
                     layer_labels = np.repeat(labels[i * extraction_batch_size + j],
                                              np.prod(np.shape(p[layer])[1:-1]))
+
+                    if i == 0:
+                        print('{}_activations: {}'.format(layer, layer_activations.shape))
 
                     if j == 0:
                         activations_batch[layer] = layer_activations
@@ -289,6 +297,9 @@ class Estimator(object):
                 else:
                     activations_out[layer] = np.append(activations_out[layer], activations_batch[layer], axis=0)
                     labels_out[layer] = np.append(labels_out[layer], labels_batch[layer], axis=0)
+
+            toc = time.time()
+            print('extraction iteration {}: {} sec'.format(i, toc - tic))
 
         accuracy = np.mean(np.equal(labels, predicted_labels))
 
