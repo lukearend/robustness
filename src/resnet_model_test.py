@@ -145,7 +145,9 @@ def _building_block_v1(inputs, filters, use_batch_norm, training,
     inputs = tf.nn.relu(inputs)
 
     # Perturbation.
-    if perturbation_type == 1:
+    if perturbation_type == -1:
+        pass
+    elif perturbation_type == 1:
         # Activation noise.
         inputs = pt.activation_noise(inputs, perturbation_amount, int(inputs.get_shape()[0]))
     elif perturbation_type in [0, 2]:
@@ -164,7 +166,9 @@ def _building_block_v1(inputs, filters, use_batch_norm, training,
     inputs = tf.nn.relu(inputs)
 
     # Perturbation.
-    if perturbation_type == 1:
+    if perturbation_type == -1:
+        pass
+    elif perturbation_type == 1:
         # Activation noise.
         inputs = pt.activation_noise(inputs, perturbation_amount, int(inputs.get_shape()[0]))
     elif perturbation_type in [0, 2]:
@@ -390,8 +394,8 @@ class Model(object):
                 strides=self.conv_stride, data_format=self.data_format)
             inputs = tf.identity(inputs, 'initial_conv')
 
-            # Perturbation (this layer is only targeted if perturbation is noisy activations).
-            if perturbation_type == 1:
+            # Perturbation (this first layer is only targeted if perturbation is noisy activations).
+            if self.perturbation_type == 1:
                 # Activation noise.
                 inputs = pt.activation_noise(inputs, perturbation_amount, int(inputs.get_shape()[0]))
 
@@ -406,8 +410,8 @@ class Model(object):
                 num_filters = self.num_filters * (2**i)
                 # For killing perturbations, spare every block layer but last.
                 if self.perturbation_type in [0, 2] and i < len(self.block_sizes)-1:
-                    perturbation_type = 0
-                    perturbation_amount = 0.
+                    perturbation_type = -1
+                    perturbation_amount = None
                 else:
                     perturbation_type = self.perturbation_type
                     perturbation_amount = self.perturbation_amount
