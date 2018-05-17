@@ -345,7 +345,7 @@ class Estimator(object):
                     neurons_to_kill = nearest_neighbors[:num_to_kill]
 
                 kill_mask.append(np.zeros(num_neurons))
-                kill_mask[layers][neurons_to_kill] = 1.
+                kill_mask[layer][neurons_to_kill] = 1.
         else:
             kill_mask = [None for _ in range(len(kernel))]
 
