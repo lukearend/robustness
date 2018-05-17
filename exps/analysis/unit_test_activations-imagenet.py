@@ -18,15 +18,15 @@ import estimator
 
 def main():
     num_filters = {
-        0.25: 16,
-        0.5: 32,
-        1: 64,
-        2: 128,
-        4: 256}[1]
+        0.25: 4,
+        0.5: 8,
+        1: 16,
+        2: 32,
+        4: 64}[1]
 
     num_layers = {
         'cifar10': 19,
-        'imagenet': 17}['imagenet']
+        'imagenet': 17}['cifar10']
 
     base_data_dir = {
         '/raid': '/raid/poggio/home/larend/data',
@@ -35,16 +35,16 @@ def main():
 
     data_dir = {
         'cifar10': '{}/cifar-10-tfrecords'.format(base_data_dir),
-        'imagenet': '{}/imagenet-tfrecords'.format(base_data_dir)}['imagenet']
+        'imagenet': '{}/imagenet-tfrecords'.format(base_data_dir)}['cifar10']
 
     for crossval in range(1):
         print('crossval: {}'.format(crossval))
 
         model = estimator.Estimator(
-            model_dir='/cbcl/cbcl01/larend/models/robust/imagenet/00002',
+            model_dir='/cbcl/cbcl01/larend/models/robust/cifar10/00002',
             params={
                 'batch_size': 100,
-                'dataset': 'imagenet',
+                'dataset': 'cifar10',
                 'use_batch_norm': True,
                 'num_filters': num_filters},
             tf_random_seed=int(time.time()))

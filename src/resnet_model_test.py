@@ -396,13 +396,15 @@ class Model(object):
                 strides=self.conv_stride, data_format=self.data_format)
             inputs = tf.identity(inputs, 'initial_conv')
 
-            # # Perturbation.
+            # # Perturbations.
             # if self.perturbation_type == 0:
             #     # Random killing.
             #     inputs = pt.activation_knockout(inputs, self.perturbation_amount)
             # elif self.perturbation_type == 1:
-            #     # Activation noise.
-            #     inputs = pt.activation_noise(inputs, self.perturbation_amount, int(inputs.get_shape()[0]))
+            # Only perturb this layer with noisy activations.
+            if self.perturbation_type == 1:
+                # Activation noise.
+                inputs = pt.activation_noise(inputs, self.perturbation_amount, int(inputs.get_shape()[0]))
             # elif self.perturbation_type == 2:
             #     # Targeted killing.
             #     mask = tf.reshape(tf.tile(self.kill_mask[0]
@@ -419,7 +421,8 @@ class Model(object):
 
             for i, num_blocks in enumerate(self.block_sizes):
                 num_filters = self.num_filters * (2**i)
-                if i < 2:
+                # For killing perturbations, spare every block layer but last.
+                if perturbation_type in [0, 2] and i < len(self.block_sizes)-1
                     perturbation_type = 0
                     perturbation_amount = 0.
                 else:
