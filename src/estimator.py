@@ -270,7 +270,7 @@ class Estimator(object):
 
                     layer_activations = np.reshape(p[layer], (-1, np.shape(p[layer])[-1]))
                     layer_labels = np.repeat(labels[i * extraction_batch_size + j],
-                                             np.prod(np.shape(p[layer])[1:-1]))
+                                             np.prod(np.shape(p[layer])[:-1]))
 
                     if i == 0 and j == 0:
                         print('{}_activations: {}'.format(layer, layer_activations.shape))
