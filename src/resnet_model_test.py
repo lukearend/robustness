@@ -422,7 +422,7 @@ class Model(object):
             for i, num_blocks in enumerate(self.block_sizes):
                 num_filters = self.num_filters * (2**i)
                 # For killing perturbations, spare every block layer but last.
-                if perturbation_type in [0, 2] and i < len(self.block_sizes)-1:
+                if self.perturbation_type in [0, 2] and i < len(self.block_sizes)-1:
                     perturbation_type = 0
                     perturbation_amount = 0.
                 else:
