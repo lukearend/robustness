@@ -69,7 +69,7 @@ def main():
                     # Build kernel file name.
                     pickle_dir = '/cbcl/cbcl01/larend/tmp'
                     split_str = {'train': '', 'validation': '_test'}[split]
-                    kernel_filename = os.path.join(FLAGS.pickle_dir,
+                    kernel_filename = os.path.join(pickle_dir,
                                                    'kernel{}{}'.format(split_str, crossval))
 
                     t_0 = time.time()
