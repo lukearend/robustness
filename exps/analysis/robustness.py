@@ -48,7 +48,7 @@ def main():
         '/cbcl': '/cbcl/cbcl01/larend/data'}[FLAGS.host_filesystem]
 
     data_dir = {
-        'cifar10': '{}/cifar10-tfrecords'.format(base_data_dir),
+        'cifar10': '{}/cifar-10-tfrecords'.format(base_data_dir),
         'imagenet': '{}/imagenet-tfrecords'.format(base_data_dir)}[FLAGS.dataset]
 
     for crossval in range(3):
