@@ -69,6 +69,10 @@ def input_fn(mode, input_path, params, num_gpus=None, reading_labels=False,
                                                   imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
                                                   imagenet_train_predict_partial=imagenet_train_predict_partial)
             image_batch, label_batch = dataset.make_batch(params['batch_size'])
+            if params['dataset'] == 'imagenet':
+                image_batch.set_shape((params['batch_size'], 224, 224, 3))
+            elif params['dataset'] == 'cifar10':
+                image_batch.set_shape((params['batch_size'], 32, 32, 3))
             if reading_labels:
                 return image_batch, label_batch
             else:
