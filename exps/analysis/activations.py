@@ -14,6 +14,7 @@ parser.add_argument('--disable_batch_norm', dest='use_batch_norm',
 parser.add_argument('--dataset', type=str, required=True)
 parser.add_argument('--pickle_dir', type=str, required=True)
 parser.add_argument('--host_filesystem', type=str, required=True)
+parser.add_argument('--rush', dest='rush', action='store_true')
 FLAGS = parser.parse_args()
 
 append_path = {
@@ -68,7 +69,8 @@ def main():
             activations, labels, accuracy = model.activations(
                 num_layers,
                 data_dir=data_dir,
-                split=split)
+                split=split,
+                rush=FLAGS.rush)
             t_1 = time.time()
 
             print('crossval: {}'.format(crossval))

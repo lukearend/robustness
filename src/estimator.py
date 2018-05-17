@@ -194,7 +194,7 @@ class Estimator(object):
 
         model.evaluate(input_fn=input_fn)
 
-    def activations(self, num_layers, data_dir='/tmp', split='train', num_gpus=1):
+    def activations(self, num_layers, data_dir='/tmp', split='train', num_gpus=1, rush=False):
         """Extract activations to a dataset.
 
         Args:
@@ -251,6 +251,8 @@ class Estimator(object):
             extraction_batch_size = 100
         elif self.params['dataset'] == 'imagenet':
             extraction_batch_size = 25
+        if rush:
+            extraction_batch_size = 5
         num_predictions = len(labels)
         num_iterations = math.ceil(num_predictions / extraction_batch_size)
         predicted_labels = np.zeros(np.shape(labels))
