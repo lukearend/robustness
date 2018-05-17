@@ -249,10 +249,12 @@ class Estimator(object):
         # done in batches for memory efficiency.
         if self.params['dataset'] == 'cifar10':
             extraction_batch_size = 100
+            if rush:
+                extraction_batch_size = 20
         elif self.params['dataset'] == 'imagenet':
             extraction_batch_size = 25
-        if rush:
-            extraction_batch_size = 10
+            if rush:
+                extraction_batch_size = 5
         num_predictions = len(labels)
         num_iterations = math.ceil(num_predictions / extraction_batch_size)
         predicted_labels = np.zeros(np.shape(labels))
