@@ -10,14 +10,14 @@
 
 module load openmind/singularity/older_versions/2.4
 
-singularity exec --nv -B /om:/om /om/user/larend/localtensorflow.img \
-python /om/user/larend/robust/exps/analysis/activations.py \
---model_dir=/om/user/larend/models/robust/imagenet/00003 \
---scale_factor=2 \
---dataset=imagenet \
---pickle_dir=/om/user/larend/pickles/imagenet/00003 \
---host_filesystem=/om \
---rush
+# singularity exec --nv -B /om:/om /om/user/larend/localtensorflow.img \
+# python /om/user/larend/robust/exps/analysis/activations.py \
+# --model_dir=/om/user/larend/models/robust/imagenet/00003 \
+# --scale_factor=2 \
+# --dataset=imagenet \
+# --pickle_dir=/om/user/larend/pickles/imagenet/00003 \
+# --host_filesystem=/om \
+# --rush
 
 singularity exec --nv -B /om:/om /om/user/larend/localtensorflow.img \
 python /om/user/larend/robust/exps/analysis/redundancy.py \
