@@ -49,7 +49,7 @@ def main():
                 'num_filters': num_filters},
             tf_random_seed=int(time.time()))
 
-        for split in ['validation', 'train']:
+        for split in ['validation']:
             print('split: {}'.format(split))
 
             t_0 = time.time()
