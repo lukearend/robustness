@@ -419,14 +419,21 @@ class Model(object):
 
             for i, num_blocks in enumerate(self.block_sizes):
                 num_filters = self.num_filters * (2**i)
+                if i < 1:
+                    perturbation_type = 2
+                    perturbation_amount = 0.
+                else:
+                    perturbation_type = self.perturbation_type
+                    perturbation_amount = self.perturbation_amount
+
                 inputs = block_layer(
                     inputs=inputs, filters=num_filters,
                     use_batch_norm=self.use_batch_norm, bottleneck=self.bottleneck,
                     block_fn=self.block_fn, blocks=num_blocks,
                     strides=self.block_strides[i], training=training,
                     name='block_layer{}'.format(i + 1), data_format=self.data_format,
-                    perturbation_type=self.perturbation_type,
-                    perturbation_amount=self.perturbation_amount,
+                    perturbation_type=perturbation_type,
+                    perturbation_amount=perturbation_amount,
                     kill_mask=self.kill_mask[(1 + 2 * (np.cumsum(self.block_sizes)[i] - self.block_sizes[i]))
                                             :(1 + 2 * np.cumsum(self.block_sizes)[i])])
 
