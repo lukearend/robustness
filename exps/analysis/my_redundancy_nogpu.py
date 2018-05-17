@@ -141,6 +141,7 @@ for cross in range(3):
     kernel_test = []
     res_NN = [[[] for i in range(2)] for j in range(2)]
     for layer in range(len(res)):
+        print('layer: {}\tres: {}\tres_test: {}'.format(layer, res.shape, res_test.shape))
         k_tmp, k_test_tmp = Kernel(res[layer], res_test[layer])
         kernel.append(k_tmp)
         kernel_test.append(k_test_tmp)
