@@ -3,7 +3,7 @@
 #SBATCH --mem=64000
 #SBATCH --cpus-per-task=10
 #SBATCH --gres=gpu:tesla-k80:1
-#SBATCH --job-name=imagenet-00002
+#SBATCH --job-name=im2
 #SBATCH --output=out/imagenet-00002.out
 #SBATCH --mail-user=larend@mit.edu
 #SBATCH --mail-type=FAIL

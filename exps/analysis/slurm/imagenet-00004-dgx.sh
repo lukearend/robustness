@@ -2,7 +2,7 @@
 #SBATCH --time=12:00:00
 #SBATCH --mem=500000
 #SBATCH --cpus-per-task=80
-#SBATCH --job-name=imagenet-00004
+#SBATCH --job-name=im4
 #SBATCH --output=out/imagenet-00004.out
 #SBATCH --mail-user=larend@mit.edu
 #SBATCH --mail-type=FAIL
