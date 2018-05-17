@@ -152,7 +152,6 @@ def activation_knockout_compensated(x, knockout_prob):
 
 
 def activation_noise(x, variance_proportion, batch_size, variance_excluded_axes=(0,), seed=None, name=None):
-    print('activation noise on {} with level {}'.format(x.get_shape().as_list(), variance_proportion))
     with ops.name_scope(name, "activation-gaussian_noise", [x]) as name:
         x = ops.convert_to_tensor(x, name="x")
         variance_proportion = ops.convert_to_tensor(variance_proportion,

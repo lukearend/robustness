@@ -150,6 +150,7 @@ def _building_block_v1(inputs, filters, use_batch_norm, training,
         inputs = pt.activation_knockout(inputs, perturbation_amount)
     elif perturbation_type == 1:
         # Activation noise.
+        print('activation noise on {} with level {}'.format(inputs.get_shape().as_list(), perturbation_amount))
         inputs = pt.activation_noise(inputs, perturbation_amount, int(inputs.get_shape()[0]))
     elif perturbation_type == 2:
         # Targeted killing.
@@ -172,6 +173,7 @@ def _building_block_v1(inputs, filters, use_batch_norm, training,
         inputs = pt.activation_knockout(inputs, perturbation_amount)
     elif perturbation_type == 1:
         # Activation noise.
+        print('activation noise on {} with level {}'.format(inputs.get_shape().as_list(), perturbation_amount))
         inputs = pt.activation_noise(inputs, perturbation_amount, int(inputs.get_shape()[0]))
     elif perturbation_type == 2:
         # Targeted killing.

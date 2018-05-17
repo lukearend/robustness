@@ -243,22 +243,56 @@ class Estimator(object):
         predictions = model.predict(input_fn)
 
         # Loop through predictions and store them in a numpy array.
+        extraction_batch_size = 100
+        num_predictions = len(labels)
+        num_iterations = ceil(num_predictions / extraction_batch_size)
+        predicted_labels = np.zeros(np.shape(labels))
+        for i in range(num_iterations):
+            p = next(predictions)
+
+            for j in range(extraction_batch_size):
+                if j == 0:
+                    activations_batch = list(range(num_layers))
+                    labels_batch = list(range(num_layers))
+
+                for layer in range(num_layers):
+                    layer_activations = np.reshape(p[layer], (-1, np.shape(p[layer])[-1]))
+                    layer_labels = np.repeat(labels[i], np.prod(np.shape(p[layer])[1:-1]))
+
+                    if j == 0:
+                        activations_batch[layer] = layer_activations
+                        labels_out[layer] = layer_labels
+                    else:
+                        activations_out[layer] = np.append(activations_out[layer], layer_activations, axis=0)
+                        labels_out[layer] = np.append(labels_out[layer], layer_labels, axis=0)
+
+            # Subsample activations if necessary.
+            MAX_SAMPLES = 50000
+            num_samples = np.shape(layer_labels)[0]
+            max_samples_per_iteration = int(MAX_SAMPLES / num_iterations)
+            if num_samples > num_samples_per_iteration
+# to do: continue writing the subsampling code
+# and desk check the logic of this whole loop
+
+
+            for layer in range(num_layers):
+                num_samples = np.shape(activations_out[layer])[0]
+                if num_samples > MAX_SAMPLES:
+                    idx = np.random.permutations(num_samples)[:MAX_
+
+
+
+
         predicted_labels = np.zeros(np.shape(labels))
         for i, p in enumerate(predictions):
             predicted_labels[i] = p['classes']
             if i == 0:
                 activations_out = list(range(num_layers))
                 labels_out = list(range(num_layers))
-            """
-            """
 
             for layer in range(num_layers):
-                ###########################################
-                # FIGURE OUT HOW TO RESHAPE THESE PROPERLY.
-                # layer_activations = np.array(p[layer])
-                layer_activations = np.array(p[layer].shape) # temporary debug
-                layer_labels = np.array([labels[i]])
-                ###########################################
+                layer_activations = np.reshape(p[layer], (-1, np.shape(p[layer])[-1]))
+                layer_labels = np.repeat(labels[i], np.prod(np.shape(p[layer])[1:-1]))
 
                 if i == 0:
                     activations_out[layer] = layer_activations
@@ -266,6 +300,15 @@ class Estimator(object):
                 else:
                     activations_out[layer] = np.append(activations_out[layer], layer_activations, axis=0)
                     labels_out[layer] = np.append(labels_out[layer], layer_labels, axis=0)
+
+        # Subsample activations.
+        MAX_SAMPLES = 50000
+        for layer in range(num_layers):
+            num_samples = np.shape(activations_out[layer])[0]
+            if num_samples > MAX_SAMPLES:
+                idx = np.random.permutations(num_samples)[:MAX_SAMPLES]
+                activations_out[layer] = activations_out[lyer][idx, :]
+                labels_out[layer] = labels_out[layer][idx]
 
         accuracy = np.mean(np.equal(labels, predicted_labels))
 
