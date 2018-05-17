@@ -397,18 +397,18 @@ class Model(object):
             inputs = tf.identity(inputs, 'initial_conv')
 
             # # Perturbation.
-            # if self.perturbation_type == 0:
-            #     # Random killing.
-            #     inputs = pt.activation_knockout(inputs, self.perturbation_amount)
-            # elif self.perturbation_type == 1:
-            #     # Activation noise.
-            #     inputs = pt.activation_noise(inputs, self.perturbation_amount, int(inputs.get_shape()[0]))
-            # elif self.perturbation_type == 2:
-            #     # Targeted killing.
-            #     mask = tf.reshape(tf.tile(self.kill_mask[0]
-            #                               [int(np.prod(inputs.get_shape()[1:3])) * inputs.get_shape()[0]]),
-            #                       [-1, int(inputs.get_shape()[1]), int(inputs.get_shape()[2]), int(inputs.get_shape()[3])])
-            #     inputs = pt.activation_knockout_mask(inputs, self.perturbation_amount, mask)
+            if self.perturbation_type == 0:
+                # Random killing.
+                inputs = pt.activation_knockout(inputs, self.perturbation_amount)
+            elif self.perturbation_type == 1:
+                # Activation noise.
+                inputs = pt.activation_noise(inputs, self.perturbation_amount, int(inputs.get_shape()[0]))
+            elif self.perturbation_type == 2:
+                # Targeted killing.
+                mask = tf.reshape(tf.tile(self.kill_mask[0]
+                                          [int(np.prod(inputs.get_shape()[1:3])) * inputs.get_shape()[0]]),
+                                  [-1, int(inputs.get_shape()[1]), int(inputs.get_shape()[2]), int(inputs.get_shape()[3])])
+                inputs = pt.activation_knockout_mask(inputs, self.perturbation_amount, mask)
 
             if self.first_pool_size:
                 inputs = tf.layers.max_pooling2d(
@@ -419,7 +419,7 @@ class Model(object):
 
             for i, num_blocks in enumerate(self.block_sizes):
                 num_filters = self.num_filters * (2**i)
-                if i < 2:
+                if i < 0:
                     perturbation_type = 0
                     perturbation_amount = 0.
                 else:
