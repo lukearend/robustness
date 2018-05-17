@@ -48,8 +48,8 @@ def main():
         '/cbcl': '/cbcl/cbcl01/larend/data'}[FLAGS.host_filesystem]
 
     data_dir = {
-        'cifar10': '{}/larend/data/cifar-10-tfrecords'.format(base_data_dir),
-        'imagenet': '{}/larend/data/imagenet-tfrecords'.format(base_data_dir)}[FLAGS.dataset]
+        'cifar10': '{}/cifar10-tfrecords'.format(base_data_dir),
+        'imagenet': '{}/imagenet-tfrecords'.format(base_data_dir)}[FLAGS.dataset]
 
     for crossval in range(3):
         results = [None for _ in range(5)]
