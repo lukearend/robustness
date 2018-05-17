@@ -269,7 +269,7 @@ class Estimator(object):
 
                     if j == 0:
                         activations_batch[layer] = layer_activations
-                        labels_out[layer] = layer_labels
+                        labels_batch[layer] = layer_labels
                     else:
                         activations_batch[layer] = np.append(activations_batch[layer], layer_activations, axis=0)
                         labels_batch[layer] = np.append(labels_batch[layer], layer_labels, axis=0)
