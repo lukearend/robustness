@@ -75,6 +75,7 @@ def main():
             print('split: {}'.format(split))
             print('accuracy: {}'.format(accuracy))
             print('time: {}'.format(t_1 - t_0))
+            sys.stdout.flush()
 
             if not os.path.exists(FLAGS.pickle_dir):
                 os.makedirs(FLAGS.pickle_dir)

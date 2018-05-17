@@ -97,6 +97,7 @@ def main():
                     print('split: {}'.format(split))
                     print('accuracy: {}'.format(accuracy))
                     print('time: {}'.format(t_1 - t_0))
+                    sys.stdout.flush()
 
                     results[results_index][j][i] = accuracy
 

@@ -1,6 +1,7 @@
 """A wrapper class for the model."""
 
 import os
+import sys
 import time
 import math
 import pickle
@@ -298,7 +299,9 @@ class Estimator(object):
 
             toc = time.time()
             print('extraction iteration {}/{}: {} sec'.format(i, num_iterations, toc - tic))
+            sys.stdout.flush()
         print()
+        sys.stdout.flush()
 
         accuracy = np.mean(np.equal(labels, predicted_labels))
 
