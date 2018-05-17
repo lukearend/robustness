@@ -70,7 +70,7 @@ def main():
             results[results_index] = [np.zeros(len(perturbation_amounts)) for _ in range(2)]
             for i, perturbation_amount in enumerate(perturbation_amounts):
 
-                for j, split in enumerate(['validation', 'train']):
+                for j, split in enumerate(['train', 'validation']):
                     # Build kernel file name.
                     split_str = {'train': '', 'validation': '_test'}[split]
                     kernel_filename = os.path.join(FLAGS.pickle_dir,

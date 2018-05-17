@@ -60,7 +60,7 @@ def main():
             for i, perturbation_amount in enumerate(perturbation_amounts):
                 kill_mask = [None for _ in range(19)]
 
-                for j, split in enumerate(['train']):
+                for j, split in enumerate(['train', 'validation']):
                     print('split: {}'.format(split))
 
                     t_0 = time.time()
