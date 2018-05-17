@@ -153,7 +153,7 @@ def _building_block_v1(inputs, filters, use_batch_norm, training,
     elif perturbation_type in [0, 2]:
         # Random (0) or targeted (2) killing, depending on mask.
         mask = tf.reshape(tf.tile(kill_mask[0],
-                                  [int(np.prod(inputs.get_shape()[1:3])) * inputs.get_shape()[0]]),
+                                  [int(np.prod(inputs.get_shape()[1:3]) * inputs.get_shape()[0])]),
                           [-1, int(inputs.get_shape()[1]), int(inputs.get_shape()[2]), int(inputs.get_shape()[3])])
         inputs = pt.activation_knockout_mask(inputs, perturbation_amount, mask)
 
@@ -174,7 +174,7 @@ def _building_block_v1(inputs, filters, use_batch_norm, training,
     elif perturbation_type in [0, 2]:
         # Random (0) or targeted (2) killing, depending on mask.
         mask = tf.reshape(tf.tile(kill_mask[1],
-                                  [int(np.prod(inputs.get_shape()[1:3])) * inputs.get_shape()[0]]),
+                                  [int(np.prod(inputs.get_shape()[1:3]) * inputs.get_shape()[0])]),
                           [-1, int(inputs.get_shape()[1]), int(inputs.get_shape()[2]), int(inputs.get_shape()[3])])
         inputs = pt.activation_knockout_mask(inputs, perturbation_amount, mask)
 
