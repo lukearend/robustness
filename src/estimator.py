@@ -279,7 +279,7 @@ class Estimator(object):
             for layer in range(num_layers):
                 num_samples = np.shape(labels_batch[layer])[0]
                 if num_samples > max_samples_per_iteration:
-                    idx = np.random.permutations(num_samples)[:max_samples_per_iteration]
+                    idx = np.random.permutation(num_samples)[:max_samples_per_iteration]
                     activations_batch[layer] = activations_batch[layer][idx, :]
                     labels_batch[layer] = labels_batch[layer][idx]
 
