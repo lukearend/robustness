@@ -37,7 +37,7 @@ def main():
 
     for crossval in range(1):
         print('crossval: {}'.format(crossval))
-        results = []
+        results = [None for _ in range(5)]
 
         model = estimator.Estimator(
             model_dir='/cbcl/cbcl01/larend/models/robust/cifar10/00002',
@@ -48,7 +48,7 @@ def main():
                 'num_filters': num_filters},
             tf_random_seed=int(time.time()))
 
-        for k, perturbation_type in enumerate([0, 1, 2]):
+        for perturbation_type in enumerate([0, 1, 2]):
             print('perturbation: {}'.format(perturbation_type))
 
             perturbation_amounts = {
