@@ -54,7 +54,7 @@ def main():
     for crossval in range(3):
         results = [None for _ in range(5)]
 
-        model = Estimator(
+        model = estimator.Estimator(
             model_dir=FLAGS.model_dir,
             params={
                 'batch_size': 100,

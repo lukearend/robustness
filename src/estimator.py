@@ -298,6 +298,7 @@ class Estimator(object):
 
             toc = time.time()
             print('extraction iteration {}/{}: {} sec'.format(i, num_iterations, toc - tic), end='    \r')
+        print()
 
         accuracy = np.mean(np.equal(labels, predicted_labels))
 
