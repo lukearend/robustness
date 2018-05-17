@@ -327,7 +327,8 @@ class Estimator(object):
             kernel = pickle.load(f)
         num_layers = len(kernel)
 
-        perturbation_amount = 0.5 #DEBUGGING PURPOSES
+        perturbation_type = 2 #DEBUGGING
+        perturbation_amount = 0.5 #DEBUGGING
 
         if perturbation_type in [0, 2]:
             kill_mask = []
