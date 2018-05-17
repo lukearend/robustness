@@ -2,6 +2,7 @@
 
 import os
 import time
+import math
 
 import numpy as np
 
@@ -246,7 +247,7 @@ class Estimator(object):
         # done in batches for memory efficiency.
         extraction_batch_size = 100
         num_predictions = len(labels)
-        num_iterations = ceil(num_predictions / extraction_batch_size)
+        num_iterations = math.ceil(num_predictions / extraction_batch_size)
         predicted_labels = np.zeros(np.shape(labels))
         for i in range(num_iterations):
             if i == 0:
