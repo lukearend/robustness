@@ -252,7 +252,7 @@ class Estimator(object):
         elif self.params['dataset'] == 'imagenet':
             extraction_batch_size = 25
         if rush:
-            extraction_batch_size = 5
+            extraction_batch_size = 10
         num_predictions = len(labels)
         num_iterations = math.ceil(num_predictions / extraction_batch_size)
         predicted_labels = np.zeros(np.shape(labels))
