@@ -20,9 +20,9 @@ module load openmind/singularity/older_versions/2.4
 # --host_filesystem=/om \
 # --rush
 
-# singularity exec --nv -B /om:/om /om/user/larend/localtensorflow.img \
-# python /om/user/larend/robust/exps/analysis/redundancy.py \
-# --pickle_dir=/om/user/larend/pickles/cifar10/00008
+singularity exec --nv -B /om:/om /om/user/larend/localtensorflow.img \
+python /om/user/larend/robust/exps/analysis/redundancy.py \
+--pickle_dir=/om/user/larend/pickles/cifar10/00008
 
 singularity exec --nv -B /om:/om /om/user/larend/localtensorflow.img \
 python /om/user/larend/robust/exps/analysis/robustness.py \
