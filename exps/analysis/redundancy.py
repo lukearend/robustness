@@ -89,8 +89,8 @@ def Kernel(res, res_test):
         norm = LA.norm(res[:, k], axis=0)
         norm_test = LA.norm(res_test[:, k], axis=0)
 
-        norm[norm == 0] = 1
-        norm_test[norm_test == 0] = 1
+        norm[norm == 0.] = 1.
+        norm_test[norm_test == 0.] = 1.
 
         res[:, k] = res[:, k] / norm
         res_test[:, k] = res_test[:, k] / norm_test
