@@ -259,7 +259,7 @@ class Estimator(object):
 
         first_p = next(predictions)
         num_neurons = [np.shape(first_p[layer])[2] for layer in range(num_layers)]
-        points_in_map = [np.prod(np.shape(first_p[layer])[:2]) for layer in range(num_layers)]
+        points_in_map = [np.prod(np.shape(first_p[layer])[:-1]) for layer in range(num_layers)]
 
         num_predictions = len(labels)
         predicted_labels = np.zeros(np.shape(labels))
@@ -291,9 +291,8 @@ class Estimator(object):
                 predicted_labels[i * extraction_batch_size + j] = p['classes']
 
                 for layer in range(num_layers):
-                    layer_activations = np.reshape(p[layer], (-1, np.shape(p[layer])[-1]))
-                    layer_labels = np.repeat(labels[i * extraction_batch_size + j],
-                                             np.prod(np.shape(p[layer])[:-1]))
+                    layer_activations = np.reshape(p[layer], (points_in_map[layer], num_neurons[layer]))
+                    layer_labels = np.repeat(labels[i * extraction_batch_size + j], points_in_map[layer])
 
                     activations_batch[layer][(j * points_in_map[layer]):((j + 1) * points_in_map[layer]), :] = layer_activations
                     labels_batch[layer][(j * points_in_map[layer]):((j + 1) * points_in_map[layer])] = layer_labels
