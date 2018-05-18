@@ -262,6 +262,10 @@ class Estimator(object):
         num_predictions = len(labels)
         predicted_labels = np.zeros(np.shape(labels))
         num_iterations = int(num_predictions / extraction_batch_size)
+        activations_out = []
+        labels_out = []
+        activations_batch = []
+        labels_batch = []
         for layer in range(num_layers):
             if points_in_map[layer] * extraction_batch_size * num_iterations > MAX_SAMPLES:
                 max_samples_per_iteration = int(MAX_SAMPLES / num_iterations)
