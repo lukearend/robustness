@@ -98,7 +98,7 @@ def main():
                         perturbation_type,
                         perturbation_amount,
                         kernel_filename,
-                        unperturbed_predictions[j]
+                        unperturbed_predictions[j],
                         data_dir=data_dir,
                         split=split,
                         imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed)
