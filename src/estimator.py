@@ -315,11 +315,9 @@ class Estimator(object):
         print()
         sys.stdout.flush()
 
-        labels_out = labels_out.astype(int)
-
         accuracy = np.mean(np.equal(labels, predicted_labels))
 
-        return activations_out, labels_out.astype(int), accuracy
+        return activations_out, labels_out, accuracy
 
     def robustness(self,
         perturbation_type,
