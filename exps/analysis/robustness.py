@@ -69,7 +69,7 @@ def main():
         unperturbed_predictions.append(model.predict(
             data_dir=data_dir,
             split=split,
-            imagenet_train_predict_partial=imagenet_train_predict_shuffle_seed))
+            imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed))
 
     for crossval in range(3):
         results = [None for _ in range(5)]
