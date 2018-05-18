@@ -274,12 +274,12 @@ class Estimator(object):
                 max_samples_per_iteration = int(MAX_SAMPLES / num_iterations)
                 total_num_samples = num_iterations * max_samples_per_iteration
                 activations_out.append(np.zeros((total_num_samples, num_neurons[layer])))
-                labels_out.append(np.zeros(total_num_samples))
+                labels_out.append(np.zeros(total_num_samples, dtype=np.int))
             else:
                 activations_out.append(np.zeros((points_in_map[layer] * num_predictions, num_neurons[layer])))
-                labels_out.append(np.zeros(points_in_map[layer] * num_predictions))
+                labels_out.append(np.zeros(points_in_map[layer] * num_predictions, dtype=np.int))
             activations_batch.append(np.zeros((extraction_batch_size * points_in_map[layer], num_neurons[layer])))
-            labels_batch.append(np.zeros(extraction_batch_size * points_in_map[layer]))
+            labels_batch.append(np.zeros(extraction_batch_size * points_in_map[layer], dtype=np.int))
         for i in range(num_iterations):
             tic = time.time()
 
