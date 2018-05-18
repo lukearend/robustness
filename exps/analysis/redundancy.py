@@ -62,6 +62,8 @@ def selectivity(res, gt, res_test, gt_test):
     ave_all = np.zeros([num_neurons, np.shape(np.unique(gt, axis=0))[0]])
     ave_all_test = np.zeros([num_neurons, np.shape(np.unique(gt, axis=0))[0]])
     for k in np.unique(gt, axis=0).tolist():
+        print(k)
+        print(gt)
         ave_c[:, k] = np.mean(res[gt == k], axis=0)
         ave_c_test[:, k] = np.mean(res_test[gt_test == k], axis=0)
 
