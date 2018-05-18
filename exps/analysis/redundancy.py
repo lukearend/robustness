@@ -82,6 +82,7 @@ def selectivity(res, gt, res_test, gt_test):
 
     for idx_k, k in enumerate(idx_max.tolist()):
         sel[idx_k] = (ave_c[idx_k, k] - ave_all[idx_k, k])/(ave_c[idx_k, k] + ave_all[idx_k, k])
+        print(ave_c)
         sel_test[idx_k] = (ave_c_test[idx_k, k] - ave_all_test[idx_k, k]) / (ave_c_test[idx_k, k] + ave_all_test[idx_k, k])
 
     sel_gen = ((sel-sel_test)**2)
