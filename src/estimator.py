@@ -388,7 +388,7 @@ class Estimator(object):
         predicted_labels = [p['classes'] for p in predictions]
 
         # Compute proportion that are same as unperturbed predictions.
-        same = np.mean(np.equals(predicted_labels, unperturbed_predictions))
+        same = np.mean(np.equal(predicted_labels, unperturbed_predictions))
 
         return same
 
