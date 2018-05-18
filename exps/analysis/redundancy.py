@@ -181,6 +181,7 @@ for cross in range(3):
         pickle.dump(res_NN, f, protocol=2)
 
     for layer in range(len(res)):
+        tic = time.time()
         k, spectrum, W = pca(res[layer], (0.95, 0.8))
         results[0][0].append(k)
         results[1][0].append(spectrum)
@@ -188,9 +189,12 @@ for cross in range(3):
         results[3][0].append(acc)
         k = non_zero(spectrum)
         results[5][0].append(k)
+        toc = time.time()
+        print('layer time: ', tic - toc)
 
 
     for layer in range(len(res_test)):
+        tic = time.time()
         k, spectrum, W = pca(res_test[layer], (0.95, 0.8))
         results[0][1].append(k)
         results[1][1].append(spectrum)
@@ -198,6 +202,8 @@ for cross in range(3):
         results[3][1].append(acc_test)
         k = non_zero(spectrum)
         results[5][1].append(k)
+        toc = time.time()
+        print('layer time: ', tic - toc)
 
     for layer in range(len(res_test)):
         results[4][1].append(np.shape(res_test[layer])[-1])
