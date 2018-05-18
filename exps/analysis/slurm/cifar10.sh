@@ -8,8 +8,8 @@
 #SBATCH --mail-user=larend@mit.edu
 #SBATCH --mail-type=FAIL
 
-SCALE_FACTOR=('0.25', '0.5', '1', '2', '4', '0.25', '0.5', '1', '2', '4')
-BATCH_NORM_FLAG=('', '', '', '', '', '--disable_batch_norm', '--disable_batch_norm', '--disable_batch_norm', '--disable_batch_norm', '--disable_batch_norm')
+SCALE_FACTOR=('0.25' '0.5' '1' '2' '4' '0.25' '0.5' '1' '2' '4')
+BATCH_NORM_FLAG=('' '' '' '' '' '--disable_batch_norm' '--disable_batch_norm' '--disable_batch_norm' '--disable_batch_norm' '--disable_batch_norm')
 
 module load openmind/singularity/older_versions/2.4
 
