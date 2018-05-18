@@ -71,7 +71,7 @@ def main():
             split=split,
             imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed))
 
-    for crossval in range(1, 2):
+    for crossval in range(3):
         results = [None for _ in range(5)]
 
         for perturbation_type in [0, 1, 2]:
