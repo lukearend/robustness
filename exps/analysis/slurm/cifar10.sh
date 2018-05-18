@@ -3,7 +3,7 @@
 #SBATCH --mem=32000
 #SBATCH --cpus-per-task=10
 #SBATCH --gres=gpu:tesla-k80:1
-#SBATCH --job-name=ci%a
+#SBATCH --job-name=cifar10
 #SBATCH --output=out/cifar10-0000%a.out
 #SBATCH --mail-user=larend@mit.edu
 #SBATCH --mail-type=FAIL
