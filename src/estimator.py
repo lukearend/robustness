@@ -253,14 +253,17 @@ class Estimator(object):
             if rush:
                 extraction_batch_size = 20
         elif self.params['dataset'] == 'imagenet':
-            extraction_batch_size = 100
+            extraction_batch_size = 25
             if rush:
                 extraction_batch_size = 5
+
         first_p = next(predictions)
         num_neurons = [np.shape(first_p[layer])[2] for layer in range(num_layers)]
         points_in_map = [np.prod(np.shape(first_p[layer])[:2]) for layer in range(num_layers)]
+
         num_predictions = len(labels)
         predicted_labels = np.zeros(np.shape(labels))
+
         num_iterations = int(num_predictions / extraction_batch_size)
         activations_out = []
         labels_out = []
