@@ -191,6 +191,7 @@ for cross in range(3):
         results[5][0].append(k)
         toc = time.time()
         print('layer time: ', tic - toc)
+        sys.stdout.flush()
 
 
     for layer in range(len(res_test)):
@@ -204,6 +205,7 @@ for cross in range(3):
         results[5][1].append(k)
         toc = time.time()
         print('layer time: ', tic - toc)
+        sys.stdout.flush()
 
     for layer in range(len(res_test)):
         results[4][1].append(np.shape(res_test[layer])[-1])
