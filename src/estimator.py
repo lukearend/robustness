@@ -247,6 +247,7 @@ class Estimator(object):
 
         # Loop through predictions and store them in a numpy array;
         # done in batches for memory efficiency.
+        MAX_SAMPLES = 50000
         if self.params['dataset'] == 'cifar10':
             extraction_batch_size = 100
             if rush:
@@ -262,9 +263,9 @@ class Estimator(object):
         predicted_labels = np.zeros(np.shape(labels))
         num_iterations = int(num_predictions / extraction_batch_size)
         for layer in range(num_layers):
-            if points_in_map[layer] * num_predictions > MAX_SAMPLES:
+            if points_in_map[layer] * extraction_batch_size * num_iterations > MAX_SAMPLES:
                 max_samples_per_iteration = int(MAX_SAMPLES / num_iterations)
-                total_num_samples = num_samples * max_samples_per_iteration
+                total_num_samples = num_iterations * max_samples_per_iteration
                 activations_out[layer] = np.zeros((total_num_samples, num_neurons[layer]))
                 labels_out[layer] = np.zeros(total_num_samples)
             else:
@@ -290,16 +291,15 @@ class Estimator(object):
                     activations_batch[layer][(j * points_in_map[layer]):((j + 1) * points_in_map[layer]), :] = layer_activations
                     labels_batch[layer][(j * points_in_map[layer]):((j + 1) * points_in_map[layer])] = layer_labels
 
-            MAX_SAMPLES = 50000
             max_samples_per_iteration = int(MAX_SAMPLES / num_iterations)
             for layer in range(num_layers):
-                # num_samples = np.shape(labels_batch[layer])[0]
-                num_samples = extraction_batch_size * points_in_map[layer]
-                if num_samples > max_samples_per_iteration:
+                if points_in_map[layer] * extraction_batch_size * num_iterations > MAX_SAMPLES:
+                    max_samples_per_iteration = int(MAX_SAMPLES / num_iterations)
                     idx = np.random.permutation(num_samples)[:max_samples_per_iteration]
                     activations_out[layer][(i * max_samples_per_iteration):((i + 1) * max_samples_per_iteration), :] = activations_batch[layer][idx, :]
                     labels_out[layer][(i * max_samples_per_iteration):((i + 1) * max_samples_per_iteration)] = labels_batch[layer][idx]
                 else:
+                    num_samples = extraction_batch_size * points_in_map[layer]
                     activations_out[layer][(i * num_samples):((i + 1) * (extraction_batch_size * points_in_map[layer])), :] = activations_batch[layer]
                     labels_out[layer][(i * num_samples):((i + 1) * (extraction_batch_size * points_in_map[layer]))] = labels_batch[layer]
 
