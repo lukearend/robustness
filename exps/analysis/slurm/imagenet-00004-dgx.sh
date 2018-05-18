@@ -14,7 +14,6 @@ python /raid/poggio/home/larend/robust/exps/analysis/activations.py \
 --dataset=imagenet \
 --pickle_dir=/raid/poggio/home/larend/pickles/imagenet/00004 \
 --host_filesystem=/raid \
---rush
 
 singularity exec --nv -B /raid:/raid /raid/poggio/home/larend/localtensorflow.img \
 python /raid/poggio/home/larend/robust/exps/analysis/redundancy.py \
