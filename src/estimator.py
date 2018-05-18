@@ -253,7 +253,7 @@ class Estimator(object):
             if rush:
                 extraction_batch_size = 20
         elif self.params['dataset'] == 'imagenet':
-            extraction_batch_size = 25
+            extraction_batch_size = 100
             if rush:
                 extraction_batch_size = 5
         first_p = next(predictions)
