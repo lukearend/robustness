@@ -157,6 +157,7 @@ for cross in range(3):
     kernel_test = []
     res_NN = [[[] for i in range(2)] for j in range(2)]
     for layer in range(len(res)):
+        tic = time.time()
         print('layer: {}\tres: {}\tres_test: {}'.format(layer, res[layer].shape, res_test[layer].shape))
         k_tmp, k_test_tmp = Kernel(res[layer], res_test[layer])
         kernel.append(k_tmp)
@@ -169,6 +170,9 @@ for cross in range(3):
         mean_NN, std_NN = get_NN(k_test_tmp)
         res_NN[1][0].append(mean_NN)
         res_NN[1][1].append(std_NN)
+        toc = time.time()
+        print('layer time: ', tic - toc)
+        sys.stdout.flush()
 
 
     with open(FLAGS.pickle_dir + '/kernel' + str(cross) +'.pkl', 'wb') as f:
@@ -181,7 +185,6 @@ for cross in range(3):
         pickle.dump(res_NN, f, protocol=2)
 
     for layer in range(len(res)):
-        tic = time.time()
         k, spectrum, W = pca(res[layer], (0.95, 0.8))
         results[0][0].append(k)
         results[1][0].append(spectrum)
@@ -189,13 +192,9 @@ for cross in range(3):
         results[3][0].append(acc)
         k = non_zero(spectrum)
         results[5][0].append(k)
-        toc = time.time()
-        print('layer time: ', tic - toc)
-        sys.stdout.flush()
 
 
     for layer in range(len(res_test)):
-        tic = time.time()
         k, spectrum, W = pca(res_test[layer], (0.95, 0.8))
         results[0][1].append(k)
         results[1][1].append(spectrum)
@@ -203,9 +202,6 @@ for cross in range(3):
         results[3][1].append(acc_test)
         k = non_zero(spectrum)
         results[5][1].append(k)
-        toc = time.time()
-        print('layer time: ', tic - toc)
-        sys.stdout.flush()
 
     for layer in range(len(res_test)):
         results[4][1].append(np.shape(res_test[layer])[-1])
