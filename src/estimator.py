@@ -265,13 +265,12 @@ class Estimator(object):
                 activations_out = list(range(num_layers))
                 labels_out = list(range(num_layers))
 
+                activations_batch = list(range(num_layers))
+                labels_batch = list(range(num_layers))
+
             for j in range(extraction_batch_size):
                 p = next(predictions)
                 predicted_labels[i * extraction_batch_size + j] = p['classes']
-
-                if j == 0:
-                    activations_batch = list(range(num_layers))
-                    labels_batch = list(range(num_layers))
 
                 for layer in range(num_layers):
                     layer_activations = np.reshape(p[layer], (-1, np.shape(p[layer])[-1]))
