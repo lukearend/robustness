@@ -266,13 +266,13 @@ class Estimator(object):
             if points_in_map[layer] * extraction_batch_size * num_iterations > MAX_SAMPLES:
                 max_samples_per_iteration = int(MAX_SAMPLES / num_iterations)
                 total_num_samples = num_iterations * max_samples_per_iteration
-                activations_out[layer] = np.zeros((total_num_samples, num_neurons[layer]))
-                labels_out[layer] = np.zeros(total_num_samples)
+                activations_out.append(np.zeros((total_num_samples, num_neurons[layer])))
+                labels_out.append(np.zeros(total_num_samples))
             else:
-                activations_out[layer] = np.zeros((points_in_map[layer] * num_predictions, num_neurons[layer]))
-                labels_out[layer] = np.zeros(points_in_map[layer] * num_predictions)
-            activations_batch[layer] = np.zeros((extraction_batch_size * points_in_map[layer], num_neurons[layer]))
-            labels_batch[layer] = np.zeros(extraction_batch_size * points_in_map[layer])
+                activations_out.append(np.zeros((points_in_map[layer] * num_predictions, num_neurons[layer])))
+                labels_out.append(np.zeros(points_in_map[layer] * num_predictions))
+            activations_batch.append(np.zeros((extraction_batch_size * points_in_map[layer], num_neurons[layer])))
+            labels_batch.append(np.zeros(extraction_batch_size * points_in_map[layer]))
         for i in range(num_iterations):
             tic = time.time()
 
