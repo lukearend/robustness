@@ -86,8 +86,14 @@ def Kernel(res, res_test):
     num_neurons = np.shape(np.mean(res, axis=0))[0]
 
     for k in range(num_neurons):
-        res[:, k] = res[:, k] / LA.norm(res[:, k], axis=0)
-        res_test[:, k] = res_test[:, k] / LA.norm(res_test[:, k], axis=0)
+        norm = LA.norm(res[:, k], axis=0)
+        norm_test = LA.norm(res_test[:, k], axis=0)
+
+        norm[norm == 0] = 1
+        norm_test[norm_test == 0] = 1
+
+        res[:, k] = res[:, k] / norm
+        res_test[:, k] = res_test[:, k] / norm_test
 
     K = np.zeros([num_neurons, num_neurons])
     K_test = np.zeros([num_neurons, num_neurons])

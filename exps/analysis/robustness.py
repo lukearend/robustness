@@ -51,17 +51,28 @@ def main():
         'cifar10': '{}/cifar-10-tfrecords'.format(base_data_dir),
         'imagenet': '{}/imagenet-tfrecords'.format(base_data_dir)}[FLAGS.dataset]
 
+    # Get unperturbed predictions.
+    model = estimator.Estimator(
+        model_dir=FLAGS.model_dir,
+        params={
+            'batch_size': 100,
+            'dataset': FLAGS.dataset,
+            'use_batch_norm': FLAGS.use_batch_norm,
+            'num_filters': num_filters},
+        tf_random_seed=int(time.time()))
+
+    imagenet_train_predict_shuffle_seed = int(time.time())
+
+    unperturbed_predictions = []
+    splits = ['train', 'validation']
+    for split in splits:
+        unperturbed_predictions.append(model.predict(
+            data_dir=data_dir,
+            split=split,
+            imagenet_train_predict_partial=imagenet_train_predict_shuffle_seed))
+
     for crossval in range(3):
         results = [None for _ in range(5)]
-
-        model = estimator.Estimator(
-            model_dir=FLAGS.model_dir,
-            params={
-                'batch_size': 100,
-                'dataset': FLAGS.dataset,
-                'use_batch_norm': FLAGS.use_batch_norm,
-                'num_filters': num_filters},
-            tf_random_seed=int(time.time()))
 
         for perturbation_type in [0, 1, 2]:
             perturbation_amounts = {
@@ -76,30 +87,32 @@ def main():
             results[results_index] = [np.zeros(len(perturbation_amounts)) for _ in range(2)]
             for i, perturbation_amount in enumerate(perturbation_amounts):
 
-                for j, split in enumerate(['train', 'validation']):
+                for j, split in enumerate(splits):
                     # Build kernel file name.
                     split_str = {'train': '', 'validation': '_test'}[split]
                     kernel_filename = os.path.join(FLAGS.pickle_dir,
                                                    'kernel{}{}.pkl'.format(split_str, crossval))
 
                     t_0 = time.time()
-                    accuracy = model.robustness(
+                    same = model.robustness(
                         perturbation_type,
                         perturbation_amount,
                         kernel_filename,
+                        unperturbed_predictions[j]
                         data_dir=data_dir,
-                        split=split)
+                        split=split,
+                        imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed)
                     t_1 = time.time()
 
                     print('crossval: {}'.format(crossval))
                     print('perturbation: {}'.format(perturbation_type))
                     print('amount: {}'.format(perturbation_amount))
                     print('split: {}'.format(split))
-                    print('accuracy: {}'.format(accuracy))
+                    print('same: {}'.format(same))
                     print('time: {}'.format(t_1 - t_0))
                     sys.stdout.flush()
 
-                    results[results_index][j][i] = accuracy
+                    results[results_index][j][i] = same
 
         if not os.path.exists(FLAGS.pickle_dir):
             os.makedirs(FLAGS.pickle_dir)

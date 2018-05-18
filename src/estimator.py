@@ -315,8 +315,10 @@ class Estimator(object):
         perturbation_type,
         perturbation_amount,
         kernel_filename,
+        unperturbed_predictions,
         data_dir='/tmp',
         split='train',
+        imagenet_train_predict_shuffle_seed=None,
         num_gpus=1):
         """Test robustness of a model.
 
@@ -328,7 +330,8 @@ class Estimator(object):
             num_gpus: number of GPUs to use.
         """
         # Set seed!
-        imagenet_train_predict_shuffle_seed = int(time.time())
+        if imagenet_train_predict_shuffle_seed is None:
+            imagenet_train_predict_shuffle_seed = int(time.time())
 
         # Load kernel file and use it to compute kill_mask.
         with open(kernel_filename, 'rb') as f:
@@ -357,26 +360,6 @@ class Estimator(object):
         else:
             kill_mask = [None for _ in range(len(kernel))]
 
-        # First, loop through the dataset and read out labels.
-        _, label_batch = estimator_fns.input_fn(tf.estimator.ModeKeys.PREDICT,
-                                                data_dir,
-                                                self.params,
-                                                reading_labels=True,
-                                                predict_split=split,
-                                                imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
-                                                imagenet_train_predict_partial=True)
-        labels = None
-        with tf.Session() as sess:
-            while True:
-                try:
-                    labels_tmp = sess.run(label_batch)
-                    if labels is None:
-                        labels = labels_tmp
-                    else:
-                        labels = np.append(labels, labels_tmp, axis=0)
-                except tf.errors.OutOfRangeError:
-                    break
-
         # Test robustness.
         model_fn = estimator_fns.get_model_fn(
             num_gpus,
@@ -400,21 +383,53 @@ class Estimator(object):
                                                predict_split=split,
                                                imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
                                                imagenet_train_predict_partial=True)
-        predictions = model.predict(input_fn, predict_keys=['classes', 'probabilities'])
+        predictions = model.predict(input_fn, predict_keys=['classes'])
 
-        # Loop through predictions and compute accuracy.
-        correct = np.zeros(len(labels))
-        if self.params['dataset'] == 'imagenet':
-            # For imagenet, compute top-5 accuracy.
-            probabilities = np.zeros((len(labels), 1000))
-            for i, p in enumerate(predictions):
-                top_5_indices = np.argsort(-p['probabilities'])[:5]
-                correct[i] = labels[i] in top_5_indices
-        else:
-            # For cifar, compute top-1 accuracy.
-            for i, p in enumerate(predictions):
-                correct[i] = labels[i] == p['classes']
+        predicted_labels = [p['classes'] for p in predictions]
 
-        accuracy = np.mean(correct)
+        # Compute proportion that are same as unperturbed predictions.
+        same = np.mean(np.equals(predicted_labels, unperturbed_predictions))
 
-        return accuracy
+        return same
+
+    def predict(self,
+        data_dir='/tmp',
+        split='train',
+        imagenet_train_predict_shuffle_seed=None,
+        num_gpus=1):
+        """Test robustness of a model.
+
+        Args:
+            perturbation_type, perturbation_amount, kernel_filename:
+                settings for testing robustness.
+            data_dir: directory in which to look for validation data.
+            split: one of 'train' or 'validation'.
+            num_gpus: number of GPUs to use.
+        """
+        # Set seed!
+        if imagenet_train_predict_shuffle_seed is None:
+            imagenet_train_predict_shuffle_seed = int(time.time())
+
+        # Make predictions.
+        model_fn = estimator_fns.get_model_fn(num_gpus)
+
+        config = tf.estimator.RunConfig().replace(
+            tf_random_seed=self.tf_random_seed,
+            session_config=self.session_config)
+
+        model = tf.estimator.Estimator(model_fn=model_fn,
+                                       model_dir=self.model_dir,
+                                       config=config,
+                                       params=self.params)
+        input_fn = lambda: estimator_fns.input_fn(tf.estimator.ModeKeys.PREDICT,
+                                               data_dir,
+                                               self.params,
+                                               num_gpus=num_gpus,
+                                               predict_split=split,
+                                               imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
+                                               imagenet_train_predict_partial=True)
+        predictions = model.predict(input_fn, predict_keys=['classes'])
+
+        predicted_labels = [p['classes'] for p in predictions]
+
+        return predicted_labels

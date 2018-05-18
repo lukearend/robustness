@@ -37,6 +37,9 @@ class ImageNetDataset(object):
             lookup_name = self.predict_split
         filenames = tf.gfile.Glob(
             os.path.join(self.data_dir, '{}-*-of-*'.format(lookup_name)))
+        if tf.estimator.ModeKeys.PREDICT:
+            # Sort so that TFRecords will be read out deterministically.
+            filenames = sorted(filenames)
         return filenames
 
     def parser(self, serialized_example):
@@ -93,7 +96,6 @@ class ImageNetDataset(object):
         filenames = self.get_filenames()
         if self.mode == tf.estimator.ModeKeys.PREDICT and self.imagenet_train_predict_partial:
             # Sort and shuffle with seed to randomize deterministically.
-            filenames = sorted(filenames)
             random.seed(self.imagenet_train_predict_shuffle_seed)
             random.shuffle(filenames)
         dataset = tf.contrib.data.TFRecordDataset(filenames)
@@ -251,6 +253,8 @@ class Cifar10Dataset(object):
                     num_examples -= 1
             dataset = dataset.take(num_examples)
             dataset = dataset.repeat(1)
+
+            dataset = dataset.take(500) # For fast debugging!
         else:
             dataset = dataset.repeat(1)
 
