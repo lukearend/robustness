@@ -87,12 +87,12 @@ def Kernel(res, res_test):
 
     for k in range(num_neurons):
         norm = LA.norm(res[:, k], axis=0)
-        print(norm)
         norm_test = LA.norm(res_test[:, k], axis=0)
-        print(norm_test)
 
-        norm[np.where(norm == 0.)] = 1.
-        norm_test[np.where(norm_test == 0.)] = 1.
+        if norm == 0:
+            norm = 1
+        if norm_test == 0:
+            norm = 1
 
         res[:, k] = res[:, k] / norm
         res_test[:, k] = res_test[:, k] / norm_test
