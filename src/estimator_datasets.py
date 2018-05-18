@@ -137,6 +137,8 @@ class ImageNetDataset(object):
                     num_examples -= 1
             dataset = dataset.take(num_examples)
             dataset = dataset.repeat(1)
+
+            dataset = dataset.take(1000) # For fast debugging!
         else:
             dataset = dataset.repeat(1)
 
