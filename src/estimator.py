@@ -299,7 +299,7 @@ class Estimator(object):
             for layer in range(num_layers):
                 if points_in_map[layer] * extraction_batch_size * num_iterations > MAX_SAMPLES:
                     max_samples_per_iteration = int(MAX_SAMPLES / num_iterations)
-                    idx = np.random.permutation(num_samples)[:max_samples_per_iteration]
+                    idx = np.random.permutation(points_in_map[layer] * extraction_batch_size)[:max_samples_per_iteration]
                     activations_out[layer][(i * max_samples_per_iteration):((i + 1) * max_samples_per_iteration), :] = activations_batch[layer][idx, :]
                     labels_out[layer][(i * max_samples_per_iteration):((i + 1) * max_samples_per_iteration)] = labels_batch[layer][idx]
                 else:
