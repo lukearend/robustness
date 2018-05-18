@@ -17,7 +17,6 @@ python /om/user/larend/robust/exps/analysis/activations.py \
 --dataset=imagenet \
 --pickle_dir=/om/user/larend/pickles/imagenet/00003 \
 --host_filesystem=/om \
---rush
 
 singularity exec --nv -B /om:/om /om/user/larend/localtensorflow.img \
 python /om/user/larend/robust/exps/analysis/redundancy.py \
