@@ -17,15 +17,16 @@ module load openmind/singularity/older_versions/2.4
 # --dataset=cifar10 \
 # --pickle_dir=/om/user/larend/pickles/cifar10/00002 \
 # --host_filesystem=/om
+# --rush
 
 singularity exec --nv -B /om:/om /om/user/larend/localtensorflow.img \
 python /om/user/larend/robust/exps/analysis/redundancy.py \
 --pickle_dir=/om/user/larend/pickles/cifar10/00002
 
-singularity exec --nv -B /om:/om /om/user/larend/localtensorflow.img \
-python /om/user/larend/robust/exps/analysis/robustness.py \
---model_dir=/om/user/larend/models/robust/cifar10/00002 \
---scale_factor=1 \
---dataset=cifar10 \
---pickle_dir=/om/user/larend/pickles/cifar10/00002 \
---host_filesystem=/om
+# singularity exec --nv -B /om:/om /om/user/larend/localtensorflow.img \
+# python /om/user/larend/robust/exps/analysis/robustness.py \
+# --model_dir=/om/user/larend/models/robust/cifar10/00002 \
+# --scale_factor=1 \
+# --dataset=cifar10 \
+# --pickle_dir=/om/user/larend/pickles/cifar10/00002 \
+# --host_filesystem=/om
