@@ -255,21 +255,31 @@ class Estimator(object):
             extraction_batch_size = 25
             if rush:
                 extraction_batch_size = 5
+        first_p = next(predictions)
+        num_neurons = [np.shape(first_p[layer])[2] for layer in range(num_layers)]
+        points_in_map = [np.prod(np.shape(first_p[layer])[:2]) for layer in range(num_layers)]
         num_predictions = len(labels)
-        num_iterations = math.ceil(num_predictions / extraction_batch_size)
         predicted_labels = np.zeros(np.shape(labels))
+        num_iterations = int(num_predictions / extraction_batch_size)
+        for layer in range(num_layers):
+            if points_in_map[layer] * num_predictions > MAX_SAMPLES:
+                max_samples_per_iteration = int(MAX_SAMPLES / num_iterations)
+                total_num_samples = num_samples * max_samples_per_iteration
+                activations_out[layer] = np.zeros((total_num_samples, num_neurons[layer]))
+                labels_out[layer] = np.zeros(total_num_samples)
+            else:
+                activations_out[layer] = np.zeros((points_in_map[layer] * num_predictions, num_neurons[layer]))
+                labels_out[layer] = np.zeros(points_in_map[layer] * num_predictions)
+            activations_batch[layer] = np.zeros((extraction_batch_size * points_in_map[layer], num_neurons[layer]))
+            labels_batch[layer] = np.zeros(extraction_batch_size * points_in_map[layer])
         for i in range(num_iterations):
             tic = time.time()
 
-            if i == 0:
-                activations_out = list(range(num_layers))
-                labels_out = list(range(num_layers))
-
-                activations_batch = list(range(num_layers))
-                labels_batch = list(range(num_layers))
-
             for j in range(extraction_batch_size):
-                p = next(predictions)
+                if i == 0 and j == 0:
+                    p = first_p
+                else:
+                    p = next(predictions)
                 predicted_labels[i * extraction_batch_size + j] = p['classes']
 
                 for layer in range(num_layers):
@@ -277,28 +287,21 @@ class Estimator(object):
                     layer_labels = np.repeat(labels[i * extraction_batch_size + j],
                                              np.prod(np.shape(p[layer])[:-1]))
 
-                    if j == 0:
-                        activations_batch[layer] = layer_activations
-                        labels_batch[layer] = layer_labels
-                    else:
-                        activations_batch[layer] = np.append(activations_batch[layer], layer_activations, axis=0)
-                        labels_batch[layer] = np.append(labels_batch[layer], layer_labels, axis=0)
+                    activations_batch[layer][(j * points_in_map[layer]):((j + 1) * points_in_map[layer]), :] = layer_activations
+                    labels_batch[layer][(j * points_in_map[layer]):((j + 1) * points_in_map[layer])] = layer_labels
 
             MAX_SAMPLES = 50000
             max_samples_per_iteration = int(MAX_SAMPLES / num_iterations)
             for layer in range(num_layers):
-                num_samples = np.shape(labels_batch[layer])[0]
+                # num_samples = np.shape(labels_batch[layer])[0]
+                num_samples = extraction_batch_size * points_in_map[layer]
                 if num_samples > max_samples_per_iteration:
                     idx = np.random.permutation(num_samples)[:max_samples_per_iteration]
-                    activations_batch[layer] = activations_batch[layer][idx, :]
-                    labels_batch[layer] = labels_batch[layer][idx]
-
-                if i == 0:
-                    activations_out[layer] = activations_batch[layer]
-                    labels_out[layer] = labels_batch[layer]
+                    activations_out[layer][(i * max_samples_per_iteration):((i + 1) * max_samples_per_iteration), :] = activations_batch[layer][idx, :]
+                    labels_out[layer][(i * max_samples_per_iteration):((i + 1) * max_samples_per_iteration)] = labels_batch[layer][idx]
                 else:
-                    activations_out[layer] = np.append(activations_out[layer], activations_batch[layer], axis=0)
-                    labels_out[layer] = np.append(labels_out[layer], labels_batch[layer], axis=0)
+                    activations_out[layer][(i * num_samples):((i + 1) * (extraction_batch_size * points_in_map[layer])), :] = activations_batch[layer]
+                    labels_out[layer][(i * num_samples):((i + 1) * (extraction_batch_size * points_in_map[layer]))] = labels_batch[layer]
 
             toc = time.time()
             print('extraction iteration {}/{}: {} sec'.format(i, num_iterations, toc - tic), end='    \r')
