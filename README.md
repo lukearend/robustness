@@ -1,2 +1,2 @@
 # robust
-training nets to study robustness to ablation
+training nets to study robustness to perturbations
