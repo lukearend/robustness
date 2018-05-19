@@ -40,7 +40,7 @@ def forward_pass(x, is_training, params):
     # y, activations = resnet(x, is_training)
 
     resnet = resnet_model_orig.Model(
-        resnet_size=34,
+        resnet_size=18,
         bottleneck=False,
         num_classes=1000,
         num_filters=256,
@@ -48,7 +48,7 @@ def forward_pass(x, is_training, params):
         conv_stride=2,
         first_pool_size=3,
         first_pool_stride=2,
-        block_sizes=[3, 4, 6, 3],
+        block_sizes=[2, 2, 2, 2],
         block_strides=[2, 2, 2, 2],
         final_size=2048)
 
