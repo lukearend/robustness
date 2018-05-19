@@ -50,7 +50,7 @@ def forward_pass(x, is_training, params):
         first_pool_stride=2,
         block_sizes=[3, 4, 6, 3],
         block_strides=[2, 2, 2, 2],
-        final_size=2048)
+        final_size=512)
 
     y = resnet(x, is_training)
 
