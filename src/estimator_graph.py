@@ -43,14 +43,14 @@ def forward_pass(x, is_training, params):
         resnet_size=34,
         bottleneck=False,
         num_classes=1000,
-        num_filters=64,
+        num_filters=256,
         kernel_size=7,
         conv_stride=2,
         first_pool_size=3,
         first_pool_stride=2,
         block_sizes=[3, 4, 6, 3],
         block_strides=[2, 2, 2, 2],
-        final_size=512)
+        final_size=2048)
 
     y = resnet(x, is_training)
 
