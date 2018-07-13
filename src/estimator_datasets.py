@@ -14,6 +14,8 @@ class ImageNetDataset(object):
 
     Described at http://www.image-net.org/challenges/LSVRC/2012/.
     """
+    DEPTH = 3
+
     def __init__(self, mode, data_dir, params, predict_split='validation',
                  imagenet_train_predict_shuffle_seed=None,
                  imagenet_train_predict_partial=False):
