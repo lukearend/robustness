@@ -205,10 +205,6 @@ def _convert_to_example(filename, image_buffer, label, synset, human, bbox,
     [l.append(point) for l, point in zip([xmin, ymin, xmax, ymax], b)]
     # pylint: enable=expression-not-assigned
 
-  print('{}: ({}, {}), {}'.format(filename, height, width, human))
-  sys.stdout.flush()
-  raise NotImplementedError()
-
   colorspace = 'RGB'
   channels = 3
   image_format = 'JPEG'
@@ -317,44 +313,7 @@ def _is_cmyk(filename):
   return filename.split('/')[-1] in blacklist
 
 
-def _get_fixation_pt_from_bbox(bbox):
-  """Extracts a fixation point by taking the average center amongst all bounding
-  boxes given.
-
-  Args:
-    bbox: list of 0+ bounding boxes for a particular image, each looking like
-      [xmin, ymin, xmax, ymax].
-
-  Returns:
-    fixation_pt: 2-item list containing [h, w] coordinates as floats or
-      [None, None] if no bounding boxes available.
-  """
-  # Unpack the bounding box.
-  xmin = []
-  ymin = []
-  xmax = []
-  ymax = []
-  for b in bbox:
-    assert len(b) == 4
-    [l.append(point) for l, point in zip([xmin, ymin, xmax, ymax], b)]
-
-  if len(xmin > 0):
-    # Find the center of each given bounding box.
-    x_centers = (np.array(xmin) + np.array(xmax)) / 2
-    y_centers = (np.array(ymin) + np.array(ymax)) / 2
-
-    # Average amongst them.
-    x_center_avg = float(np.mean(x_centers))
-    y_center_avg = float(np.mean(y_centers))
-
-    fixation_pt = [y_center_avg, x_center_avg]
-  else:
-    fixation_pt = [None, None]
-
-  return fixation_pt
-
-
-def _process_image(filename, coder, bbox):
+def _process_image(filename, coder):
   """Process a single image file.
 
   Args:
@@ -391,7 +350,7 @@ def _process_image(filename, coder, bbox):
 
   image_buffer = coder.encode_jpeg(image)
 
-  return image_buffer, bbox, height, width
+  return image_buffer, height, width
 
 
 def _process_image_files_batch(coder, thread_index, ranges, name, filenames,
@@ -443,8 +402,7 @@ def _process_image_files_batch(coder, thread_index, ranges, name, filenames,
       human = humans[i]
       bbox = bboxes[i]
 
-      image_buffer, bbox, height, width = _process_image(
-        filename, coder, bbox)
+      image_buffer, height, width = _process_image(filename, coder)
 
       example = _convert_to_example(filename, image_buffer, label,
                                     synset, human, bbox,
