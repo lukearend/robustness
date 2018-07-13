@@ -205,8 +205,9 @@ def _convert_to_example(filename, image_buffer, label, synset, human, bbox,
     [l.append(point) for l, point in zip([xmin, ymin, xmax, ymax], b)]
     # pylint: enable=expression-not-assigned
 
-    print('{}: ({}, {}), {}'.format(filename, height, width, human))
-    raise NotImplementedError()
+  print('{}: ({}, {}), {}'.format(filename, height, width, human))
+  sys.stdout.flush()
+  raise NotImplementedError()
 
   colorspace = 'RGB'
   channels = 3
