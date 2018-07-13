@@ -6,7 +6,6 @@ import random
 import tensorflow as tf
 
 import estimator_utils
-
 from vgg_preprocessing import preprocess_image as vgg_preprocess_image
 
 
@@ -123,7 +122,7 @@ class ImageNetDataset(object):
             dataset = dataset.take(num_examples)
             dataset = dataset.repeat(1)
 
-            dataset = dataset.take(1000) # For fast debugging!
+            # dataset = dataset.take(1000) # For fast debugging!
         else:
             dataset = dataset.repeat(1)
 
