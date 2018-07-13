@@ -10,39 +10,6 @@ import estimator_datasets
 import estimator_graph
 
 
-# def input_fn_read_labels(mode, input_path, params, num_gpus=None,
-#              predict_split='validation', imagenet_train_predict_shuffle_seed=None,
-#              imagenet_train_predict_partial=False):
-#     """Create input graph for model.
-
-#     Args:
-#         mode: one of tf.estimator.ModeKeys.{TRAIN, EVAL, PREDICT}.
-#         input_path: directory where input data is located.
-#         params: hyperparameters for training and architecture.
-#         num_gpus: number of GPUs participating in data-parallelism.
-
-#     Returns:
-#         feature_shards: list of length num_gpus containing feature
-#                         batches.
-#         label_shards: list of length num_gpus containing label batches.
-#     """
-#     with tf.device('/cpu:0'):
-#         if mode == tf.estimator.ModeKeys.PREDICT:
-#             # dataset = estimator_datasets.RawImageDataset(mode, '/cbcl/cbcl01/larend/data/images-sorted_paths.txt', params)
-#             # # dataset = estimator_datasets.Cifar10DatasetImages(mode, input_path, params)
-#             # image_batch = dataset.make_batch(params['batch_size'])
-#             # return image_batch, None
-#             dataset = estimator_utils.get_dataset(params['dataset'],
-#                                                   mode,
-#                                                   input_path,
-#                                                   params,
-#                                                   predict_split=predict_split,
-#                                                   imagenet_train_predict_shuffle_seed=imagenet_train_predict_shuffle_seed,
-#                                                   imagenet_train_predict_partial=imagenet_train_predict_partial)
-#             image_batch, label_batch = dataset.make_batch(params['batch_size'])
-#             return label_batch
-
-
 def input_fn(mode, input_path, params, num_gpus=None, reading_labels=False,
              predict_split='validation', imagenet_train_predict_shuffle_seed=None,
              imagenet_train_predict_partial=False):

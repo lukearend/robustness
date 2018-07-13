@@ -20,26 +20,6 @@ from tensorflow.contrib.learn.python.learn import monitors as monitor_lib
 from tensorflow.tensorboard.backend.event_processing import event_accumulator
 
 
-# Utils for estimator_datasets.
-def get_mean_imagenet_rgb():
-    """Fetches the mean activation per pixel over the entire ImageNet
-    dataset from mean_imagenet_rgb.mat file, which must be located in
-    the path shown."""
-    # Load the data from file.
-    if os.path.exists('/raid/poggio/home/larend/robust/data/mean_imagenet_rgb.mat'):
-        data = scipy.io.loadmat('/raid/poggio/home/larend/robust/data/mean_imagenet_rgb.mat')
-    elif os.path.exists('/cbcl/cbcl01/larend/robust/data/mean_imagenet_rgb.mat'):
-        data = scipy.io.loadmat('/cbcl/cbcl01/larend/robust/data/mean_imagenet_rgb.mat')
-    else:
-        data = scipy.io.loadmat('/om/user/larend/robust/data/mean_imagenet_rgb.mat')
-    mean_imagenet_rgb = data['mean_imagenet_rgb']
-
-    # Convert to float32 Tensor and map onto range [0, 1].
-    mean_imagenet_rgb = tf.cast(mean_imagenet_rgb, tf.float32) * (1. / 255.)
-
-    return mean_imagenet_rgb
-
-
 # Utils for estimator_graph.
 def get_dataset(dataset, mode, input_path, params, predict_split='validation',
                 imagenet_train_predict_shuffle_seed=None,

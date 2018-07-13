@@ -7,16 +7,14 @@ import tensorflow as tf
 
 import estimator_utils
 
+from vgg_preprocessing import preprocess_image as vgg_preprocess_image
+
 
 class ImageNetDataset(object):
     """ImageNet dataset.
 
     Described at http://www.image-net.org/challenges/LSVRC/2012/.
     """
-    HEIGHT = 256
-    WIDTH = 256
-    DEPTH = 3
-
     def __init__(self, mode, data_dir, params, predict_split='validation',
                  imagenet_train_predict_shuffle_seed=None,
                  imagenet_train_predict_partial=False):
@@ -68,26 +66,13 @@ class ImageNetDataset(object):
         image = tf.image.decode_jpeg(parsed_features['image/encoded'],
                                      channels=self.DEPTH)
 
-        # Convert from uint8 -> float32 and map onto range [0, 1].
-        image = tf.cast(image, tf.float32) * (1. / 255.)
-
-        # Subtract mean ImageNet activation.
-        mean_imagenet_rgb = estimator_utils.get_mean_imagenet_rgb()
-        image = image - mean_imagenet_rgb
-
-        # Apply data augmentation.
-        if (self.mode == tf.estimator.ModeKeys.TRAIN and
-            self.params['train_with_distortion']):
-            # Randomly flip the image, and then randomly crop from
-            # the central 224 x 224.
-            image = tf.image.random_flip_left_right(image)
-            image = tf.image.crop_to_bounding_box(image,
-                tf.random_uniform([], minval=0, maxval=32, dtype=tf.int32),
-                tf.random_uniform([], minval=0, maxval=32, dtype=tf.int32),
-                224, 224)
+        # VGG preprocessing borrowed from slim; includes data augmentation so train_with_distortion should be set to True.
+        if self.mode == tf.estimator.ModeKeys.TRAIN:
+            assert self.params['train_with_distortion'] == True
+            is_training = True
         else:
-            # Take a central 224 x 224 crop.
-            image = tf.image.resize_image_with_crop_or_pad(image, 224, 224)
+            is_training = False
+        image = vgg_preprocess_image(image, 224, 224, is_training=is_training)
 
         return image, label
 
