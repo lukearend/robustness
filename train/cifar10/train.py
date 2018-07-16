@@ -57,7 +57,7 @@ def main():
         tf_random_seed=12345)
 
     model.train(data_dir='{}/cifar-10-tfrecords'.format(base_data_dir),
-                num_gpus=2,
+                num_gpus=1,
                 save_summary_steps=1000,
                 save_checkpoint_and_validate_secs=180,
                 keep_checkpoint_max=10,
