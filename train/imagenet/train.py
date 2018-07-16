@@ -49,7 +49,7 @@ def main():
             'num_filters': num_filters},
         tf_random_seed=12345)
 
-    model.train(data_dir='{}/imagenet-tfrecords'.format(base_data_dir),
+    model.train(data_dir='{}/imagenet-tfrecords-full'.format(base_data_dir),
                 num_gpus=8,
                 save_summary_steps=1000,
                 save_checkpoint_and_validate_secs=3600,
