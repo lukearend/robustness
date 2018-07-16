@@ -8,6 +8,7 @@ def forward_pass(x, is_training, params):
     if params['dataset'] == 'imagenet':
         resnet = resnet_model.Model(
             resnet_size=18,
+            use_batch_norm=True,
             bottleneck=False,
             num_classes=1000,
             num_filters=params['num_filters'],
@@ -21,6 +22,7 @@ def forward_pass(x, is_training, params):
     elif params['dataset'] == 'cifar10':
         resnet = resnet_model.Model(
             resnet_size=20,
+            use_batch_norm=params['use_batch_norm'],
             bottleneck=False,
             num_classes=10,
             num_filters=params['num_filters'],
@@ -39,6 +41,7 @@ def forward_pass_test(x, params, perturbation_type, perturbation_amount, kill_ma
     if params['dataset'] == 'imagenet':
         resnet = resnet_model_test.Model(
             resnet_size=18,
+            use_batch_norm=True,
             bottleneck=False,
             num_classes=1000,
             num_filters=params['num_filters'],

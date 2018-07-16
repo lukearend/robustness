@@ -32,6 +32,7 @@ class Estimator(object):
         'batch_size': 256,
         'weight_decay': 0.0001,
         'dataset': 'imagenet',
+        'use_batch_norm': True,
         'num_filters': 64
     }
 

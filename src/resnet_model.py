@@ -99,7 +99,7 @@ def conv2d_fixed_padding(inputs, filters, kernel_size, strides, data_format):
 ################################################################################
 # ResNet block definitions.
 ################################################################################
-def _building_block_v1(inputs, filters, training, projection_shortcut, strides,
+def _building_block_v1(inputs, filters, use_batch_norm, training, projection_shortcut, strides,
                        data_format, activations):
   """A single block for ResNet v1, without a bottleneck.
 
@@ -129,13 +129,15 @@ def _building_block_v1(inputs, filters, training, projection_shortcut, strides,
 
   if projection_shortcut is not None:
     shortcut = projection_shortcut(inputs)
-    shortcut = batch_norm(inputs=shortcut, training=training,
-                          data_format=data_format)
+    if use_batch_norm:
+      shortcut = batch_norm(inputs=shortcut, training=training,
+                            data_format=data_format)
 
   inputs = conv2d_fixed_padding(
       inputs=inputs, filters=filters, kernel_size=3, strides=strides,
       data_format=data_format)
-  inputs = batch_norm(inputs, training, data_format)
+  if use_batch_norm:
+    inputs = batch_norm(inputs, training, data_format)
   inputs = tf.nn.relu(inputs)
 
   if data_format == 'channels_first':
@@ -146,7 +148,8 @@ def _building_block_v1(inputs, filters, training, projection_shortcut, strides,
   inputs = conv2d_fixed_padding(
       inputs=inputs, filters=filters, kernel_size=3, strides=1,
       data_format=data_format)
-  inputs = batch_norm(inputs, training, data_format)
+  if use_batch_norm:
+    inputs = batch_norm(inputs, training, data_format)
   inputs += shortcut
   inputs = tf.nn.relu(inputs)
 
@@ -319,7 +322,7 @@ def _bottleneck_block_v2(inputs, filters, training, projection_shortcut,
   return inputs + shortcut
 
 
-def block_layer(inputs, filters, bottleneck, block_fn, blocks, strides,
+def block_layer(inputs, filters, use_batch_norm, bottleneck, block_fn, blocks, strides,
                 training, name, data_format, activations):
   """Creates one layer of blocks for the ResNet model.
 
@@ -353,11 +356,11 @@ def block_layer(inputs, filters, bottleneck, block_fn, blocks, strides,
         data_format=data_format)
 
   # Only the first block per block_layer uses projection_shortcut and strides
-  inputs = block_fn(inputs, filters, training, projection_shortcut, strides,
+  inputs = block_fn(inputs, filters, use_batch_norm, training, projection_shortcut, strides,
                     data_format, activations)
 
   for _ in range(1, blocks):
-    inputs = block_fn(inputs, filters, training, None, 1, data_format, activations)
+    inputs = block_fn(inputs, filters, use_batch_norm, training, None, 1, data_format, activations)
 
   return tf.identity(inputs, name)
 
@@ -365,7 +368,7 @@ def block_layer(inputs, filters, bottleneck, block_fn, blocks, strides,
 class Model(object):
   """Base class for building the Resnet Model."""
 
-  def __init__(self, resnet_size, bottleneck, num_classes, num_filters,
+  def __init__(self, resnet_size, use_batch_norm, bottleneck, num_classes, num_filters,
                kernel_size,
                conv_stride, first_pool_size, first_pool_stride,
                block_sizes, block_strides,
@@ -412,6 +415,8 @@ class Model(object):
     if resnet_version not in (1, 2):
       raise ValueError(
           'Resnet version should be 1 or 2. See README for citations.')
+
+    self.use_batch_norm = use_batch_norm
 
     self.bottleneck = bottleneck
     if bottleneck:
@@ -544,7 +549,8 @@ class Model(object):
       for i, num_blocks in enumerate(self.block_sizes):
         num_filters = self.num_filters * (2**i)
         inputs = block_layer(
-            inputs=inputs, filters=num_filters, bottleneck=self.bottleneck,
+            inputs=inputs, filters=num_filters,
+            use_batch_norm = self.use_batch_norm, bottleneck=self.bottleneck,
             block_fn=self.block_fn, blocks=num_blocks,
             strides=self.block_strides[i], training=training,
             name='block_layer{}'.format(i + 1), data_format=self.data_format,
@@ -553,7 +559,8 @@ class Model(object):
       # Only apply the BN and ReLU for model that does pre_activation in each
       # building/bottleneck block, eg resnet V2.
       if self.pre_activation:
-        inputs = batch_norm(inputs, training, self.data_format)
+        if self.use_batch_norm:
+          inputs = batch_norm(inputs, training, self.data_format)
         inputs = tf.nn.relu(inputs)
 
       # The current top layer has shape
