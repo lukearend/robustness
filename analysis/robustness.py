@@ -49,7 +49,7 @@ def main():
 
     data_dir = {
         'cifar10': '{}/cifar-10-tfrecords'.format(base_data_dir),
-        'imagenet': '{}/imagenet-tfrecords'.format(base_data_dir)}[FLAGS.dataset]
+        'imagenet': '{}/imagenet-tfrecords-full'.format(base_data_dir)}[FLAGS.dataset]
 
     # Get unperturbed predictions.
     model = estimator.Estimator(

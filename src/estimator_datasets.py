@@ -242,7 +242,7 @@ class Cifar10Dataset(object):
             dataset = dataset.take(num_examples)
             dataset = dataset.repeat(1)
 
-            dataset = dataset.take(1000) # For fast debugging!
+            # dataset = dataset.take(1000) # For fast debugging!
         else:
             dataset = dataset.repeat(1)
 
