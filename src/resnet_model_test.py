@@ -394,7 +394,7 @@ def block_layer(inputs, filters, use_batch_norm, bottleneck, block_fn, blocks, s
   inputs = block_fn(inputs, filters, use_batch_norm, training, projection_shortcut, strides,
                     data_format, perturbation_type, perturbation_amount, kill_mask[0:2])
 
-  for _ in range(1, blocks):
+  for i in range(1, blocks):
     inputs = block_fn(inputs, filters, use_batch_norm, training, None, 1, data_format,
                       perturbation_type, perturbation_amount, kill_mask[(2 * i):(2 * i + 2)])
 
