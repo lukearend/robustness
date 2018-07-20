@@ -555,8 +555,6 @@ class Model(object):
       A logits Tensor with shape [<batch_size>, self.num_classes].
     """
 
-    activations = []
-
     with self._model_variable_scope():
       if self.data_format == 'channels_first':
         # Convert the inputs from channels_last (NHWC) to channels_first (NCHW).
@@ -631,4 +629,4 @@ class Model(object):
       inputs = tf.layers.dense(inputs=inputs, units=self.num_classes)
 
       inputs = tf.identity(inputs, 'final_dense')
-      return inputs, activations
+      return inputs
