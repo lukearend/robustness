@@ -1,2 +1,2 @@
-# robust
-training nets to study robustness to perturbations
+# robustness
+Training DNNs to study robustness to perturbations.
